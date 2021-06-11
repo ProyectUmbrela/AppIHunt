@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ihunt/providers/api.dart';
-import 'package:ihunt/utils/validators.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-import 'package:ihunt/utils/widgets.dart';
+import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class LoginPage extends StatefulWidget {
@@ -111,16 +109,17 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future _sendRequest(emailField, passwordField) async {
-    Api _api = Api();
+    //Api _api = Api();
     _submit();
     print("====================");
     print(emailField.text);
     print(passwordField.text);
     print("====================");
-    final msg = jsonEncode(
+    final body = jsonEncode(
         {'idusuario': emailField.text, 'contrasena': passwordField.text});
-    String url = '/login';
-    var response = await _api.registerPost(msg, url);
+    final headers = {"Content-Type": "application/json"};
+    String url = 'https://appiuserstest.herokuapp.com/ihunt/test';
+    var response = await http.post(url, headers: headers, body: body);
 
     int statusCode = response.statusCode;
     if (statusCode == 201) {
@@ -143,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
     final emailField = TextFormField(
         autofocus: false,
         controller: myControllerEmail,
-        validator: validateEmail,
+        //validator: validateEmail,
         decoration: buildInputDecoration("Correo", Icons.email));
 
     final passwordField = TextFormField(
