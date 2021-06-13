@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
       //home: MainScreen(),
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
-      routes: <String, WidgetBuilder> {
+      routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginPage(),
-        '/homeS' : (BuildContext context) => new MainScreen(),
-        '/register' : (BuildContext context) => new Register()
+        '/homeS': (BuildContext context) => new MainScreen(),
+        '/register': (BuildContext context) => new Register()
       },
     );
   }

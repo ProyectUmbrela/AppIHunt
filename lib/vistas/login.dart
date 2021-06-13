@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:ihunt/providers/api.dart';
 
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
@@ -47,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
   }
   */
 
-  /*
   Widget _divider() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -58,18 +58,18 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 5),
               child: Divider(
-                thickness: 1,
+                thickness: 2,
               ),
             ),
           ),
           Text('or'),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 5),
               child: Divider(
-                thickness: 1,
+                thickness: 2,
               ),
             ),
           ),
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
-  }*/
+  }
 
   void _showDialog(seconds, message) {
     showDialog(
@@ -112,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future _sendRequest(emailField, passwordField) async {
-    //Api _api = Api();
+    Api _api = Api();
     _submit();
     print("====================");
     print(emailField.text);
@@ -120,10 +120,10 @@ class _LoginPageState extends State<LoginPage> {
     print("====================");
     final body = jsonEncode(
         {'idusuario': emailField.text, 'contrasena': passwordField.text});
-    final headers = {"Content-Type": "application/json"};
-    String url = 'https://appiuserstest.herokuapp.com/ihunt/test';
-    var response = await http.post(url, headers: headers, body: body);
-
+    //final headers = {"Content-Type": "application/json"};
+    //String url = 'https://appiuserstest.herokuapp.com/ihunt/test';
+    //var response = await http.post(url, headers: headers, body: body);
+    var response = await _api.loginPost(body);
     int statusCode = response.statusCode;
     if (statusCode == 201) {
       //print("***********login");
@@ -195,6 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 35.0,
                   ),
+                  _divider(),
                 ],
               ),
             ),

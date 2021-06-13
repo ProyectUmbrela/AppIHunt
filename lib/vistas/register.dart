@@ -17,18 +17,22 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-
   final formKey = new GlobalKey<FormState>();
 
-  TextEditingController  useridCtrl = new TextEditingController();
-  TextEditingController  usernameCtrl = new TextEditingController();
-  TextEditingController  useremailCtrl = new TextEditingController();
-  TextEditingController  userphoneCtrl = new TextEditingController();
-  TextEditingController  passwordCtrl = new TextEditingController();
-  TextEditingController  confirmPasswordCtrl = new TextEditingController();
-  TextEditingController  chosenValueCtrl = new TextEditingController();
+  TextEditingController useridCtrl = new TextEditingController();
+  TextEditingController usernameCtrl = new TextEditingController();
+  TextEditingController useremailCtrl = new TextEditingController();
+  TextEditingController userphoneCtrl = new TextEditingController();
+  TextEditingController passwordCtrl = new TextEditingController();
+  TextEditingController confirmPasswordCtrl = new TextEditingController();
+  TextEditingController chosenValueCtrl = new TextEditingController();
 
-  String _userid, _username, _useremail, _userphone, _password, _confirmPassword;
+  String _userid,
+      _username,
+      _useremail,
+      _userphone,
+      _password,
+      _confirmPassword;
   String _chosenValue;
 
   @override
@@ -36,26 +40,27 @@ class _RegisterState extends State<Register> {
     //AuthProvider auth = Provider.of<AuthProvider>(context);
 
     final type = DropdownButton<String>(
-      focusColor:Colors.white,
+      focusColor: Colors.white,
       value: _chosenValue,
       //elevation: 5,
       style: TextStyle(color: Colors.white),
-      iconEnabledColor:Colors.black,
+      iconEnabledColor: Colors.black,
       items: <String>[
         'Propietario',
         'Usuario',
       ].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value,style:TextStyle(color:Colors.black),),
+          child: Text(
+            value,
+            style: TextStyle(color: Colors.black),
+          ),
         );
       }).toList(),
-      hint:Text(
+      hint: Text(
         "Elige tu role",
         style: TextStyle(
-            color: Colors.black,
-            fontSize: 14,
-            fontWeight: FontWeight.w500),
+            color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
       ),
       onChanged: (String value) {
         setState(() {
@@ -64,7 +69,8 @@ class _RegisterState extends State<Register> {
       },
     );
 
-    final logo = Image(image: AssetImage("images/icono.png"),
+    final logo = Image(
+      image: AssetImage("images/icono.png"),
       width: 150.0,
       height: 100,
     );
@@ -82,7 +88,8 @@ class _RegisterState extends State<Register> {
       controller: usernameCtrl,
       validator: (value) => value.isEmpty ? "Your name is required" : null,
       onSaved: (value) => _username = value,
-      decoration: buildInputDecoration("First and last name", Icons.accessibility),
+      decoration:
+          buildInputDecoration("First and last name", Icons.accessibility),
     );
 
     final userEmail = TextFormField(
@@ -107,7 +114,8 @@ class _RegisterState extends State<Register> {
       obscureText: true,
       validator: (value) => value.isEmpty ? "Please enter password" : null,
       onSaved: (value) => _password = value,
-      decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
+      decoration:
+          buildInputDecoration("Confirm password", Icons.remove_red_eye),
     );
 
     final confirmPassword = TextFormField(
@@ -116,7 +124,8 @@ class _RegisterState extends State<Register> {
       validator: (value) => validatePassword(value, passwordCtrl.text),
       onSaved: (value) => _confirmPassword = value,
       obscureText: true,
-      decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
+      decoration:
+          buildInputDecoration("Confirm password", Icons.remove_red_eye),
     );
 
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
@@ -129,19 +138,19 @@ class _RegisterState extends State<Register> {
         },
       );
     }
+
     Widget _dialogTitle(String noty) {
       return Text(noty);
     }
 
     List<Widget> _buildActions() {
-      return [
-        _buildActionButton("Aceptar", Colors.blue)
-      ];
+      return [_buildActionButton("Aceptar", Colors.blue)];
     }
 
     Widget _contentText(String texto) {
       return Text(texto);
     }
+
     Widget _showCupertinoDialog(String texto, noty) {
       return CupertinoAlertDialog(
         title: _dialogTitle(noty),
@@ -149,7 +158,9 @@ class _RegisterState extends State<Register> {
         actions: _buildActions(),
       );
     }
-    Future<void> _cupertinoDialog(BuildContext context, String texto, String noty) async {
+
+    Future<void> _cupertinoDialog(
+        BuildContext context, String texto, String noty) async {
       return showCupertinoDialog<void>(
         context: context,
         builder: (_) => _showCupertinoDialog(texto, noty),
@@ -163,7 +174,9 @@ class _RegisterState extends State<Register> {
         actions: _buildActions(),
       );
     }
-    Future<void> _materialAlertDialog(BuildContext context, String texto, String noty) async {
+
+    Future<void> _materialAlertDialog(
+        BuildContext context, String texto, String noty) async {
       return showDialog<void>(
         context: context,
         builder: (_) => _showMaterialDialog(texto, noty),
@@ -175,30 +188,32 @@ class _RegisterState extends State<Register> {
       Navigator.pushReplacementNamed(context, '/register');
     };
 
-    Future submit () async {
+    Future submit() async {
       final form = formKey.currentState;
 
       if (form.validate()) {
-
         form.save();
         Api _api = Api();
 
-        final msg = jsonEncode({'idusuario': useridCtrl.text,
+        final msg = jsonEncode({
+          'idusuario': useridCtrl.text,
           'nombre': usernameCtrl.text,
           'correo': useremailCtrl.text,
           'telefono': userphoneCtrl.text,
           'contrasena': passwordCtrl.text,
-        'tipo':_chosenValue});
+          'tipo': _chosenValue
+        });
 
         print(msg);
 
         var response = await _api.registerPost(msg);
         Map data = jsonDecode(response.body);
 
-        if(response.statusCode == 201){ // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+        if (response.statusCode == 201) {
+          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
           Navigator.pushReplacementNamed(context, '/homeS');
-        }else{
+        } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
             print('.............');
@@ -209,18 +224,26 @@ class _RegisterState extends State<Register> {
         }
       } else {
         if (Platform.isAndroid) {
-          _materialAlertDialog(context, "Por favor, rellene el formulario correctamente", "Formulario inválido");
+          _materialAlertDialog(
+              context,
+              "Por favor, rellene el formulario correctamente",
+              "Formulario inválido");
         } else if (Platform.isIOS) {
-          _cupertinoDialog(context, "Por favor, rellene el formulario correctamente", "Formulario inválido");
+          _cupertinoDialog(
+              context,
+              "Por favor, rellene el formulario correctamente",
+              "Formulario inválido");
         }
       }
-    };
+    }
+
+    ;
 
     return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: EdgeInsets.all(40.0),
-          child: Form(
+        child: Scaffold(
+      body: Container(
+        padding: EdgeInsets.all(40.0),
+        child: Form(
             key: formKey,
             child: SingleChildScrollView(
               child: Column(
@@ -231,12 +254,16 @@ class _RegisterState extends State<Register> {
                   label("Nombre de usuario"),
                   SizedBox(height: 5),
                   userId,
-                  SizedBox(height: 15,),
+                  SizedBox(
+                    height: 15,
+                  ),
 
                   label("Nombre completo"),
                   SizedBox(height: 5),
                   userName,
-                  SizedBox(height: 15,),
+                  SizedBox(
+                    height: 15,
+                  ),
 
                   label("Correo electrónico"),
                   SizedBox(height: 5.0),
@@ -265,23 +292,21 @@ class _RegisterState extends State<Register> {
                   Row(
                     children: <Widget>[
                       Expanded(
-                        child: Container(
-                          child: longButtons("Aceptar", submit),
-                          alignment: Alignment.centerLeft,)
-                      ),
+                          child: Container(
+                        child: longButtons("Aceptar", submit),
+                        alignment: Alignment.centerLeft,
+                      )),
                       Expanded(
                           child: Container(
-                            child: longButtons("Cancelar", canceled),
-                            alignment: Alignment.centerRight,)
-                      ),
+                        child: longButtons("Cancelar", canceled),
+                        alignment: Alignment.centerRight,
+                      )),
                     ],
                   )
                 ],
               ),
-            )
-          ),
-        ),
-      )
-    );
+            )),
+      ),
+    ));
   }
 }
