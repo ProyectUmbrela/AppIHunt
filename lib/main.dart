@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/registerRoom.dart';
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Bold',
         primarySwatch: Colors.blue,
       ),
-      home: Register(),
+      home:  RegisterRoom(),
       //home: MainScreen(),
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
       routes: <String, WidgetBuilder>{
