@@ -5,14 +5,14 @@ class Landlord extends StatefulWidget {
   _LandlordState createState() => _LandlordState();
 }
 
-class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin {
+class _LandlordState extends State<Landlord>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bienvenido a la vista de propietario'),
+        title: Text('Vista de propietario'),
       ),
-
     );
   }
 }

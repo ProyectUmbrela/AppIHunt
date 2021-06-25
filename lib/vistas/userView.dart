@@ -10,10 +10,8 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bienvenido a la vista de usuario'),
+        title: Text('Vista de usuario'),
       ),
-
     );
   }
 }
-

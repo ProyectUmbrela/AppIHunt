@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Bold',
         primarySwatch: Colors.blue,
       ),
-      home:  User(),
+      //home:  User(),
+      home: LoginPage(),
       //home: MainScreen(),
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
       routes: <String, WidgetBuilder>{

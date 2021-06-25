@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
-//import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
+import 'package:ihunt/vistas/landlordView.dart';
 
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
@@ -114,25 +114,29 @@ class _LoginPageState extends State<LoginPage> {
   Future _sendRequest(emailField, passwordField) async {
     Api _api = Api();
     _submit();
-    print("====================");
-    print(emailField.text);
-    print(passwordField.text);
-    print("====================");
+    //print("====================");
+    //print(emailField.text);
+    //print(passwordField.text);
+    //print("====================");
     final body = jsonEncode(
         {'idusuario': emailField.text, 'contrasena': passwordField.text});
-    //final headers = {"Content-Type": "application/json"};
-    //String url = 'https://appiuserstest.herokuapp.com/ihunt/test';
-    //var response = await http.post(url, headers: headers, body: body);
+
     var response = await _api.loginPost(body);
     int statusCode = response.statusCode;
+    statusCode = 201;
     if (statusCode == 201) {
       //print("***********login");
-      _showDialog(1, "Loggeado");
+      //_showDialog(1, "Loggeado");
+      Navigator.pushReplacementNamed(context, '/landlord');
+      //Navigator.push(
+      //  context,
+      //  MaterialPageRoute(builder: (context) => Landlord()),
+      //);
     } else {
       _showDialog(2, "El usuario o contraseña son incorrectos");
     }
-    String responseBody = response.body;
-    print(responseBody);
+    //String responseBody = response.body;
+    //print(responseBody);
   }
 
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
@@ -168,6 +172,31 @@ class _LoginPageState extends State<LoginPage> {
             style: style.copyWith(color: Colors.white)),
       ),
     );
+
+    /*
+    List<String> fotos = [
+      "https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg",
+      "https://awsrpia.s3.amazonaws.com/habitaciones/200093415_107240988265907_2391073375870101507_n.jpg",
+      "https://awsrpia.s3.amazonaws.com/habitaciones/201482550_532932834826458_3630072694624410304_n.jpg",
+      "https://awsrpia.s3.amazonaws.com/habitaciones/201763526_107240834932589_1701097239284879277_n.jpg",
+      "https://awsrpia.s3.amazonaws.com/habitaciones/201822557_532998261486582_8554378459947353905_n.jpg",
+      "https://awsrpia.s3.amazonaws.com/habitaciones/202073837_501458407829418_6563349131041000474_n.jpg"
+    ];
+  
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Fotos de la habitacion en renta"),
+      ),
+      body: ListView.builder(
+        itemCount: fotos.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+            child: Image.network(fotos[index]),
+          );
+        },
+      ),
+    );
+  */
 
     return Scaffold(
       body: ModalProgressHUD(
