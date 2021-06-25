@@ -1,1 +1,0 @@
-// vista principal de usuario

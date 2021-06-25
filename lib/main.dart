@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/landlordView.dart';
 import 'package:ihunt/vistas/registerRoom.dart';
+import 'package:ihunt/vistas/userView.dart';
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
@@ -20,13 +22,15 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Bold',
         primarySwatch: Colors.blue,
       ),
-      home:  RegisterRoom(),
+      home:  User(),
       //home: MainScreen(),
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginPage(),
         '/homeS': (BuildContext context) => new MainScreen(),
-        '/register': (BuildContext context) => new Register()
+        '/register': (BuildContext context) => new Register(),
+        '/landlord': (BuildContext context) => new Landlord(),
+        '/user': (BuildContext context) => new User()
       },
     );
   }

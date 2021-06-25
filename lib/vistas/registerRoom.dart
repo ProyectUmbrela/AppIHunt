@@ -174,19 +174,18 @@ class _RegisterRoomState extends State<RegisterRoom> {
         var response = await _api.registerPost(msg);
         Map data = jsonDecode(response.body);
 
-        /*if (response.statusCode == 201) {
+        if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
           Navigator.pushReplacementNamed(context, '/homeS');
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
-            print('.............');
             print(response.statusCode);
           } else if (Platform.isIOS) {
             _cupertinoDialog(context, data['message'], 'Notificación');
           }
-        }*/
+        }
       } else {
         if (Platform.isAndroid) {
           _materialAlertDialog(
