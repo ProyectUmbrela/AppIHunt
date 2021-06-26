@@ -18,6 +18,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final formKey = new GlobalKey<FormState>();
+  bool _loading = false;
 
   TextEditingController useridCtrl = new TextEditingController();
   TextEditingController usernameCtrl = new TextEditingController();
@@ -37,43 +38,24 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    //AuthProvider auth = Provider.of<AuthProvider>(context);
 
-    final type = DropdownButton<String>(
-      focusColor: Colors.white,
+    final type = DropdownButtonFormField<String>(
       value: _chosenValue,
-      //elevation: 5,
-      style: TextStyle(color: Colors.white),
-      iconEnabledColor: Colors.black,
-      items: <String>[
-        'Propietario',
-        'Usuario',
-      ].map<DropdownMenuItem<String>>((String value) {
+      hint: Text(
+        'Elige tu role',
+      ),
+      onChanged: (value) =>
+          setState(() => _chosenValue = value),
+      validator: (value) => value == null ? 'Por favor elige un role' : null,
+      items:
+      ['Propietario', 'Usuario'].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(
-            value,
-            style: TextStyle(color: Colors.black),
-          ),
+          child: Text(value),
         );
       }).toList(),
-      hint: Text(
-        "Elige tu role",
-        style: TextStyle(
-            color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
-      ),
-      onChanged: (String value) {
-        setState(() {
-          _chosenValue = value;
-        });
-      },
     );
 
-    final logo = Image(
-      image: AssetImage("images/icono.png"),
-      width: 150.0,
-      height: 100,
-    );
 
     final userId = TextFormField(
       autofocus: false,
@@ -192,11 +174,15 @@ class _RegisterState extends State<Register> {
       final form = formKey.currentState;
 
       if (form.validate()) {
+        setState(() {
+          _loading = true;
+        });
+
         form.save();
         Api _api = Api();
 
         final msg = jsonEncode({
-          'idusuario': useridCtrl.text,
+          'usuario': useridCtrl.text,
           'nombre': usernameCtrl.text,
           'correo': useremailCtrl.text,
           'telefono': userphoneCtrl.text,
@@ -212,11 +198,18 @@ class _RegisterState extends State<Register> {
         if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
-          Navigator.pushReplacementNamed(context, '/homeS');
+
+          setState(() {
+            _loading = false;
+          });
+
+          Navigator.pushReplacementNamed(context, '/login');
         } else {
+          setState(() {
+            _loading = false;
+          });
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
-            print('.............');
             print(response.statusCode);
           } else if (Platform.isIOS) {
             _cupertinoDialog(context, data['message'], 'Notificación');
@@ -235,9 +228,7 @@ class _RegisterState extends State<Register> {
               "Formulario inválido");
         }
       }
-    }
-
-    ;
+    };
 
     return SafeArea(
         child: Scaffold(
@@ -293,7 +284,8 @@ class _RegisterState extends State<Register> {
                     children: <Widget>[
                       Expanded(
                           child: Container(
-                        child: longButtons("Aceptar", submit),
+                        child: _loading ? CircularProgressIndicator() :
+                          longButtons("Aceptar", submit),
                         alignment: Alignment.centerLeft,
                       )),
                       Expanded(
