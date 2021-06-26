@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
-import 'package:ihunt/vistas/landlordView.dart';
+//import 'package:ihunt/vistas/landlordView.dart';
+//import 'package:ihunt/vistas/userView.dart';
 
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
@@ -101,8 +102,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _saving = true;
     });
-
-    //Simulate a service call
     //print('submitting to backend...');
     new Future.delayed(new Duration(seconds: 4), () {
       setState(() {
@@ -119,15 +118,24 @@ class _LoginPageState extends State<LoginPage> {
     //print(passwordField.text);
     //print("====================");
     final body = jsonEncode(
-        {'idusuario': emailField.text, 'contrasena': passwordField.text});
+        {'usuario': emailField.text, 'contrasena': passwordField.text});
 
     var response = await _api.loginPost(body);
     int statusCode = response.statusCode;
-    statusCode = 201;
+
+    //String responseBody = response.body;
+    //print("###########################");
+    var resp = json.decode(response.body);
+
+    //print(resp['access_token']);
     if (statusCode == 201) {
-      //print("***********login");
-      //_showDialog(1, "Loggeado");
-      Navigator.pushReplacementNamed(context, '/landlord');
+      if (resp['tipo'] == 'Propietario') {
+        Navigator.pushReplacementNamed(context, '/landlord');
+      }
+      if (resp['tipo'] == 'Usuario') {
+        Navigator.pushReplacementNamed(context, '/user');
+      }
+
       //Navigator.push(
       //  context,
       //  MaterialPageRoute(builder: (context) => Landlord()),
@@ -135,8 +143,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       _showDialog(2, "El usuario o contraseña son incorrectos");
     }
-    //String responseBody = response.body;
-    //print(responseBody);
   }
 
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);

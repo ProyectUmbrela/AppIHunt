@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Bold',
         primarySwatch: Colors.blue,
       ),
-      //home:  User(),
+
       home: Register(),
-      //home: MainScreen(),
+      //home: LoginPage(),
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginPage(),
