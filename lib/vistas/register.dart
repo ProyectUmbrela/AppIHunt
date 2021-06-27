@@ -182,7 +182,7 @@ class _RegisterState extends State<Register> {
         Api _api = Api();
 
         final msg = jsonEncode({
-          'usuario': useridCtrl.text,
+          'idusuario': useridCtrl.text,
           'nombre': usernameCtrl.text,
           'correo': useremailCtrl.text,
           'telefono': userphoneCtrl.text,
