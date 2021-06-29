@@ -129,10 +129,10 @@ class _LoginPageState extends State<LoginPage> {
 
     //print(resp['access_token']);
     if (statusCode == 201) {
-      if (resp['tipo'] == 'Propietario') {
+      if (resp['Tipo'] == 'Propietario') {
         Navigator.pushReplacementNamed(context, '/landlord');
       }
-      if (resp['tipo'] == 'Usuario') {
+      if (resp['Tipo'] == 'Usuario') {
         Navigator.pushReplacementNamed(context, '/user');
       }
 
@@ -155,14 +155,12 @@ class _LoginPageState extends State<LoginPage> {
     final emailField = TextFormField(
         autofocus: false,
         controller: myControllerEmail,
-        //validator: validateEmail,
         decoration: buildInputDecoration("Correo", Icons.email));
 
     final passwordField = TextFormField(
         autofocus: false,
         controller: myControllerPassword,
         obscureText: true,
-        //validator: (value) => value.isEmpty ? "Your name is required" : null,
         decoration: buildInputDecoration("Contraseña", Icons.remove_red_eye));
 
     final loginbuton = Material(
