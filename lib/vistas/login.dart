@@ -22,6 +22,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _saving = false;
 
+  final myControllerEmail = TextEditingController();
+  final myControllerPassword = TextEditingController();
+
   /*
   Widget _submitButton() {
     return Container(
@@ -111,12 +114,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future _sendRequest(emailField, passwordField) async {
+
     Api _api = Api();
     _submit();
-    //print("====================");
-    //print(emailField.text);
-    //print(passwordField.text);
-    //print("====================");
+    print("====================");
+    print(emailField.text);
+    print(passwordField.text);
+    print("====================");
+
     final body = jsonEncode(
         {'usuario': emailField.text, 'contrasena': passwordField.text});
 
@@ -149,8 +154,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final myControllerEmail = TextEditingController();
-    final myControllerPassword = TextEditingController();
 
     final emailField = TextFormField(
         autofocus: false,
