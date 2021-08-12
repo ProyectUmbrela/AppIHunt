@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 
-      home: MainScreen(),
+      home: Landlord(),
       //home: LoginPage(),
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
       routes: <String, WidgetBuilder>{
