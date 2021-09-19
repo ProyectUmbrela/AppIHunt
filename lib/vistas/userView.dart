@@ -43,8 +43,9 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
           margin: const EdgeInsets.only(top: 20.0),
           child : Text(stringval ?? 'default_value',
             style: TextStyle(
-                color: Colors.white ,
-                fontSize: textSize
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold
             ),
           ),
         ),
@@ -142,14 +143,14 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         ],
       ),
       body: Container(
-        margin: const EdgeInsets.all(5.0),
-        padding: const EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(0.5),
+        padding: const EdgeInsets.all(0.5),
         decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
                 stops: [0, 1],
-                colors: [Colors.blueAccent, Colors.deepPurple],
+                colors: [Colors.blue[100], Colors.blue[200]],
                 tileMode: TileMode.repeated),
             borderRadius: BorderRadius.circular(10.0)),
         alignment: FractionalOffset.center,

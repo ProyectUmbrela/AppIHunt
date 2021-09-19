@@ -67,6 +67,10 @@ class MyApp extends StatelessWidget {
       ),
 
       home: LoginPage(),
+=======
+      home: Landlord(),
+      //home: LoginPage(),
+
       debugShowCheckedModeBanner: false, // quitar etiqueta debug en los screen
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginPage(),

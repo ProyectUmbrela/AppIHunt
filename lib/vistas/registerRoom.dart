@@ -162,7 +162,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           'idhabitación': roomidCtrl.text,
           'direccion': adressCtrl.text,
           'dimension': dimensionsCtrl.text,
-          'servicios': servicesCtrl.text,
+          'servicios': servicesCtrl.text,//luz, inter, agu cal, agua fr, gas
           'descripcion': descriptionCtrl.text,
           'precio' : priceCtrl.text,
           'terminos' : termsCtrl.text,
