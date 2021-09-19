@@ -1,9 +1,18 @@
+//import 'dart:js';
+//import 'package:js/js.dart';
+
 import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/landlordView.dart';
 import 'package:ihunt/vistas/registerRoom.dart';
-import 'package:ihunt/vistas/userView.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+
+// Vistas de inquilino
+import 'package:ihunt/vistas/userView.dart'; // principal
+import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
+import 'package:ihunt/vistas/inquilino/mapa.dart';
+
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
@@ -13,7 +22,7 @@ import 'vistas/login.dart';
 
 
 
-Future<void> main() async {   
+Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -33,7 +42,9 @@ Future<void> main() async {
     routes: {
       '/login' : (context) => LoginPage(),
       '/user' : (context) => User(),
-      '/register' : (context) => Register()
+      '/register' : (context) => Register(),
+      '/lugares': (context) => Lugares(),
+      '/mapa' : (context) => MapSample()
     },
 
   ));

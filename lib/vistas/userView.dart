@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ihunt/vistas/inquilino/mapa.dart';
+import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -26,12 +28,12 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
 
 
   void setData() async{
-  var sharedPreferences = await SharedPreferences.getInstance();
+    var sharedPreferences = await SharedPreferences.getInstance();
 
-  setState(() {
-    nombre = sharedPreferences.getString("nombre") ?? "Error";
-    id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
-  });
+    setState(() {
+      nombre = sharedPreferences.getString("nombre") ?? "Error";
+      id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+    });
 
   }
 
@@ -59,7 +61,23 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
   }
 
 
-  
+  Future toLugares() async {
+    //Navigator.pushReplacementNamed(context, '/lugares');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Lugares()),
+      );
+  }
+
+  Future toMapa() async {
+    //Navigator.pushReplacementNamed(context, '/mapa');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MapSample()),
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +94,7 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         //onPressed: () => _{},
         
-        onPressed: ()=>{},
+        onPressed: ()=> toLugares(),
         child: Text("Mis lugares",
             textAlign: TextAlign.center
             
@@ -98,7 +116,7 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         //onPressed: () => _{},
         
-        onPressed: ()=>{},
+        onPressed: ()=>toMapa(),
         child: Text("Buscar",
             textAlign: TextAlign.center
             
