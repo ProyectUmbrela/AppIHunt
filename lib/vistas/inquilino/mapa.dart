@@ -6,6 +6,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/userView.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
@@ -38,9 +39,36 @@ class MapSampleState extends State<MapSample> {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
+  /*
+  Future backToUser() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => User()),
+    );
+
+  }*/
+
+  Future backToUser() async {
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => User()),
+        );
+    }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+         // icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => {
+              Navigator.of(context).pop(),
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>User()))
+            }
+        ), 
+        title: Text("Volver"),
+      ),
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: _kGooglePlex,

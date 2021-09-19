@@ -153,6 +153,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacementNamed(context, '/landlord');
       }
       if (resp['Tipo'] == 'Usuario') {
+        //Navigator.of(context).pop();
         Navigator.pushReplacementNamed(context, '/user');
        
       }

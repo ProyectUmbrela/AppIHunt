@@ -11,8 +11,8 @@ class User extends StatefulWidget {
   _UserState createState() => _UserState();
 }
 
-class _UserState extends State<User> with SingleTickerProviderStateMixin {
-
+class _UserState extends State<User> {
+//class ProfileRouteState extends State<ProfileRoute> {
 
   //var SharedPreferences = sharedPreferences;
   // "idusuario": "fredy",
@@ -34,8 +34,14 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
     });
-
   }
+
+  void _logout() async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool("isLogged", false);
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
+
 
 
   Widget getRow(String stringval, double textSize , double opacity){
@@ -43,7 +49,7 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         opacity: opacity,
         child:  Container(
           margin: const EdgeInsets.only(top: 20.0),
-          child : Text(stringval ?? 'default_value',
+          child : Text(stringval ?? 'Error',
             style: TextStyle(
                 color: Colors.black,
                 fontSize: 30,
@@ -53,31 +59,9 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         ),
       ) ;
     }
-  void _logout() async {
-    var sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setBool("isLogged", false);
-
-    Navigator.of(context).pushReplacementNamed('/login');
-  }
 
 
-  Future toLugares() async {
-    //Navigator.pushReplacementNamed(context, '/lugares');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Lugares()),
-      );
-  }
-
-  Future toMapa() async {
-    //Navigator.pushReplacementNamed(context, '/mapa');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MapSample()),
-    );
-  }
-
-
+  
 
   @override
   Widget build(BuildContext context) {
@@ -87,14 +71,14 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
       color: Color(0xff01A0C7),
-      
       child: MaterialButton(
-        
         minWidth: (MediaQuery.of(context).size.width/3.3),
-        //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        //onPressed: () => _{},
-        
-        onPressed: ()=> toLugares(),
+         onPressed: () {
+           Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Lugares()));
+        },
         child: Text("Mis lugares",
             textAlign: TextAlign.center
             
@@ -116,7 +100,9 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         //onPressed: () => _{},
         
-        onPressed: ()=>toMapa(),
+        onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MapSample()));
+        },
         child: Text("Buscar",
             textAlign: TextAlign.center
             
@@ -151,7 +137,7 @@ class _UserState extends State<User> with SingleTickerProviderStateMixin {
         actions: <Widget>[
           Row(
             children: <Widget>[
-              Text("Log out"),
+              Text("Salir"),
               new IconButton(
                 icon: Icon(Icons.exit_to_app, color: Colors.white),
                 onPressed: _logout,

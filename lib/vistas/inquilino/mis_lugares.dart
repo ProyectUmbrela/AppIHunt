@@ -22,7 +22,7 @@ class Lugares extends StatelessWidget {
 /// This is the stateful widget that the main application instantiates.
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget() : super();
-
+ 
   @override
   createState() => _MyStatefulWidgetState();
 }
@@ -43,8 +43,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     Habitacion(name: "Nombre propietario 2", estado: "Rentada2"),
     Habitacion(name: "Nombre propietario 3", estado: "Rentada3")
   ];
-
-
 
   //@override
   Widget habitaciondetail(habitacion) {
@@ -89,63 +87,62 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 
 
-  Future backToUser() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => User()),
-    );
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Volver",
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            backToUser();
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ThirdScreen()),
-            );
-            */
-          },
-        ),
+        leading: BackButton(
+         // icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => {
+              Navigator.of(context).pop(),
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>User()))
+            }
+        ), 
+        title: Text("Volver"),
       ),
-      backgroundColor: Colors.grey[900],
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 50, 10, 10),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              /*children: <Widget>[
-                Icon(Icons.menu, size: 35, color: Colors.white),
-                Text('Notifications',
-                  style: TextStyle (
-                    color: Colors.white,
-                    fontSize: 25
-                  ),
+      //backgroundColor: Colors.grey[900],
+
+      body: Container(
+        margin: const EdgeInsets.all(0.5),
+        padding: const EdgeInsets.all(0.5),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
+                stops: [0, 1],
+                colors: [Colors.blue[100], Colors.blue[200]],
+                tileMode: TileMode.repeated),
+            borderRadius: BorderRadius.circular(10.0)),
+        alignment: FractionalOffset.center,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 50, 10, 10),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  /*children: <Widget>[
+                    Icon(Icons.menu, size: 35, color: Colors.white),
+                    Text('Notifications',
+                      style: TextStyle (
+                        color: Colors.white,
+                        fontSize: 25
+                      ),
+                    ),
+                    Icon(Icons.notifications_none, size: 35, color: Colors.white)
+                  ],*/
                 ),
-                Icon(Icons.notifications_none, size: 35, color: Colors.white)
-              ],*/
+                Column(
+                  children: habitaciones.map((p) {
+                    return habitaciondetail(p);
+                  }).toList()
+                )
+              ],
             ),
-            Column(
-              children: habitaciones.map((p) {
-                return habitaciondetail(p);
-              }).toList()
-            )
-          ],
+          ),
         ),
-      ),
-    );
+      );
   }
 
 }
