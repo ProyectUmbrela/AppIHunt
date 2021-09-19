@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
+import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
-//import 'package:ihunt/vistas/landlordView.dart';
-//import 'package:ihunt/vistas/userView.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
@@ -110,6 +110,12 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  onSuccess() async{
+    var sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool("isLogged", true);
+  }
+
+
   Future _sendRequest(emailField, passwordField) async {
     Api _api = Api();
     _submit();
@@ -118,7 +124,10 @@ class _LoginPageState extends State<LoginPage> {
     //print(passwordField.text);
     //print("====================");
     final body = jsonEncode(
-        {'usuario': emailField.text, 'contrasena': passwordField.text});
+        {
+          'usuario': emailField.text,
+          'contrasena': passwordField.text
+        });
 
     var response = await _api.loginPost(body);
     int statusCode = response.statusCode;
@@ -129,11 +138,18 @@ class _LoginPageState extends State<LoginPage> {
 
     //print(resp['access_token']);
     if (statusCode == 201) {
+
+      var sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setBool("isLogged", true);
+      sharedPreferences.setString("nombre", resp['nombre']);
+      sharedPreferences.setString("idusuario", resp['idusuario']);
+
       if (resp['Tipo'] == 'Propietario') {
         Navigator.pushReplacementNamed(context, '/landlord');
       }
       if (resp['Tipo'] == 'Usuario') {
         Navigator.pushReplacementNamed(context, '/user');
+       
       }
 
       //Navigator.push(
