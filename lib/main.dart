@@ -8,6 +8,10 @@ import 'package:ihunt/vistas/registerRoom.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
+
+//Permisos de localizacion
+import 'package:location_permissions/location_permissions.dart';
+
 // Vistas de inquilino
 import 'package:ihunt/vistas/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
@@ -25,9 +29,7 @@ import 'vistas/login.dart';
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
-
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
   bool isLogged = (prefs.getBool('isLogged') ?? false) ;
 
   var home;
