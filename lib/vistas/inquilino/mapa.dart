@@ -3,12 +3,11 @@
 // found in the LICENSE file.
 
 // ignore_for_file: public_member_api_docs
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/userView.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+//import 'package:location/location.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -28,25 +27,24 @@ class MapSample extends StatefulWidget {
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
 
+
+  //var location = Location();
+  
+
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(18.92468751419534, -99.21812706731137),
     zoom: 14.4746,
   );
 
   static final CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
+      target: LatLng(18.92468751419534, -99.21812706731137),
       tilt: 59.440717697143555,
+      
       zoom: 19.151926040649414);
 
-  /*
-  Future backToUser() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => User()),
-    );
+  
 
-  }*/
 
   Future backToUser() async {
       Navigator.pop(context);
@@ -55,6 +53,8 @@ class MapSampleState extends State<MapSample> {
         MaterialPageRoute(builder: (context) => User()),
         );
     }
+
+   
 
   @override
   Widget build(BuildContext context) {

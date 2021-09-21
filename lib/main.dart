@@ -10,7 +10,7 @@ import 'dart:async';
 
 
 //Permisos de localizacion
-import 'package:location_permissions/location_permissions.dart';
+//import 'package:location_permissions/location_permissions.dart';
 
 // Vistas de inquilino
 import 'package:ihunt/vistas/userView.dart'; // principal
@@ -34,7 +34,7 @@ Future<void> main() async {
 
   var home;
   if(isLogged)
-    home = User();
+    home = MapSample();//User();
   else
     home = LoginPage() ;
 
