@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/userView.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 //import 'package:location/location.dart';
+import 'package:location_permissions/location_permissions.dart';
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -28,7 +30,7 @@ class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
 
 
-  //var location = Location();
+  var permission = LocationPermissions().requestPermissions();
   
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -54,7 +56,11 @@ class MapSampleState extends State<MapSample> {
         );
     }
 
-   
+  
+  
+
+  
+
 
   @override
   Widget build(BuildContext context) {
