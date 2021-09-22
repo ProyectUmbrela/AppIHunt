@@ -2,8 +2,7 @@
 //import 'package:js/js.dart';
 
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/landlordView.dart';
-import 'package:ihunt/vistas/registerRoom.dart';
+import 'vistas/propietario/registerRoom.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -17,6 +16,8 @@ import 'package:ihunt/vistas/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:ihunt/vistas/inquilino/mapa.dart';
 
+// VISTA PROPIETARIO
+import 'vistas/propietario/landlordView.dart';
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
@@ -40,10 +41,11 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     title: 'i-hunt',
-    home: home,
+    home: Landlord(),
     routes: {
       '/login' : (context) => LoginPage(),
       '/user' : (context) => User(),
+      '/landlord': (context) => Landlord(),
       '/register' : (context) => Register(),
       '/lugares': (context) => Lugares(),
       '/mapa' : (context) => MapSample()
