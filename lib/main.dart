@@ -41,14 +41,15 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     title: 'i-hunt',
-    home: Landlord(),
+    home: Register(),
     routes: {
       '/login' : (context) => LoginPage(),
       '/user' : (context) => User(),
       '/landlord': (context) => Landlord(),
       '/register' : (context) => Register(),
       '/lugares': (context) => Lugares(),
-      '/mapa' : (context) => MapSample()
+      '/mapa' : (context) => MapSample(),
+      '/registerRoom' : (context) => RegisterRoom(),
     },
 
   ));
