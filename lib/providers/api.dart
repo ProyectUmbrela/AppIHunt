@@ -6,6 +6,8 @@ class Api {
   String _url = 'https://appiuserstest.herokuapp.com/ihunt';
   String _register = '/register';
   String _login = '/login';
+  String _registerRoom = '/registerRoom';
+
   Map<String, String> _headers = {"Content-type": "application/json"};
 
   Future<dynamic> registerPost(data) async {
@@ -21,4 +23,12 @@ class Api {
 
     return response;
   }
+
+  Future<dynamic> RegisterRoomPost(data) async {
+    var response = await http.post('https://appiuserstest.herokuapp.com/hunt/registerRoom',
+        body: data, headers: this._headers);
+
+    return response;
+  }
+
 }

@@ -28,3 +28,14 @@ String validatePassword(String value, value2) {
   }
   return null;
 }
+
+String numberValidator(String value) {
+  if(value == null) {
+    return null;
+  }
+  final n = double.tryParse(value);
+  if(n == null) {
+    return '"$value" is not a valid number';
+  }
+  return null;
+}
