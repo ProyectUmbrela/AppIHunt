@@ -25,7 +25,7 @@ class Api {
   }
 
   Future<dynamic> RegisterRoomPost(data) async {
-    var response = await http.post('https://appiuserstest.herokuapp.com/hunt/registerRoom',
+    var response = await http.post(Uri.parse('https://appiuserstest.herokuapp.com/hunt/registerRoom'),
         body: data, headers: this._headers);
 
     return response;

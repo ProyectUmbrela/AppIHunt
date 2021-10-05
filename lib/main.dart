@@ -59,7 +59,7 @@ Future<void> main() async {
       '/register' : (context) => Register(),
       '/lugares': (context) => Lugares(),
       '/mapa' : (context) => MapSample(),
-      '/detalles': (context) => DetallesHab()
+      '/detalles': (context) => DetallesHab(),
       '/registerRoom' : (context) => RegisterRoom(),
 
     },
