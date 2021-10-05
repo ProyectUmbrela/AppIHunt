@@ -1,22 +1,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ihunt">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>   <!--TO GET CURRENT LOCATION -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!--TO GET CURRENT LOCATION -->
     <uses-permission android:name="android.permission.INTERNET"/>
     
+    
+
    <application
-        android:label="ihunt"
+        android:label="IHunt - Android"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- ********************************************************* -->
         <!-- User permissions to use Google Maps -->
         <meta-data android:name="com.google.android.geo.API_KEY"
           android:value="AIzaSyAW7kgufUBd540TQ4Edbe0crkb3Uqpqxxo"/>
-        <!--
-        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-        <uses-permission android:name="android.permission.INTERNET"/>
-        -->
-        <!-- ********************************************************* -->
+
+
+        <!-- https://developers.google.com/maps/documentation/android-sdk/config -->
+        <meta-data
+          android:name="com.google.android.gms.version"
+          android:value="@integer/google_play_services_version" />
 
 
 

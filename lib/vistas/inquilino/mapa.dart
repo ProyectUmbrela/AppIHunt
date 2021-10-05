@@ -7,8 +7,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/userView.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:location/location.dart';
+import 'package:geocoder/geocoder.dart';
+import "package:latlong/latlong.dart" as latLng;
 import 'package:location_permissions/location_permissions.dart';
+import 'package:location/location.dart' as LocationManager;
 
 
 class MyApp extends StatelessWidget {
@@ -26,41 +28,49 @@ class MapSample extends StatefulWidget {
   State<MapSample> createState() => MapSampleState();
 }
 
+
+
+
 class MapSampleState extends State<MapSample> {
   Completer<GoogleMapController> _controller = Completer();
-
+  final Set<Marker> listMarkers = {};
+  BitmapDescriptor customIcon;
 
   var permission = LocationPermissions().requestPermissions();
   
 
+
+
+
+
+  Future<LatLng> getUserLocation() async {
+    LocationManager.LocationData currentLocation;
+    final location = LocationManager.Location();
+    try {
+      currentLocation = await location.getLocation();
+      final lat = currentLocation.latitude;
+      final lng = currentLocation.longitude;
+      final center = LatLng(lat, lng);
+      return center;
+    } on Exception {
+      currentLocation = null;
+      return null;
+    }
+  }
+
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(18.92468751419534, -99.21812706731137),
+    target: LatLng(18.9242095, -99.21812706731137),
     zoom: 14.4746,
+    
   );
-
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(18.92468751419534, -99.21812706731137),
-      tilt: 59.440717697143555,
-      
-      zoom: 19.151926040649414);
-
-  
-
 
   Future backToUser() async {
       Navigator.pop(context);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => User()),
-        );
-    }
-
-  
-  
-
-  
-
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,23 +87,8 @@ class MapSampleState extends State<MapSample> {
       ),
       body: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      /*
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ),
-    */
+        initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
+        compassEnabled: true),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
