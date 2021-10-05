@@ -7,6 +7,10 @@ import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'landlordView.dart';
+
 class RegisterRoom extends StatefulWidget {
   @override
   _RegisterRoomState createState() => _RegisterRoomState();
@@ -14,6 +18,24 @@ class RegisterRoom extends StatefulWidget {
 
 
 class _RegisterRoomState extends State<RegisterRoom> {
+  void setData() async{
+    var sharedPreferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      nombre = sharedPreferences.getString("nombre") ?? "Error";
+      id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+    });
+  }
+
+  // VARIABLES DE SESION
+  String id_usuario;
+  String nombre;
+
+  @override
+  void initState(){
+    setData();
+  }
+
 
   final formKey = new GlobalKey<FormState>();
 
@@ -58,17 +80,14 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final services = TextFormField(
       autofocus: false,
       controller: servicesCtrl,
-      obscureText: true,
       onSaved: (value) => _services = value,
-      decoration:
-      buildInputDecoration("Servicios", Icons.local_laundry_service),
+      decoration: buildInputDecoration("Servicios", Icons.local_laundry_service),
     );
 
     final description = TextFormField(
       autofocus: false,
       controller: descriptionCtrl,
       onSaved: (value) => _description = value,
-      obscureText: true,
       decoration:
       buildInputDecoration("Descripción", Icons.description),
     );
@@ -76,8 +95,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final price = TextFormField(
       autofocus: false,
       controller: priceCtrl,
+      validator: numberValidator,
       onSaved: (value) => _price = value,
-      obscureText: true,
       decoration:
       buildInputDecoration("Precio", Icons.monetization_on),
     );
@@ -85,7 +104,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
       autofocus: false,
       controller: termsCtrl,
       onSaved: (value) => _terms = value,
-      obscureText: true,
       decoration:
       buildInputDecoration("Términos", Icons.add_alert),
     );
@@ -157,27 +175,41 @@ class _RegisterRoomState extends State<RegisterRoom> {
         form.save();
         Api _api = Api();
 
-        var date = new DateTime.now();
-        final msg = jsonEncode({
-          'idhabitación': roomidCtrl.text,
-          'direccion': adressCtrl.text,
-          'dimension': dimensionsCtrl.text,
-          'servicios': servicesCtrl.text,//luz, inter, agu cal, agua fr, gas
-          'descripcion': descriptionCtrl.text,
-          'precio' : priceCtrl.text,
-          'terminos' : termsCtrl.text,
-          'fecharegistro': date
+        print("############# JSON ");
+        print({
+          "idhabitacion": roomidCtrl.text,
+          "idpropietario": id_usuario,
+          "direccion": adressCtrl.text,
+          "dimension": dimensionsCtrl.text,
+          "servicios": servicesCtrl.text,
+          "descripcion": descriptionCtrl.text,
+          "precio": double.parse(priceCtrl.text),
+          "terminos": termsCtrl.text
         });
 
-        print(msg);
+        final msg = jsonEncode({
+          "idhabitacion": roomidCtrl.text,
+          "idpropietario": id_usuario,
+          "direccion": adressCtrl.text,
+          "dimension": dimensionsCtrl.text,
+          "servicios": servicesCtrl.text,
+          "descripcion": descriptionCtrl.text,
+          "precio": double.parse(priceCtrl.text),
+          "terminos": termsCtrl.text
+        });
 
-        var response = await _api.registerPost(msg);
+        var response = await _api.RegisterRoomPost(msg);
         Map data = jsonDecode(response.body);
+
+        print("################# ESTATUS CODE: ");
+        print(response.statusCode);
 
         if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
-          Navigator.pushReplacementNamed(context, '/homeS');
+          Navigator.push(context, new MaterialPageRoute(
+              builder: (context) => new Landlord())
+          );
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
