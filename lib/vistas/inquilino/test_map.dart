@@ -1,8 +1,6 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_core/firebase_core.dart';
-//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -13,7 +11,6 @@ import 'package:location/location.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 // to get the current location
-//import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -44,16 +41,15 @@ class MyHomePage extends State<MyMaps> {
         ImageConfiguration(),
         'assets/marker_1.png');
   }
-
+  /*
   void addingMarker(latitude, longitude) async{
-
     FirebaseFirestore.instance
         .collection("marker_rent").add({
       'coords' : new GeoPoint(latitude=latitude, longitude=longitude)   //[latitude, longitude]
     }).then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
-
   }
+  */
 
   void initMarker(specify, specifyId) async{
 
@@ -81,14 +77,13 @@ class MyHomePage extends State<MyMaps> {
 
   void getMarkerData() async{
 
-    var locations = await locationFromAddress("Civac, Jiutepec, Mor.");
-    print("########################################");
-    double lat = locations[0].latitude;
+    //var locations = await locationFromAddress("Civac, Jiutepec, Mor.");
+    /*double lat = locations[0].latitude;
     double lngt = locations[0].longitude;
     print("====> lat: ${lat}");
     print("====> lngt: ${lngt}");
-    addingMarker(lat, lngt);
-    print("########################################");
+    addingMarker(lat, lngt);*/
+
     FirebaseFirestore.instance
         .collection("marker_rent")
         .where("coords", isNull: false)
@@ -187,15 +182,6 @@ class MyHomePage extends State<MyMaps> {
     controller.setMapStyle(_mapStyle);
   }
 
-
-
 }
-
-
-
-
-
-
-
 
 
