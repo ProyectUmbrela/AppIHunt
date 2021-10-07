@@ -2,7 +2,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:location/location.dart';
+
+import 'package:location/location.dart';
 import 'package:ihunt/vistas/userView.dart';
 
 
@@ -10,7 +11,8 @@ import 'package:ihunt/vistas/userView.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 // to get the current location
-//import 'package:geocoding/geocoding.dart';
+
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 
