@@ -35,15 +35,15 @@ Future<void> main() async {
 
   var home;
   if(isLogged)
-    home = MapSample();
+    home = MyMaps();//MapSample();
   else
-    home = LoginPage() ;
+    home = MyMaps();
 
   runApp(MaterialApp(
     title: 'i-hunt',
 
 
-    home: LoginPage(),
+    home: MyMaps(),
 
     routes: {
       '/login' : (context) => LoginPage(),
