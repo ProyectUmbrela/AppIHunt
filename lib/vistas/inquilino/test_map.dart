@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:location/location.dart';
+//import 'package:location/location.dart';
 import 'package:ihunt/vistas/userView.dart';
 
 
@@ -12,8 +12,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 // to get the current location
 
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geocoding/geocoding.dart';
+//import 'package:geolocator/geolocator.dart';
 
 
 class MyMaps extends StatefulWidget {
@@ -102,6 +102,7 @@ class MapsPage extends State<MyMaps> {
   }
 
   //GET THE CURRENT POSITION
+  /*
   Future<Position> _getGeoLocationPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -134,7 +135,7 @@ class MapsPage extends State<MyMaps> {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
-  }
+  }*/
 
 
   void setStyleMap() async{
