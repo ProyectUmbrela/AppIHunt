@@ -1,15 +1,8 @@
-//import 'dart:js';
-//import 'package:js/js.dart';
-
 import 'package:flutter/material.dart';
 import 'vistas/propietario/registerRoom.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
-
-//Permisos de localizacion
-//import 'package:location_permissions/location_permissions.dart';
 
 // Vistas de inquilino
 import 'package:ihunt/vistas/userView.dart'; // principal
@@ -42,15 +35,15 @@ Future<void> main() async {
 
   var home;
   if(isLogged)
-    home = MapSample();
+    home = MyMaps();//MapSample();
   else
-    home = LoginPage() ;
+    home = MyMaps();
 
   runApp(MaterialApp(
     title: 'i-hunt',
 
 
-    home: LoginPage(),
+    home: MyMaps(),
 
     routes: {
       '/login' : (context) => LoginPage(),
@@ -59,8 +52,8 @@ Future<void> main() async {
       '/register' : (context) => Register(),
       '/lugares': (context) => Lugares(),
       '/mapa' : (context) => MapSample(),
-      '/detalles': (context) => DetallesHab()
-      '/registerRoom' : (context) => RegisterRoom(),
+      '/detalles': (context) => DetallesHab(),
+      '/registerRoom' : (context) => RegisterRoom()
 
     },
 
