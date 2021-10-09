@@ -7,7 +7,6 @@ import 'dart:async';
 // Vistas de inquilino
 import 'package:ihunt/vistas/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
-import 'package:ihunt/vistas/inquilino/mapa.dart';
 import 'package:ihunt/vistas/inquilino/test_map.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
 
@@ -32,26 +31,35 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLogged = (prefs.getBool('isLogged') ?? false);
+  String tipo_usuario = prefs.getString("Tipo");
+  var home_view;
+  if((isLogged) && (tipo_usuario == 'Usuario')){
+    print("LOGEADO COMO USUARIO");
+    home_view = UserView();
+  }
+  if((isLogged) && (tipo_usuario == 'Propietario')){
+    print("LOGEADO COMO PROPIETARIO");
+    home_view = Landlord();
+  }
 
-  var home;
-  if(isLogged)
-    home = MyMaps();//MapSample();
-  else
-    home = MyMaps();
+  else{
+    home_view = LoginPage();
+  }
+
+  //else vista principal
+
 
   runApp(MaterialApp(
     title: 'i-hunt',
-
-
-    home: MyMaps(),
+    home: home_view,
 
     routes: {
       '/login' : (context) => LoginPage(),
-      '/user' : (context) => User(),
+      '/user' : (context) => UserView(),
       '/landlord': (context) => Landlord(),
       '/register' : (context) => Register(),
       '/lugares': (context) => Lugares(),
-      '/mapa' : (context) => MapSample(),
+      '/mapa' : (context) => MyMaps(),
       '/detalles': (context) => DetallesHab(),
       '/registerRoom' : (context) => RegisterRoom()
 

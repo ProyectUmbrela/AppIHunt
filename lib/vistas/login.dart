@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,9 @@ import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+
+
 
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
@@ -24,33 +28,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
-
-  /*
-  Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          /*boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],*/
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-      child: Text(
-        'Ingresar',
-        style: TextStyle(fontSize: 20, color: Colors.black),
-      ),
-    );
-  }
-  */
 
   Widget _divider() {
     return Container(
@@ -90,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext builderContext) {
         Future.delayed(Duration(seconds: seconds), () {
-          Navigator.of(context).pop();
+          //Navigator.of(context).pop();
         });
         return AlertDialog(
           // Retrieve the text the that user has entered by using the
@@ -106,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
       _saving = true;
     });
     //print('submitting to backend...');
-    new Future.delayed(new Duration(seconds: 4), () {
+    new Future.delayed(new Duration(seconds: 2), () {
       setState(() {
         _saving = false;
       });
@@ -137,33 +114,31 @@ class _LoginPageState extends State<LoginPage> {
     var response = await _api.loginPost(body);
     int statusCode = response.statusCode;
 
-    //String responseBody = response.body;
-    //print("###########################");
     var resp = json.decode(response.body);
 
-    //print(resp['access_token']);
+
+    var sharedPreferences = await SharedPreferences.getInstance();
     if (statusCode == 201) {
 
-      var sharedPreferences = await SharedPreferences.getInstance();
+
       sharedPreferences.setBool("isLogged", true);
       sharedPreferences.setString("nombre", resp['nombre']);
       sharedPreferences.setString("idusuario", resp['idusuario']);
+      sharedPreferences.setString("Tipo", resp['Tipo']);
 
       if (resp['Tipo'] == 'Propietario') {
         Navigator.pushReplacementNamed(context, '/landlord');
       }
       if (resp['Tipo'] == 'Usuario') {
-        //Navigator.of(context).pop();
         Navigator.pushReplacementNamed(context, '/user');
        
       }
 
-      //Navigator.push(
-      //  context,
-      //  MaterialPageRoute(builder: (context) => Landlord()),
-      //);
     } else {
+      _saving = false;
+      sharedPreferences.setBool("isLogged", false);
       _showDialog(2, "El usuario o contraseña son incorrectos");
+
     }
   }
 
@@ -173,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
 
     final emailField = TextFormField(
-        autofocus: false,
+        autofocus: true,
         controller: myControllerEmail,
         decoration: buildInputDecoration("Correo", Icons.email));
 
@@ -221,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   */
-
+    /*
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
@@ -245,15 +220,120 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   //space
                   loginbuton,
-                  SizedBox(
+                  /*SizedBox(
                     height: 35.0,
-                  ),
+                  ),*/
                   _divider(),
                 ],
               ),
             ),
           ),
           inAsyncCall: _saving),
+    );*/
+    bool _isInAsyncCall = false;
+
+    bool _isInvalidAsyncUser = false; // managed after response from server
+    bool _isInvalidAsyncPass = false; // managed after response from server
+
+    String _username;
+    String _password;
+    bool _isLoggedIn = false;
+    void _submit() {
+      //if (_loginFormKey.currentState.validate()) {
+//        _loginFormKey.currentState.save();
+
+        // dismiss keyboard during async call
+        FocusScope.of(context).requestFocus(new FocusNode());
+
+        // start the modal progress HUD
+        setState(() {
+          _isInAsyncCall = true;
+        });
+
+        // Simulate a service call
+        Future.delayed(Duration(seconds: 1), () {
+          final _accountUsername = 'username1';
+          final _accountPassword = 'password1';
+          setState(() {
+            if (_username == _accountUsername) {
+              _isInvalidAsyncUser = false;
+              if (_password == _accountPassword) {
+                // username and password are correct
+                _isInvalidAsyncPass = false;
+                _isLoggedIn = true;
+              } else
+                // username is correct, but password is incorrect
+                _isInvalidAsyncPass = true;
+            } else {
+              // incorrect username and have not checked password result
+              _isInvalidAsyncUser = true;
+              // no such user, so no need to trigger async password validator
+              _isInvalidAsyncPass = false;
+            }
+            // stop the modal progress HUD
+            _isInAsyncCall = false;
+          });
+          //if (_isLoggedIn)
+            // do something
+
+        });
+      //}
+    }
+
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: ModalProgressHUD(
+          child: Container(
+            child: SingleChildScrollView(
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(60.0),
+
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Correo o usuario"),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    child: emailField,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Contraseña"),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    child: passwordField,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: loginbuton,
+                  )
+                ],
+              ),
+            ),
+          ),
+          inAsyncCall: _saving
+      ),
     );
+
+
+
+
   }
 }

@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_d
+/*
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/userView.dart';
@@ -11,8 +12,9 @@ import 'package:geocoder/geocoder.dart';
 import "package:latlong/latlong.dart" as latLng;
 import 'package:location_permissions/location_permissions.dart';
 import 'package:location/location.dart' as LocationManager;
+*/
 
-
+/*
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,10 +41,6 @@ class MapSampleState extends State<MapSample> {
   var permission = LocationPermissions().requestPermissions();
   
 
-
-
-
-
   Future<LatLng> getUserLocation() async {
     LocationManager.LocationData currentLocation;
     final location = LocationManager.Location();
@@ -68,7 +66,7 @@ class MapSampleState extends State<MapSample> {
       Navigator.pop(context);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => User()),
+        MaterialPageRoute(builder: (context) => UserView()),
       );
   }
 
@@ -80,7 +78,7 @@ class MapSampleState extends State<MapSample> {
          // icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => {
               Navigator.of(context).pop(),
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>User()))
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserView()))
             }
         ), 
         title: Text("Volver"),
@@ -92,3 +90,4 @@ class MapSampleState extends State<MapSample> {
     );
   }
 }
+*/

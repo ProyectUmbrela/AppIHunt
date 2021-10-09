@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ihunt/vistas/inquilino/mapa.dart';
+import 'package:ihunt/vistas/inquilino/test_map.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-class User extends StatefulWidget {
+class UserView extends StatefulWidget {
   @override
   _UserState createState() => _UserState();
 }
 
-class _UserState extends State<User> {
+class _UserState extends State<UserView> {
 //class ProfileRouteState extends State<ProfileRoute> {
 
   //var SharedPreferences = sharedPreferences;
@@ -20,6 +20,7 @@ class _UserState extends State<User> {
 
   String id_usuario;
   String nombre;
+  String tipo_usuario;
 
   @override
   void initState(){
@@ -33,6 +34,7 @@ class _UserState extends State<User> {
     setState(() {
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+      tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
     });
   }
 
@@ -65,7 +67,7 @@ class _UserState extends State<User> {
 
   @override
   Widget build(BuildContext context) {
-
+    print(" =========> ${tipo_usuario}");
     final lugaresbutton = Material(
       
       elevation: 5.0,
@@ -101,7 +103,7 @@ class _UserState extends State<User> {
         //onPressed: () => _{},
         
         onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MapSample()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyMaps()));
         },
         child: Text("Buscar",
             textAlign: TextAlign.center

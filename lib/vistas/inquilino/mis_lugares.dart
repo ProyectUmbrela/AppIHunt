@@ -116,7 +116,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
          // icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => {
               Navigator.of(context).pop(),
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>User()))
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserView()))
             }
         ), 
         title: Text("Volver"),

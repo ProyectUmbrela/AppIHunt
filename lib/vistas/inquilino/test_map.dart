@@ -2,8 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-//import 'package:location/location.dart';
 import 'package:ihunt/vistas/userView.dart';
 
 
@@ -11,7 +9,6 @@ import 'package:ihunt/vistas/userView.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 // to get the current location
-
 //import 'package:geocoding/geocoding.dart';
 //import 'package:geolocator/geolocator.dart';
 
@@ -25,9 +22,6 @@ class MyMaps extends StatefulWidget {
 
 
 class MapsPage extends State<MyMaps> {
-
-
-
 
   //style map
   String _mapStyle;
@@ -47,35 +41,26 @@ class MapsPage extends State<MyMaps> {
     Navigator.pop(context);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => User()),
+      MaterialPageRoute(builder: (context) => UserView()),
     );
   }
 
 
   //void initMarker(specify, specifyId) async{
-  void initMarker(position, specifyId, num_hab) async{
+  void initMarker(position, specifyId, numHab) async{
     var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(markerIdVal);
-    /*
-    final Marker marker = Marker(
-        markerId: markerId,
-        position: LatLng(
-            specify['coords'].latitude,
-            specify['coords'].longitude),
-        icon: _mapMarker,
-        infoWindow: InfoWindow(title: "En renta")
-    );*/
 
     final Marker marker = Marker(
         markerId: markerId,
         position: position,
         icon: _mapMarker,
-        infoWindow: InfoWindow(title: "${num_hab} habitaciones en renta")
+        infoWindow: InfoWindow(title: "${numHab} habitaciones en renta")
     );
 
-    //setState(() {
-      _markers[markerId] = marker;
-    //});
+
+    _markers[markerId] = marker;
+
 
   }
 
@@ -146,7 +131,7 @@ class MapsPage extends State<MyMaps> {
 
 
   void initState(){
-    //getMarkerData();
+
     super.initState();
     setStyleMap();
     setCustomMarker();
@@ -155,30 +140,6 @@ class MapsPage extends State<MyMaps> {
 
   @override
   Widget build(BuildContext context){
-  /*
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          onPressed: () => {
-            Navigator.of(context).pop(),
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>User()))
-          },
-        ),
-        title: Text("Volver"),
-      ),
-      body: SafeArea(
-          child:GoogleMap(
-            myLocationButtonEnabled: true,
-            markers: Set<Marker>.of(markers.values),
-            mapType: MapType.normal,
-            //compassEnabled: true,
-            initialCameraPosition: initCameraPosition,
-            onMapCreated: _onMapCreated,
-          )
-      ),
-    );*/
-
-
     Set<Marker> markers = Set();
 
     return Scaffold(
@@ -186,7 +147,7 @@ class MapsPage extends State<MyMaps> {
           leading: BackButton(
             onPressed: () => {
               Navigator.of(context).pop(),
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>User()))
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserView()))
             },
           ),
           title: Text("Volver"),
@@ -207,20 +168,12 @@ class MapsPage extends State<MyMaps> {
 
                   double lat = snapshot.data.docs[i]['coords'].latitude;
                   double lng = snapshot.data.docs[i]['coords'].longitude;
-                  var num_hab = snapshot.data.docs[i]['habitaciones'];
+                  var numHab = snapshot.data.docs[i]['habitaciones'];
                   var latLng = LatLng(lat, lng);
 
-                  /*markers
-                      .add(Marker(markerId: MarkerId("poss"), position: latLng));*/
-
-                  initMarker(latLng, snapshot.data.docs[i].id, num_hab);
-
+                  initMarker(latLng, snapshot.data.docs[i].id, numHab);
 
                 }
-                // Check if location is valid
-                /*if (location == null) {
-                  return Text("There was no location data");
-                }*/
 
                 return GoogleMap(
                   myLocationButtonEnabled: true,
