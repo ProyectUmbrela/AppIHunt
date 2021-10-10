@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:ihunt/vistas/inquilino/test_map.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:async';
 
 
 class UserView extends StatefulWidget {
@@ -12,11 +12,6 @@ class UserView extends StatefulWidget {
 }
 
 class _UserState extends State<UserView> {
-//class ProfileRouteState extends State<ProfileRoute> {
-
-  //var SharedPreferences = sharedPreferences;
-  // "idusuario": "fredy",
-  // "nombre": "fredydemo"
 
   String id_usuario;
   String nombre;
@@ -46,7 +41,7 @@ class _UserState extends State<UserView> {
 
 
 
-  Widget getRow(String stringval, double textSize , double opacity){
+  Widget getRow(String stringval, double textSize, double opacity){
       return Opacity(
         opacity: opacity,
         child:  Container(
@@ -63,11 +58,9 @@ class _UserState extends State<UserView> {
     }
 
 
-  
-
   @override
   Widget build(BuildContext context) {
-    print(" =========> ${tipo_usuario}");
+    //print(" =========> ${tipo_usuario}");
     final lugaresbutton = Material(
       
       elevation: 5.0,
@@ -83,12 +76,10 @@ class _UserState extends State<UserView> {
         },
         child: Text("Mis lugares",
             textAlign: TextAlign.center
-            
             //style: style.copyWith(color: Colors.white)),
       )
       ),
     );
-
 
     final buscarbutton = Material(
       
@@ -99,15 +90,12 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
-        //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        //onPressed: () => _{},
-        
         onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MyMaps()));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context)=>MyMaps()));
         },
         child: Text("Buscar",
             textAlign: TextAlign.center
-            
             //style: style.copyWith(color: Colors.white)),
       )
       ),
@@ -121,8 +109,6 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
-        //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        //onPressed: () => _{},
         onPressed: ()=>{},
         child: Text("Mensajes",
             textAlign: TextAlign.center
@@ -135,13 +121,15 @@ class _UserState extends State<UserView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hola $nombre'),
+        title: Text('$nombre'),
         actions: <Widget>[
           Row(
             children: <Widget>[
               Text("Salir"),
               new IconButton(
-                icon: Icon(Icons.exit_to_app, color: Colors.white),
+                icon: Icon(
+                    Icons.exit_to_app,
+                    color: Colors.white),
                 onPressed: _logout,
               )
             ],
@@ -183,26 +171,28 @@ class _UserState extends State<UserView> {
       ),
       floatingActionButton: Stack(
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(left:30),
+          Padding(
+            padding: EdgeInsets.only(left:30),
             child: Align(
               alignment: Alignment.bottomLeft,
               child: lugaresbutton,//Icon(Icons.camera_alt),),
             ),
           ),
-          Padding(padding: EdgeInsets.only(left:30, right: 0),
-            child:Align(
-            alignment: Alignment.bottomCenter,
-            child: buscarbutton,
+          Padding(
+              padding: EdgeInsets.only(left:30),
+              child:Align(
+                alignment: Alignment.bottomCenter,
+                child: buscarbutton,
           )),
-          Padding(padding: EdgeInsets.only(left:30, right: 0, bottom: 0),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: mensagesbutton,
+          Padding(
+              padding: EdgeInsets.only(left:30),
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: mensagesbutton,
           )),
         ],
       )
     );
   }
 
-  
 }

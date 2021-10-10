@@ -1,3 +1,4 @@
+//import 'dart:js';
 import 'package:flutter/material.dart';
 import 'vistas/propietario/registerRoom.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -33,17 +34,19 @@ Future<void> main() async {
   bool isLogged = (prefs.getBool('isLogged') ?? false);
   String tipo_usuario = prefs.getString("Tipo");
   var home_view;
-  if((isLogged) && (tipo_usuario == 'Usuario')){
+  if((isLogged) && (tipo_usuario == 'Usuario')) {
+    print("Value: $isLogged");
     print("LOGEADO COMO USUARIO");
     home_view = UserView();
   }
-  if((isLogged) && (tipo_usuario == 'Propietario')){
+  else if((isLogged) && (tipo_usuario == 'Propietario')){
     print("LOGEADO COMO PROPIETARIO");
     home_view = Landlord();
   }
 
   else{
-    home_view = LoginPage();
+    print("LOGGEADO: $isLogged");
+    home_view = MainScreen();
   }
 
   //else vista principal
@@ -61,7 +64,8 @@ Future<void> main() async {
       '/lugares': (context) => Lugares(),
       '/mapa' : (context) => MyMaps(),
       '/detalles': (context) => DetallesHab(),
-      '/registerRoom' : (context) => RegisterRoom()
+      '/registerRoom' : (context) => RegisterRoom(),
+      '/IHunt': (context) => MainScreen()
 
     },
 

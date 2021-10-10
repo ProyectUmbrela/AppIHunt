@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:ihunt/vistas/register.dart';
 
 
 
@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Text('or'),
+          Text('o'),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 5),
@@ -61,6 +61,65 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  Widget recuperarPass(){
+    return InkWell(
+      onTap: ()=> {},
+      child: Column(
+        children: <Widget>[
+          Container(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 30.0),
+              alignment: Alignment.topRight,
+              child: Text('¿Olvidaste tu contraseña?',
+                  style: TextStyle(
+                      fontSize: 14)),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _createAccountLabel() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Register()));
+
+        },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.all(15),
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "¿Aún no tienes una cuenta?",
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Registarme',
+              style: TextStyle(
+                  color: Color(0xfff79c4f),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 
   void _showDialog(seconds, message) {
     showDialog(
@@ -230,6 +289,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           inAsyncCall: _saving),
     );*/
+    /*
     bool _isInAsyncCall = false;
 
     bool _isInvalidAsyncUser = false; // managed after response from server
@@ -278,9 +338,9 @@ class _LoginPageState extends State<LoginPage> {
 
         });
       //}
-    }
+    }*/
 
-    final height = MediaQuery.of(context).size.height;
+    //final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
@@ -292,10 +352,11 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.all(60.0),
-
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0,
+                        horizontal: 30.0),
                     child: Container(
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -304,11 +365,15 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 30.0),
                     child: emailField,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0,
+                        horizontal: 30.0),
                     child: Container(
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -317,13 +382,24 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 30.0),
                     child: passwordField,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(30.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20.0,
+                        horizontal: 30.0),
                     child: loginbuton,
-                  )
+                  ),
+                  recuperarPass(),
+                  _divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(50.0),
+
+                  ),
+                  _createAccountLabel()
                 ],
               ),
             ),

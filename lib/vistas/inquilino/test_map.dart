@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ihunt/vistas/userView.dart';
-
+import 'dart:async';
 
 // style map
 import 'package:flutter/services.dart' show rootBundle;
@@ -46,7 +46,15 @@ class MapsPage extends State<MyMaps> {
   }
 
 
-  //void initMarker(specify, specifyId) async{
+  Widget displayInfoHab(){
+
+    return Card(
+      color: Colors.grey[800]
+    );
+
+  }
+
+
   void initMarker(position, specifyId, numHab) async{
     var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(markerIdVal);
@@ -55,12 +63,14 @@ class MapsPage extends State<MyMaps> {
         markerId: markerId,
         position: position,
         icon: _mapMarker,
-        infoWindow: InfoWindow(title: "${numHab} habitaciones en renta")
+        infoWindow: InfoWindow(
+            title: "${numHab} habitaciones en renta",
+            onTap: (){
+              displayInfoHab();
+            })
     );
 
-
     _markers[markerId] = marker;
-
 
   }
 
