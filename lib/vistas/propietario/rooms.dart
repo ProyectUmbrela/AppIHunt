@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/propietario/registerRoom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class rooms extends StatefulWidget {
   @override
@@ -7,10 +13,126 @@ class rooms extends StatefulWidget {
 }
 
 class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
+
+  void setData() async{
+    var sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      nombre = sharedPreferences.getString("nombre") ?? "Error";
+      id = sharedPreferences.getString("idusuario") ?? "Error";
+      //getRooms(id);
+    });
+  }
+
+  /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
+  Widget _buildActionButton(String title, Color color) {
+    return FlatButton(
+      child: Text(title),
+      textColor: color,
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _dialogTitle(String noty) {
+    return Text(noty);
+  }
+
+  List<Widget> _buildActions() {
+    return [_buildActionButton("Aceptar", Colors.blue)];
+  }
+
+  Widget _contentText(String texto) {
+    return Text(texto);
+  }
+
+  Widget _showCupertinoDialog(String texto, noty) {
+    return CupertinoAlertDialog(
+      title: _dialogTitle(noty),
+      content: _contentText(texto),
+      actions: _buildActions(),
+    );
+  }
+
+  Future<void> _cupertinoDialog(
+      BuildContext context, String texto, String noty) async {
+    return showCupertinoDialog<void>(
+      context: context,
+      builder: (_) => _showCupertinoDialog(texto, noty),
+    );
+  }
+
+  Widget _showMaterialDialog(String texto, String noty) {
+    return AlertDialog(
+      title: _dialogTitle(noty),
+      content: _contentText(texto),
+      actions: _buildActions(),
+    );
+  }
+
+  Future<void> _materialAlertDialog(
+      BuildContext context, String texto, String noty) async {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => _showMaterialDialog(texto, noty),
+    );
+  }
+  /***************************************************************************/
+
+  getRooms(id) async{
+    Api _api = Api();
+
+    final msg = jsonEncode({
+      "usuario": id
+    });
+    print(msg);
+
+    var response = await _api.GetRooms(msg);
+    Map data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+      debugPrint("Rooms get");
+      print(data);
+
+      setState(() {
+        rooms_ = data;
+        flag_room = 1;
+      });
+    } else {
+      setState(() {
+        rooms_ = data;
+        flag_room = 0;
+      });
+      if (Platform.isAndroid) {
+        //_materialAlertDialog(context, data['message'], 'Notificación');
+        print(response.statusCode);
+      } else if (Platform.isIOS) {
+        //_cupertinoDialog(context, data['message'], 'Notificación');
+      }
+    }
+  }
+
+
+  // VARIABLES DE SESION
+  String id;
+  String nombre;
+  Map<dynamic, dynamic> rooms_;
+  int flag_room;
+
+  @override
+  void initState(){
+    setData();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     String title = 'Lista de habitaciones';
+
     final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F'];
+
+    //print("################ ${rooms_.length}");
 
     return Scaffold(
         appBar: AppBar(
