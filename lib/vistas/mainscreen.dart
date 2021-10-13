@@ -1,3 +1,4 @@
+
 import 'package:ihunt/vistas/register.dart';
 import 'package:ihunt/vistas/login.dart';
 import 'package:flutter/material.dart';
@@ -57,3 +58,4 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
+

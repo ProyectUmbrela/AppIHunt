@@ -1,4 +1,4 @@
-//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +8,6 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/vistas/register.dart';
-
 
 
 //IMPORTAR FUNCIONES DE CARPETA utils
@@ -28,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
+
 
   Widget _divider() {
     return Container(
@@ -61,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
 
   Widget recuperarPass(){
     return InkWell(
@@ -141,13 +142,16 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _saving = true;
     });
+
     //print('submitting to backend...');
     new Future.delayed(new Duration(seconds: 2), () {
+
       setState(() {
         _saving = false;
       });
     });
   }
+
 
   onSuccess() async{
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -199,14 +203,42 @@ class _LoginPageState extends State<LoginPage> {
       _saving = false;
       sharedPreferences.setBool("isLogged", false);
       _showDialog(2, "El usuario o contraseña son incorrectos");
-
     }
   }
+  /*
+  Future _sendRequest(emailField, passwordField) async {
+    Api _api = Api();
+    _submit();
+    //print("====================");
+    //print(emailField.text);
+    //print(passwordField.text);
+    //print("====================");
+    final body = jsonEncode(
+        {'idusuario': emailField.text, 'contrasena': passwordField.text});
+
+    var response = await _api.loginPost(body);
+    int statusCode = response.statusCode;
+    statusCode = 201;
+    if (statusCode == 201) {
+      //_showDialog(1, "Loggeado");
+      //String responseBody = response.body;
+      //print(responseBody);
+      Navigator.pushReplacementNamed(context, '/landlord');
+      //Navigator.push(
+      //  context,
+      //  MaterialPageRoute(builder: (context) => Landlord()),
+      //);
+    } else {
+      _showDialog(2, "El usuario o contraseña son incorrectos");
+
+    }
+  }*/
 
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
+
 
     final emailField = TextFormField(
         autofocus: true,
@@ -257,6 +289,92 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   */
+
+    /*
+    return Scaffold(
+      body: ModalProgressHUD(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  label("Correo o usuario"),
+                  SizedBox(height: 15.0),
+                  emailField,
+                  SizedBox(height: 15.0),
+                  //space
+                  label("Contraseña"),
+                  SizedBox(height: 15.0),
+                  passwordField,
+                  SizedBox(
+                    height: 45.0,
+                  ),
+                  //space
+                  loginbuton,
+
+                  /*SizedBox(
+                    height: 35.0,
+                  ),*/
+                  _divider(),
+                ],
+              ),
+            ),
+          ),
+          inAsyncCall: _saving),
+    );*/
+    /*
+    bool _isInAsyncCall = false;
+
+    bool _isInvalidAsyncUser = false; // managed after response from server
+    bool _isInvalidAsyncPass = false; // managed after response from server
+
+    String _username;
+    String _password;
+    bool _isLoggedIn = false;
+    void _submit() {
+      //if (_loginFormKey.currentState.validate()) {
+//        _loginFormKey.currentState.save();
+
+        // dismiss keyboard during async call
+        FocusScope.of(context).requestFocus(new FocusNode());
+
+        // start the modal progress HUD
+        setState(() {
+          _isInAsyncCall = true;
+        });
+
+        // Simulate a service call
+        Future.delayed(Duration(seconds: 1), () {
+          final _accountUsername = 'username1';
+          final _accountPassword = 'password1';
+          setState(() {
+            if (_username == _accountUsername) {
+              _isInvalidAsyncUser = false;
+              if (_password == _accountPassword) {
+                // username and password are correct
+                _isInvalidAsyncPass = false;
+                _isLoggedIn = true;
+              } else
+                // username is correct, but password is incorrect
+                _isInvalidAsyncPass = true;
+            } else {
+              // incorrect username and have not checked password result
+              _isInvalidAsyncUser = true;
+              // no such user, so no need to trigger async password validator
+              _isInvalidAsyncPass = false;
+            }
+            // stop the modal progress HUD
+            _isInAsyncCall = false;
+          });
+          //if (_isLoggedIn)
+            // do something
+
+        });
+      //}
+    }*/
 
     //final height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -325,9 +443,6 @@ class _LoginPageState extends State<LoginPage> {
           inAsyncCall: _saving
       ),
     );
-
-
-
 
   }
 }
