@@ -55,24 +55,79 @@ class MapsPage extends State<MyMaps> {
   }
 
 
+
+
+
   void initMarker(position, specifyId, numHab) async{
     var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(markerIdVal);
 
-    final Marker marker = Marker(
-        markerId: markerId,
-        position: position,
-        icon: _mapMarker,
-        infoWindow: InfoWindow(
-            title: "${numHab} habitaciones en renta",
-            onTap: (){
-              displayInfoHab();
-            })
+    final Marker marker = new Marker(
+      markerId: markerId,
+      position: position,
+      icon: _mapMarker,
+      onTap: ()=> {/*
+        showDialog(
+          context: context,
+          builder: (BuildContext builderContext) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Align(
+                  child: SizedBox(
+                    width: 150,
+                    height: 150,
+                    child: Card(
+                      color: Colors.grey[800],
+                      child: InkWell(
+                        onTap: ()=>{},
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        )*/
+      },
+      infoWindow: InfoWindow(
+        snippet: "Ver más detalles",
+        title: "${numHab} habitaciones en renta",
+
+        onTap: (){
+          showDialog(
+            context: context,
+            builder: (BuildContext builderContext) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Align(
+                    child: SizedBox(
+                      width: 250,
+                      height: 250,
+                      child: Card(
+                        color: Colors.grey[800],
+                        child: Container(
+                          child: Image.network("https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg"),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        })
+
     );
 
     _markers[markerId] = marker;
 
   }
+
+
 
   static final CameraPosition initCameraPosition = CameraPosition(
       target: LatLng(18.9242095, -99.21812706731137),
@@ -141,7 +196,6 @@ class MapsPage extends State<MyMaps> {
 
 
   void initState(){
-
     super.initState();
     setStyleMap();
     setCustomMarker();
@@ -186,6 +240,7 @@ class MapsPage extends State<MyMaps> {
                 }
 
                 return GoogleMap(
+
                   myLocationButtonEnabled: true,
                   mapType: MapType.normal,
                   initialCameraPosition: initCameraPosition,
