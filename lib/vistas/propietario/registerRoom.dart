@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 //import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:location/location.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'landlordView.dart';
 
@@ -49,8 +53,33 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms;
 
+  // VARIABLES PARA COORDENADAS
+  double lat;
+  double lngt;
+
   @override
   Widget build(BuildContext context) {
+
+    void getLocation(address) async{
+      try {
+        var locations = await locationFromAddress(address);
+        lat = locations[0].latitude;
+        lngt = locations[0].longitude;
+      } catch(err){
+        lat = 46.8597000;
+        lngt = -97.2212000;
+      }
+    }
+
+    void addDocument(latitude, longitude) async{
+      FirebaseFirestore.instance.collection("marker_rent").add(
+        {
+          'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+          'habitaciones': 1
+        }
+      ).then((value) => print('User Added'))
+          .catchError((error) => print('Failed to add user: ${error}'));
+    }
 
     final roomId = TextFormField(
       autofocus: false,
@@ -175,18 +204,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
         form.save();
         Api _api = Api();
 
-        print("############# JSON ");
-        print({
-          "idhabitacion": roomidCtrl.text,
-          "idpropietario": id_usuario,
-          "direccion": adressCtrl.text,
-          "dimension": dimensionsCtrl.text,
-          "servicios": servicesCtrl.text,
-          "descripcion": descriptionCtrl.text,
-          "precio": double.parse(priceCtrl.text),
-          "terminos": termsCtrl.text
-        });
-
         final msg = jsonEncode({
           "idhabitacion": roomidCtrl.text,
           "idpropietario": id_usuario,
@@ -197,6 +214,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
           "precio": double.parse(priceCtrl.text),
           "terminos": termsCtrl.text
         });
+
+        getLocation(adressCtrl.text);
+        print('############################');
+        print("lat ${lat}  long ${lngt}");
+        addDocument(lat, lngt);
 
         var response = await _api.RegisterRoomPost(msg);
         Map data = jsonDecode(response.body);
