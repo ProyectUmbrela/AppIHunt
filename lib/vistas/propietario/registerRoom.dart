@@ -63,6 +63,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     void getLocation(address) async{
       try {
         var locations = await locationFromAddress(address);
+        print("########################QQQQQQQQQQQ ${address}");
         lat = locations[0].latitude;
         lngt = locations[0].longitude;
       } catch(err){
@@ -75,7 +76,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       FirebaseFirestore.instance.collection("marker_rent").add(
         {
           'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
-          'habitaciones': 1
+        'habitaciones': 1
         }
       ).then((value) => print('User Added'))
           .catchError((error) => print('Failed to add user: ${error}'));
@@ -215,7 +216,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           "terminos": termsCtrl.text
         });
 
-        getLocation(adressCtrl.text);
+        await getLocation(adressCtrl.text);
         print('############################');
         print("lat ${lat}  long ${lngt}");
         addDocument(lat, lngt);
