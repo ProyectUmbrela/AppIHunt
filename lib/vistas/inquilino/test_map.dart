@@ -5,6 +5,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ihunt/vistas/userView.dart';
 import 'dart:async';
 
+// slider images
+import 'package:carousel_slider/carousel_slider.dart';
+
 // style map
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -55,7 +58,14 @@ class MapsPage extends State<MyMaps> {
   }
 
 
-
+  List<String> fotosList = [
+    "https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg",
+    "https://awsrpia.s3.amazonaws.com/habitaciones/200093415_107240988265907_2391073375870101507_n.jpg",
+    "https://awsrpia.s3.amazonaws.com/habitaciones/201482550_532932834826458_3630072694624410304_n.jpg",
+    "https://awsrpia.s3.amazonaws.com/habitaciones/201763526_107240834932589_1701097239284879277_n.jpg",
+    "https://awsrpia.s3.amazonaws.com/habitaciones/201822557_532998261486582_8554378459947353905_n.jpg",
+    "https://awsrpia.s3.amazonaws.com/habitaciones/202073837_501458407829418_6563349131041000474_n.jpg"
+  ];
 
 
   void initMarker(position, specifyId, numHab) async{
@@ -66,30 +76,7 @@ class MapsPage extends State<MyMaps> {
       markerId: markerId,
       position: position,
       icon: _mapMarker,
-      onTap: ()=> {/*
-        showDialog(
-          context: context,
-          builder: (BuildContext builderContext) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Align(
-                  child: SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Card(
-                      color: Colors.grey[800],
-                      child: InkWell(
-                        onTap: ()=>{},
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        )*/
+      onTap: ()=> {
       },
       infoWindow: InfoWindow(
         snippet: "Ver más detalles",
@@ -105,12 +92,106 @@ class MapsPage extends State<MyMaps> {
                 children: <Widget>[
                   Align(
                     child: SizedBox(
-                      width: 250,
-                      height: 250,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.width * 1.1,
                       child: Card(
-                        color: Colors.grey[800],
+                        //color: Colors.grey[400],
                         child: Container(
-                          child: Image.network("https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg"),
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              CarouselSlider(
+                                options: CarouselOptions(
+                                    autoPlay: true
+                                ),
+                                items: fotosList.map(
+                                        (img) => Center(
+                                      child: Image.network(
+                                        img,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                ).toList(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                              ),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget> [
+                                      Text(
+                                        "Costo: \$ 2,500.00 mensual",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: 'Roboto',
+                                          letterSpacing: 0.5,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Servicios: Agua, Luz, Telefono",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: 'Roboto',
+                                          letterSpacing: 0.5,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Dirección: #####",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: 'Roboto',
+                                          letterSpacing: 0.5,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Titular: #####",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: 'Roboto',
+                                          letterSpacing: 0.5,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Teléfono: #####",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: 'Roboto',
+                                          letterSpacing: 0.5,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Detalles: #####",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w800,
+                                          fontFamily: 'Roboto',
+                                          letterSpacing: 0.5,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

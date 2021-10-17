@@ -54,7 +54,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     title: 'i-hunt',
-    home: MainScreen(),
+    home: home_view,//MainScreen(),
 
     routes: {
       '/login' : (context) => LoginPage(),
