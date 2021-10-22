@@ -3,18 +3,11 @@
 // found in the LICENSE file.
 
 // ignore_for_file: public_member_api_d
-/*
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/userView.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoder/geocoder.dart';
-import "package:latlong/latlong.dart" as latLng;
-import 'package:location_permissions/location_permissions.dart';
-import 'package:location/location.dart' as LocationManager;
-*/
 
-/*
+import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:async';
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -34,6 +27,10 @@ class MapSample extends StatefulWidget {
 
 
 class MapSampleState extends State<MapSample> {
+
+
+
+  /*
   Completer<GoogleMapController> _controller = Completer();
   final Set<Marker> listMarkers = {};
   BitmapDescriptor customIcon;
@@ -69,25 +66,61 @@ class MapSampleState extends State<MapSample> {
         MaterialPageRoute(builder: (context) => UserView()),
       );
   }
+  */
 
+
+
+
+
+
+  Future<void> listExample() async {
+    print("Initi");
+
+
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    firebase_storage.ListResult result =
+    await firebase_storage.FirebaseStorage.instance.ref('2vttDFuJU2pjBqiYhnL6').listAll();
+
+
+
+    result.items.forEach((firebase_storage.Reference ref) async {
+      print('Found file: $ref');
+      //downloadURLExample(ref);
+
+      final link = await ref.getDownloadURL();
+      print("===> $link");
+
+    });
+
+    /*result.prefixes.forEach((firebase_storage.Reference ref) {
+      print('Found directory: $ref');
+    });*/
+
+    print("CCCCCCCCCCCCCCCCCCCCC");
+
+  }
+
+  String img= "ihunt-d9d4c.appspot.com/o/2vttDFuJU2pjBqiYhnL6%2Fa.jpg?alt=media&token=a9d5b8e9-fbc2-43e0-b240-b704e7dd0398";
+  //gs://ihunt-d9d4c.appspot.com/2vttDFuJU2pjBqiYhnL6/a.jpg
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+
+
+
+
+    return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
-         // icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => {
-              Navigator.of(context).pop(),
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserView()))
-            }
-        ), 
+
         title: Text("Volver"),
+
       ),
-      body: GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: const CameraPosition(target: LatLng(0.0, 0.0)),
-        compassEnabled: true),
+      body: Container(
+        child: FloatingActionButton(
+          onPressed: ()=> listExample(),
+        )
+      )
     );
   }
 }
-*/
+
+

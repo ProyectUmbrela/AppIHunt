@@ -26,28 +26,22 @@ class infoHabitacion{
   String servicios;
   String costo;
   String detalles;
+  String direccion;
+  int habitaciones;
+  String titular;
 
 
   infoHabitacion(
-      this.servicios,
-      this.costo,
-      this.detalles);
+  this.servicios,
+  this.costo,
+  this.detalles,
+  this.direccion,
+  this.habitaciones,
+  this.titular);
 
 }
 
-class Habitacion {
-  String direccion;
-  String telefono;
-  String titular;
-  List<infoHabitacion> detalles;
 
-  Habitacion(
-      this.direccion,
-      this.telefono,
-      this.titular,
-      this.detalles
-      );
-}
 
 
 class MapsPage extends State<MyMaps> {
@@ -74,16 +68,6 @@ class MapsPage extends State<MyMaps> {
     );
   }
 
-
-  /*Widget displayInfoHab(){
-
-    return Card(
-      color: Colors.grey[800]
-    );
-
-  }*/
-
-
   List<String> fotosList = [
     "https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg",
     "https://awsrpia.s3.amazonaws.com/habitaciones/200093415_107240988265907_2391073375870101507_n.jpg",
@@ -99,9 +83,9 @@ class MapsPage extends State<MyMaps> {
 
     var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(markerIdVal);
-    Habitacion hab = habitacion;
-    infoHabitacion info = hab.detalles[0];
-    double sizeText = 15;
+    infoHabitacion info = habitacion;
+
+    double sizeText = 14;
 
     final Marker marker = new Marker(
       markerId: markerId,
@@ -111,7 +95,7 @@ class MapsPage extends State<MyMaps> {
       },
       infoWindow: InfoWindow(
         snippet: "Ver más detalles",
-        title: "${hab.detalles.length} habitaciones en renta",
+        title: "Habitación en Renta",
 
         onTap: (){
           showDialog(
@@ -124,7 +108,7 @@ class MapsPage extends State<MyMaps> {
                   Align(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.width * 1.1,
+                      height: MediaQuery.of(context).size.width * 1.0,
                       child: Card(
                         //color: Colors.grey[400],
                         child: Container(
@@ -158,50 +142,47 @@ class MapsPage extends State<MyMaps> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget> [
-                                        Text(
-                                          "Costo: \$ ${info.costo} mensual",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800,
-                                            fontFamily: 'Roboto',
-                                            letterSpacing: 0.5,
-                                            fontSize: sizeText,
-                                          ),
+                                        Row(
+                                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  "\$ ${info.costo} mensual",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w800,
+                                                    fontFamily: 'Roboto',
+                                                    letterSpacing: 0.5,
+                                                    fontSize: sizeText,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(10.0),
+                                            ),
+                                            Column(
+                                              children: <Widget>[
+                                                Text(
+                                                  "Titular: ${info.titular}",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w800,
+                                                    fontFamily: 'Roboto',
+                                                    letterSpacing: 0.5,
+                                                    fontSize: sizeText,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          "Titular: ${hab.titular}",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800,
-                                            fontFamily: 'Roboto',
-                                            letterSpacing: 0.5,
-                                            fontSize: sizeText,
-                                          ),
-                                        ),
+
                                         Text(
                                           "Incluye: ${info.servicios}",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800,
-                                            fontFamily: 'Roboto',
-                                            letterSpacing: 0.5,
-                                            fontSize: sizeText,
-                                          ),
-                                        ),
-
-                                        Text(
-                                          "Teléfono: ${hab.telefono}",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800,
-                                            fontFamily: 'Roboto',
-                                            letterSpacing: 0.5,
-                                            fontSize: sizeText,
-                                          ),
-                                        ),
-
-                                        Text(
-                                          "Dirección: ${hab.direccion}",
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w800,
@@ -220,6 +201,17 @@ class MapsPage extends State<MyMaps> {
                                             fontSize: sizeText,
                                           ),
                                         ),
+                                        Text(
+                                          "Dirección: ${info.direccion}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800,
+                                            fontFamily: 'Roboto',
+                                            letterSpacing: 0.5,
+                                            fontSize: sizeText,
+                                          ),
+                                        ),
+
                                       ],
                                     ),
                                   ),
@@ -322,7 +314,7 @@ class MapsPage extends State<MyMaps> {
                 .instance
                 .collection("marker_rent")
                 //.where("coords", isNull: false)
-                .where("habitaciones", isNotEqualTo: 1)
+                .where("habitaciones", isEqualTo: 1)
                   .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -338,10 +330,14 @@ class MapsPage extends State<MyMaps> {
                   var latLng = LatLng(lat, lng);
 
                   String direccion = snapshot.data.docs[i]['direccion'];
-                  String telefono = snapshot.data.docs[i]['telefono'];
+                  //String telefono = snapshot.data.docs[i]['telefono'];
                   String titular = snapshot.data.docs[i]['titular'];
-                  var listTab = snapshot.data.docs[i]['habitaciones'];
+                  String servicios = snapshot.data.docs[i]['servicios'];
+                  String costo = snapshot.data.docs[i]['costo'];
+                  String detalles = snapshot.data.docs[i]['detalles'];
+                  int habitaciones = snapshot.data.docs[i]['habitaciones'];
 
+                  /*
                   List<infoHabitacion> listaInfo = [];
                   for(int i=0; i<listTab.length; i++){
                     print(listTab[i]);
@@ -350,9 +346,15 @@ class MapsPage extends State<MyMaps> {
                     String detalles = listTab[i]['detalles'];
 
                     listaInfo.add(infoHabitacion(servicios, costo, detalles));
-                  }
+                  }*/
 
-                  Habitacion habitacion = Habitacion(direccion, telefono, titular, listaInfo);
+                  infoHabitacion habitacion = infoHabitacion(
+                      servicios,
+                      costo,
+                      detalles,
+                      direccion,
+                      habitaciones,
+                      titular);
 
                   //initMarker(latLng, snapshot.data.docs[i].id, numHab);
                   initMarker(latLng, snapshot.data.docs[i].id, habitacion);

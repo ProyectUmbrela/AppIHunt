@@ -6,6 +6,8 @@ import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
+import 'package:ihunt/vistas/inquilino/mapa.dart';
+
 
 class UserView extends StatefulWidget {
   @override
@@ -93,7 +95,17 @@ class _UserState extends State<UserView> {
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context)=>MyMaps()));
+            //###########################################
+            //###########################################
+            //###########################################
+            //###########################################
+              builder: (context)=>MapSample()));
+              //builder: (context)=>MyMaps()));
+            //###########################################
+            //###########################################
+            //###########################################
+            //###########################################
+
         },
         child: Text("Buscar",
             textAlign: TextAlign.center
