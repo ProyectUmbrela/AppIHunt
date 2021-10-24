@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ihunt/vistas/userView.dart';
@@ -42,8 +43,6 @@ class infoHabitacion{
 }
 
 
-
-
 class MapsPage extends State<MyMaps> {
 
   //style map
@@ -78,15 +77,15 @@ class MapsPage extends State<MyMaps> {
   ];
 
 
-  //void initMarker(position, specifyId, numHab) async{
+
   void initMarker(position, specifyId, habitacion) async{
 
-    var markerIdVal = specifyId;
-    final MarkerId markerId = MarkerId(markerIdVal);
+    //var markerIdVal = specifyId;
+    final MarkerId markerId = MarkerId(specifyId);
     infoHabitacion info = habitacion;
 
     double sizeText = 14;
-
+    var setList = await listExample(specifyId);
     final Marker marker = new Marker(
       markerId: markerId,
       position: position,
@@ -96,7 +95,6 @@ class MapsPage extends State<MyMaps> {
       infoWindow: InfoWindow(
         snippet: "Ver más detalles",
         title: "Habitación en Renta",
-
         onTap: (){
           showDialog(
             context: context,
@@ -122,13 +120,15 @@ class MapsPage extends State<MyMaps> {
                                   options: CarouselOptions(
                                       autoPlay: true
                                   ),
-                                  items: fotosList.map(
+                                  // listExample(specifyId)
+                                  //items: links_document.map(
+                                  items: setList.map(
                                           (img) => Center(
-                                        child: Image.network(
-                                          img,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
+                                            child: Image.network(
+                                              img,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
                                   ).toList(),
                                 ),
                                 Padding(
@@ -228,7 +228,6 @@ class MapsPage extends State<MyMaps> {
             },
           );
         })
-
     );
 
     _markers[markerId] = marker;
@@ -294,6 +293,40 @@ class MapsPage extends State<MyMaps> {
   }
 
 
+  //######################################################
+  //######################################################
+  //######################################################
+  //######################################################
+
+
+  Future<List> listExample(String document) async {
+
+    List<String> links_document = [];
+
+    firebase_storage.ListResult result =
+    await firebase_storage.FirebaseStorage.instance.ref(document).listAll();
+
+    result.items.forEach((firebase_storage.Reference ref) async {
+
+      final link = await ref.getDownloadURL();
+      //print("===> $link");
+      links_document.add(link);
+
+    });
+
+    /*result.prefixes.forEach((firebase_storage.Reference ref) {
+      print('Found directory: $ref');
+    });*/
+
+
+    return links_document;
+  }
+
+  //######################################################
+  //######################################################
+  //######################################################
+  //######################################################
+
   @override
   Widget build(BuildContext context){
     Set<Marker> markers = Set();
@@ -313,14 +346,29 @@ class MapsPage extends State<MyMaps> {
             stream: FirebaseFirestore
                 .instance
                 .collection("marker_rent")
-                //.where("coords", isNull: false)
-                .where("habitaciones", isEqualTo: 1)
+                .where("coords", isNull: false)
+                //.where("habitaciones", isEqualTo: 1)
                   .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 for(int i = 0; i < snapshot.data.docs.length; i++){
-                  print("=====> ${snapshot.data.docs[i].data()}");
+                  //print("=====> ${snapshot.data.docs[i].data()}");
+
+
+
+
+
+
+
+
                   //print("=====> ${snapshot.data.docs[i].id}");
+
+                  String id_document = snapshot.data.docs[i].id;
+                  //listExample(id_document);
+
+                  //var setList = listExample(id_document);
+
+
 
 
                   double lat = snapshot.data.docs[i]['coords'].latitude;
@@ -357,7 +405,10 @@ class MapsPage extends State<MyMaps> {
                       titular);
 
                   //initMarker(latLng, snapshot.data.docs[i].id, numHab);
-                  initMarker(latLng, snapshot.data.docs[i].id, habitacion);
+                  initMarker(
+                      latLng,
+                      snapshot.data.docs[i].id,
+                      habitacion);
 
                 }
 

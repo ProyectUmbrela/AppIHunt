@@ -68,18 +68,17 @@ class MapSampleState extends State<MapSample> {
   }
   */
 
+  List<String> links_document = [];
 
 
 
-
-
-  Future<void> listExample() async {
+  Future<void> listExample(String document) async {
     print("Initi");
 
-
+    // document = '2vttDFuJU2pjBqiYhnL6';
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     firebase_storage.ListResult result =
-    await firebase_storage.FirebaseStorage.instance.ref('2vttDFuJU2pjBqiYhnL6').listAll();
+    await firebase_storage.FirebaseStorage.instance.ref(document).listAll();
 
 
 
@@ -89,6 +88,7 @@ class MapSampleState extends State<MapSample> {
 
       final link = await ref.getDownloadURL();
       print("===> $link");
+      links_document.add(link);
 
     });
 
@@ -100,13 +100,12 @@ class MapSampleState extends State<MapSample> {
 
   }
 
-  String img= "ihunt-d9d4c.appspot.com/o/2vttDFuJU2pjBqiYhnL6%2Fa.jpg?alt=media&token=a9d5b8e9-fbc2-43e0-b240-b704e7dd0398";
-  //gs://ihunt-d9d4c.appspot.com/2vttDFuJU2pjBqiYhnL6/a.jpg
+
   @override
   Widget build(BuildContext context) {
 
 
-
+  String document = '2vttDFuJU2pjBqiYhnL6';
 
     return Scaffold(
       appBar: AppBar(
@@ -116,7 +115,7 @@ class MapSampleState extends State<MapSample> {
       ),
       body: Container(
         child: FloatingActionButton(
-          onPressed: ()=> listExample(),
+          onPressed: ()=> listExample(document),
         )
       )
     );
