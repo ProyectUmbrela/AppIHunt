@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:location/location.dart';
@@ -35,6 +36,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
   String id_usuario;
   String nombre;
 
+  // VARIABLE DE IMAGENES
+  List<File> image_files = new List();
+
   @override
   void initState(){
     setData();
@@ -60,6 +64,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   @override
   Widget build(BuildContext context) {
 
+    // OBTENER LATITUD Y LONGITUD
     void getLocation(address) async{
       try {
         var locations = await locationFromAddress(address);
@@ -72,13 +77,53 @@ class _RegisterRoomState extends State<RegisterRoom> {
       }
     }
 
-    void addDocument(latitude, longitude) async{
-      FirebaseFirestore.instance.collection("marker_rent").add(
-        {
-          'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
-        'habitaciones': 1
-        }
-      ).then((value) => print('User Added'))
+    // OBTENER IMAGENES
+    _imgFromGallery() async {
+      File image = await ImagePicker.pickImage(
+          source: ImageSource.gallery);
+
+      setState(() {
+        image_files.add(image);
+        print("########################## ############## LOGITUD DE LISTA ${image_files.length}");
+      });
+    }
+   _images_to_base64() async{
+      var dicc = {
+
+      };
+      for (int i = 0; i < image_files.length; i++){
+        final bytes = image_files[i].readAsBytesSync();
+        String img64 = base64Encode(bytes);
+        dicc[i] = img64;
+      }
+    }
+
+    void addDocument(latitude, longitude, price, description, address, services, name) async{
+      final now = new DateTime.now();
+      String date = DateFormat('yMd').format(now);// 28/03/2020
+
+      var document = {
+        'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+        'costo': price,
+        'detalles': description,
+        'direccion': address,
+        'fotos': {},
+        'habitaciones': 1,
+        'servicios': services,
+        'titular': name
+      };
+
+      // AGREGAR IMAGENES STR
+      for (int i = 0; i < image_files.length; i++){
+        final bytes = image_files[i].readAsBytesSync();
+        String img64 = base64Encode(bytes);
+        document['fotos'][i.toString()] = img64;
+      }
+
+      print("#########################################################################");
+      print(document);
+
+      FirebaseFirestore.instance.collection("marker_rent").add(document).then((value) => print('User Added'))
           .catchError((error) => print('Failed to add user: ${error}'));
     }
 
@@ -219,7 +264,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         await getLocation(adressCtrl.text);
         print('############################');
         print("lat ${lat}  long ${lngt}");
-        addDocument(lat, lngt);
+        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre);
 
         var response = await _api.RegisterRoomPost(msg);
         Map data = jsonDecode(response.body);
@@ -322,6 +367,25 @@ class _RegisterRoomState extends State<RegisterRoom> {
                                 child: longButtons("Cancelar", canceled),
                                 alignment: Alignment.centerRight,
                               )),
+                        ],
+                      ),
+
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: MaterialButton(
+                                color: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                onPressed: () {
+                                  _imgFromGallery();
+                                },
+                                child: Text(
+                                  "selccionar imagen",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ))
                         ],
                       )
                     ],

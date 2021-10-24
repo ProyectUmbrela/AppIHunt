@@ -63,6 +63,14 @@ dependencies:
   flutter_application_id: ^1.0.0
   carousel_slider: ^4.0.0
 
+  #manejo de imagenes
+  # carga de imagenes
+  image_picker: 0.5.4+2
+  flutter_multi_carousel: ^1.0.0
+
+  #fecha
+  intl: ^0.16.1
+
 
 dev_dependencies:
   flutter_test:
