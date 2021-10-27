@@ -8,6 +8,7 @@ import 'dart:async';
 
 // slider images
 import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:convert';
 
 // style map
 import 'package:flutter/services.dart' show rootBundle;
@@ -78,14 +79,14 @@ class MapsPage extends State<MyMaps> {
 
 
 
-  void initMarker(position, specifyId, habitacion) async{
+  void initMarker(position, specifyId, habitacion, setFotos) async{
 
     //var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(specifyId);
     infoHabitacion info = habitacion;
 
     double sizeText = 14;
-    var setList = await listExample(specifyId);
+    //var setList = await listExample(specifyId);
     final Marker marker = new Marker(
       markerId: markerId,
       position: position,
@@ -122,14 +123,15 @@ class MapsPage extends State<MyMaps> {
                                   ),
                                   // listExample(specifyId)
                                   //items: links_document.map(
-                                  items: setList.map(
+                                  items: setFotos/*.map(
                                           (img) => Center(
-                                            child: Image.network(
+                                            child: Image.memory(base64Decode(img))
+                                            /*child: Image.network(
                                               img,
                                               fit: BoxFit.cover,
-                                            ),
+                                            )*/,
                                           )
-                                  ).toList(),
+                                  ).toList()*/,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
@@ -298,7 +300,7 @@ class MapsPage extends State<MyMaps> {
   //######################################################
   //######################################################
 
-
+  /*
   Future<List> listExample(String document) async {
 
     List<String> links_document = [];
@@ -320,7 +322,7 @@ class MapsPage extends State<MyMaps> {
 
 
     return links_document;
-  }
+  }*/
 
   //######################################################
   //######################################################
@@ -346,8 +348,8 @@ class MapsPage extends State<MyMaps> {
             stream: FirebaseFirestore
                 .instance
                 .collection("marker_rent")
-                .where("coords", isNull: false)
-                //.where("habitaciones", isEqualTo: 1)
+                .where("titular", isEqualTo: "Eliseo Morales")
+
                   .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -367,6 +369,18 @@ class MapsPage extends State<MyMaps> {
                   //listExample(id_document);
 
                   //var setList = listExample(id_document);
+                  final List<String> setFotos = [];
+                  List<Widget> widgets = [];
+                  var rawFotos = snapshot.data.docs[i]['fotos'];
+
+                  rawFotos.forEach((final String key, final value) {
+                    //print("###########################################");
+                    //print("--> value: ${value}");
+                    //setFotos.add(value);
+                    //print("###########################################");
+                    // do with this info whatever you want
+                    widgets.add(Image.memory(base64Decode(value)));
+                  });
 
 
 
@@ -408,7 +422,8 @@ class MapsPage extends State<MyMaps> {
                   initMarker(
                       latLng,
                       snapshot.data.docs[i].id,
-                      habitacion);
+                      habitacion,
+                      widgets);
 
                 }
 
