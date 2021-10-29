@@ -123,7 +123,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       print("#########################################################################");
       print(document);
 
-      FirebaseFirestore.instance.collection("marker_rent").add(document).then((value) => print('User Added'))
+      FirebaseFirestore.instance.collection("habitaciones").add(document).then((value) => print('User Added'))
           .catchError((error) => print('Failed to add user: ${error}'));
     }
 
