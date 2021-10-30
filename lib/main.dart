@@ -32,21 +32,21 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLogged = (prefs.getBool('isLogged') ?? false);
-  String tipo_usuario = prefs.getString("Tipo");
-  var home_view;
-  if((isLogged) && (tipo_usuario == 'Usuario')) {
+  String tipoUsuario = prefs.getString("Tipo");
+  var homeView;
+  if((isLogged) && (tipoUsuario == 'Usuario')) {
     print("Value: $isLogged");
     print("LOGEADO COMO USUARIO");
-    home_view = UserView();
+    homeView = UserView();
   }
-  else if((isLogged) && (tipo_usuario == 'Propietario')){
+  else if((isLogged) && (tipoUsuario == 'Propietario')){
     print("LOGEADO COMO PROPIETARIO");
-    home_view = Landlord();
+    homeView = Landlord();
   }
 
   else{
     print("LOGGEADO: $isLogged");
-    home_view = MainScreen();
+    homeView = MainScreen();
   }
 
   //else vista principal
@@ -54,7 +54,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     title: 'i-hunt',
-    home: home_view,//MainScreen(),
+    home: homeView,//MainScreen(),
 
     routes: {
       '/login' : (context) => LoginPage(),
