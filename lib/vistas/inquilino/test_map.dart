@@ -348,9 +348,8 @@ class MapsPage extends State<MyMaps> {
             stream: FirebaseFirestore
                 .instance
                 .collection("marker_rent")
-                .where("titular", isEqualTo: "Eliseo Morales")
-
-                  .snapshots(),
+                .where("coords", isNotEqualTo: "")
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 for(int i = 0; i < snapshot.data.docs.length; i++){
