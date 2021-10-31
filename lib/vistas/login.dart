@@ -168,8 +168,7 @@ class _LoginPageState extends State<LoginPage> {
     print(passwordField.text);
     print("====================");
 
-    final body = jsonEncode(
-        {
+    final body = jsonEncode({
           'usuario': emailField.text,
           'contrasena': passwordField.text
         });
@@ -190,11 +189,11 @@ class _LoginPageState extends State<LoginPage> {
       sharedPreferences.setString("Tipo", resp['Tipo']);
 
       if (resp['Tipo'] == 'Propietario') {
-        Navigator.of(context).pop();
+        //Navigator.of(context).pop();
         Navigator.pushReplacementNamed(context, '/landlord');
       }
       if (resp['Tipo'] == 'Usuario') {
-        Navigator.of(context).pop();
+        //Navigator.of(context).pop();
         Navigator.pushReplacementNamed(context, '/user');
        
       }

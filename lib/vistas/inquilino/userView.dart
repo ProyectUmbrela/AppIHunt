@@ -1,12 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ihunt/vistas/inquilino/test_map.dart';
+import 'package:flutter/widgets.dart';
+import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-import 'package:ihunt/vistas/inquilino/mapa.dart';
+//import 'package:ihunt/vistas/inquilino/mapa.dart';
 
 
 class UserView extends StatefulWidget {
@@ -36,10 +37,12 @@ class _UserState extends State<UserView> {
     });
   }
 
-  void _logout() async {
-    var sharedPreferences = await SharedPreferences.getInstance();
+  Future<void> _logout() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", false);
     Navigator.of(context).pushReplacementNamed('/login');
+
+    //Navigator.pushReplacementNamed(context, '/login');
   }
 
 
@@ -72,7 +75,7 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         minWidth: (MediaQuery.of(context).size.width/3.3),
          onPressed: () {
-           Navigator.of(context).pop();
+           //Navigator.of(context).pop();
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Lugares()));

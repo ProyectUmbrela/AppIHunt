@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 // Vistas de inquilino
-import 'package:ihunt/vistas/userView.dart'; // principal
+import 'package:ihunt/vistas/inquilino/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
-import 'package:ihunt/vistas/inquilino/test_map.dart';
+import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
 
 
@@ -49,12 +49,10 @@ Future<void> main() async {
     homeView = MainScreen();
   }
 
-  //else vista principal
-
 
   runApp(MaterialApp(
     title: 'i-hunt',
-    home: homeView,//MainScreen(),
+    home: homeView,
 
     routes: {
       '/login' : (context) => LoginPage(),
@@ -66,7 +64,6 @@ Future<void> main() async {
       '/detalles': (context) => DetallesHab(),
       '/registerRoom' : (context) => RegisterRoom(),
       '/IHunt': (context) => MainScreen()
-
     },
 
   ));

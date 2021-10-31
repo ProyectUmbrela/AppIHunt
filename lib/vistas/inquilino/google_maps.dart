@@ -1,6 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+//import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ihunt/vistas/inquilino/userView.dart';
@@ -334,7 +334,7 @@ class MapsPage extends State<MyMaps> {
     Set<Marker> markers = Set();
 
     return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           leading: BackButton(
             onPressed: () => {
               Navigator.of(context).pop(),
@@ -342,7 +342,7 @@ class MapsPage extends State<MyMaps> {
             },
           ),
           title: Text("Volver"),
-        ),
+        ),*/
         body: SafeArea(
           child: StreamBuilder(
             stream: FirebaseFirestore

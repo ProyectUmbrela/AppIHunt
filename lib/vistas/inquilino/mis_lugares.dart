@@ -2,7 +2,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-import 'package:ihunt/vistas/userView.dart';
+import 'package:ihunt/vistas/inquilino/userView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //permissions
@@ -112,14 +112,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
+        /*leading: BackButton(
          // icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => {
               Navigator.of(context).pop(),
               Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserView()))
             }
-        ), 
-        title: Text("Volver"),
+        ), */
+        title: Text("Mis habitaciones rentadas"),
       ),
       //backgroundColor: Colors.grey[900],
 
