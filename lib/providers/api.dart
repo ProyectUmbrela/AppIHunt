@@ -10,6 +10,7 @@ class Api {
   String _login = '/login';
   String _registerRoom = '/registerRoom';
   String _rooms = '/listarHabitacionesPropietario';
+  String _habitacionesRentadas = '/historialInquilino';
 
   Map<String, String> _headers = {"Content-type": "application/json"};
 
@@ -41,5 +42,15 @@ class Api {
 
     return response;
   }
+
+  Future<dynamic> GetHabitaciones(data) async {
+    print(data.toString());
+    var response = await http.post(Uri.parse(this._url + this._habitacionesRentadas),
+        body: data, headers: this._headers);
+
+    return response;
+  }
+
+
 
 }
