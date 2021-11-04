@@ -4,6 +4,7 @@ import 'vistas/propietario/registerRoom.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 // Vistas de inquilino
 import 'package:ihunt/vistas/inquilino/userView.dart'; // principal
@@ -53,7 +54,24 @@ Future<void> main() async {
   runApp(MaterialApp(
     title: 'i-hunt',
     home: homeView,
-
+    localizationsDelegates: [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+    ],
+    supportedLocales: [
+      const Locale('en'),
+      const Locale('es'),
+      const Locale('zh'),
+      const Locale('he'),
+      const Locale('ru'),
+      const Locale('fr', 'BE'),
+      const Locale('fr', 'CA'),
+      const Locale('ja'),
+      const Locale('de'),
+      const Locale('hi'),
+      const Locale('ar'),
+    ],
+    locale: const Locale('es'),
     routes: {
       '/login' : (context) => LoginPage(),
       '/user' : (context) => UserView(),
