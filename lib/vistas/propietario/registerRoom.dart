@@ -175,6 +175,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       decoration:
       buildInputDecoration("Precio", Icons.monetization_on),
     );
+
     final terms = TextFormField(
       autofocus: false,
       controller: termsCtrl,
@@ -240,7 +241,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/register');
+      Navigator.pushReplacementNamed(context, '/landlord');
     };
 
     Future submit() async {

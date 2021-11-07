@@ -6,12 +6,11 @@ import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/widgets.dart';
 
 import 'package:date_field/date_field.dart';
-import 'package:nepali_date_picker/nepali_date_picker.dart';
-import 'package:nepali_utils/nepali_utils.dart';
-
 import 'package:intl/intl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:ihunt/utils/validators.dart';
 
 import 'landlordView.dart';
 
@@ -64,7 +63,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       controller: iduserCtrl,
       validator: (value) => value.isEmpty ? "Ingrese el id del usuario a registrar" : null,
       onSaved: (value) => _iduser = value,
-      decoration: buildInputDecoration("iduser", Icons.airline_seat_individual_suite),
+      decoration: buildInputDecoration("iduser", Icons.person_add),
     );
 
 
@@ -88,8 +87,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
     final months = TextFormField(
       autofocus: false,
       controller: monthsCtrl,
+      validator: numberValidator,
       onSaved: (value) => _months = value,
-      decoration: buildInputDecoration("Meses", Icons.menu),
+      decoration: buildInputDecoration("Meses", Icons.more_vert),
     );
 
 
@@ -109,6 +109,59 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print(value);
       },
       onSaved: (value) => _startdate = value.toString()
+    );
+
+    final endDate = DateTimeFormField(
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          //labelText: 'Only time',
+        ),
+        dateFormat: DateFormat.yMMMMd('es'),
+        mode: DateTimeFieldPickerMode.date,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          print(value);
+        },
+        onSaved: (value) => _enddate = value.toString()
+    );
+
+    final payDate = DateTimeFormField(
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          //labelText: 'Only time',
+        ),
+        dateFormat: DateFormat.yMMMMd('es'),
+        mode: DateTimeFieldPickerMode.date,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          print(value);
+        },
+        onSaved: (value) => _startdate = value.toString()
+    );
+
+    final Plazo = TextFormField(
+      autofocus: false,
+      controller: plazoCtrl,
+      validator: numberValidator,
+      onSaved: (value) => _plazo = value,
+      decoration:
+      buildInputDecoration("Detalles", Icons.more_vert),
+    );
+
+    final Details = TextFormField(
+      autofocus: false,
+      controller: detailsCtrl,
+      onSaved: (value) => _details = value,
+      decoration:
+      buildInputDecoration("Términos", Icons.more_vert),
     );
 
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
@@ -168,7 +221,12 @@ class _RegisterTenantState extends State<RegisterTenant> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/register');
+      Navigator.push(
+        context,
+        new MaterialPageRoute(
+          builder: (context) => new RegisterTenant(),
+        ),
+      );
     };
 
     Future submit() async {
@@ -181,7 +239,11 @@ class _RegisterTenantState extends State<RegisterTenant> {
           "idpropietario": id_prop,
           "contrato": _contrato,
           "meses": monthsCtrl.text,
-          "fecha_inicio": startdateCtrl.text
+          "fecha_inicio": startdateCtrl.text,
+          "fecha_fin": enddateCtrl.text,
+          "fecha_pago": paydateCtrl.text,
+          "plazo": plazoCtrl.text,
+          "detalles": detailsCtrl.text
         });
         print("############################# \n ${msg}");
 
@@ -236,9 +298,29 @@ class _RegisterTenantState extends State<RegisterTenant> {
                       months,
                       SizedBox(height: 15.0),
 
-                      label("Indique la fecha de inicio renta"),
+                      label("Indique la fecha de inicio"),
                       SizedBox(height: 5.0),
                       startDate,
+                      SizedBox(height: 15.0),
+
+                      label("Indique la fecha de fin"),
+                      SizedBox(height: 5.0),
+                      endDate,
+                      SizedBox(height: 15.0),
+
+                      label("Indique la fecha de pago (el dia es el tomado)"),
+                      SizedBox(height: 5.0),
+                      payDate,
+                      SizedBox(height: 15.0),
+
+                      label("Num. días de plazo para el pago"),
+                      SizedBox(height: 5.0),
+                      Plazo,
+                      SizedBox(height: 15.0),
+
+                      label("Detalles de contrato\\renta"),
+                      SizedBox(height: 5.0),
+                      Details,
                       SizedBox(height: 15.0),
 
                       //longButtons("Registrar", submit),
