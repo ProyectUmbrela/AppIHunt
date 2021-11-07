@@ -12,6 +12,35 @@ class rooms extends StatefulWidget {
   _roomsState createState() => _roomsState();
 }
 
+class Room{
+  String descripcion;
+  String dimension;
+  String direccion;
+  String fecharegistro;
+  String fechaupdate;
+  String idhabitacion;
+  String idpropietario;
+  String idusuario;
+  double precio;
+  String servicios;
+  int status;
+  String terminos;
+
+  Room({
+    this.descripcion,
+    this.dimension,
+    this.direccion,
+    this.fecharegistro,
+    this.fechaupdate,
+    this.idhabitacion,
+    this.idpropietario,
+    this.idusuario,
+    this.precio,
+    this.servicios,
+    this.status,
+    this.terminos});
+}
+
 class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
 
   void setData() async{
@@ -19,7 +48,6 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
     setState(() {
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id = sharedPreferences.getString("idusuario") ?? "Error";
-      //getRooms(id);
     });
   }
 
@@ -79,7 +107,11 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
   }
   /***************************************************************************/
 
-  getRooms(id) async{
+  Future getRooms(id) async{
+    var sharedPreferences = await SharedPreferences.getInstance();
+    nombre = sharedPreferences.getString("nombre") ?? "Error";
+
+    //id = sharedPreferences.getString("idusuario") ?? "Error";
     Api _api = Api();
 
     final msg = jsonEncode({
@@ -88,22 +120,34 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
     print(msg);
 
     var response = await _api.GetRooms(msg);
-    Map data = jsonDecode(response.body);
+    var data = jsonDecode(response.body);
+    List<Room> _rooms = [];
 
+    print("############################# responsecode ${response.statusCode}");
     if (response.statusCode == 200) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
       debugPrint("Rooms get");
-      print(data);
 
-      setState(() {
-        rooms_ = data;
-        flag_room = 1;
+      data.forEach((index, room) {
+        //print('****************key: $index , ${room['idpropietario']}');
+        _rooms.add(Room(
+            descripcion: room['descripcion'],
+            dimension: room['dimension'],
+            direccion: room['direccion'],
+            fecharegistro: room['fecharegistro'],
+            fechaupdate: room['fechaupdate'],
+            idhabitacion: room['idhabitacion'],
+            idpropietario: room['idpropietario'],
+            idusuario: room['idusuario'],
+            precio: room['precio'],
+            servicios: room['servicios'],
+            status: room['status'],
+            terminos: room['terminos']
+        ));
       });
+      print('**************** FIN ${_rooms.length}');
+      return _rooms;
     } else {
-      setState(() {
-        rooms_ = data;
-        flag_room = 0;
-      });
       if (Platform.isAndroid) {
         //_materialAlertDialog(context, data['message'], 'Notificación');
         print(response.statusCode);
@@ -117,8 +161,7 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
   // VARIABLES DE SESION
   String id;
   String nombre;
-  Map<dynamic, dynamic> rooms_;
-  int flag_room;
+  List<Room> _rooms;
 
   @override
   void initState(){
@@ -132,14 +175,157 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
 
     final List<String> entries = <String>['A', 'B', 'C', 'D', 'E', 'F'];
 
-    //print("################ ${rooms_.length}");
+
+    var _rooms;
+    print('@@@@@@@@@@@@@@@@@@@@q ${_rooms}');
 
     return Scaffold(
         appBar: AppBar(
           title: Text(title),
           centerTitle: true,
         ),
-        body: Stack(
+        body: FutureBuilder(
+          future: getRooms(id),
+          builder: (context, snapshot) {
+            return snapshot.hasData ?
+              Stack(
+                  children: <Widget> [ ListView.builder(
+                      itemCount: snapshot.data.length,
+                      padding: const EdgeInsets.all(5),
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          shadowColor: Colors.deepPurpleAccent,
+                          clipBehavior: Clip.antiAlias,
+                          child: Material(
+                            color: Colors.black12,
+                            shadowColor: Colors.deepPurpleAccent,
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.airline_seat_individual_suite),
+                                  title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
+                                  subtitle: Text(
+                                    'Texto secundario',
+                                    style:
+                                    TextStyle(color: Colors.black.withOpacity(0.6)),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 2, horizontal: 10),
+                                  child: Row(
+                                    //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              'Ocupada:',
+                                              style: TextStyle(
+                                                  color: Colors.black.withOpacity(0.6),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [ snapshot.data[index].status==1?
+                                            Text(
+                                              '  Sí',
+                                              style: TextStyle(
+                                                  color: Colors.black.withOpacity(0.6),
+                                                  fontWeight: FontWeight.normal),
+                                            ):
+                                          Text(
+                                            '  No',
+                                            style: TextStyle(
+                                                color: Colors.black.withOpacity(0.6),
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                          ],
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Precio: ', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: '${snapshot.data[index].precio}' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 2, horizontal: 10),
+                                  child: Row(
+                                    //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              'Servicios: ',
+                                              style: TextStyle(
+                                                  color: Colors.black.withOpacity(0.6),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              snapshot.data[index].servicios,
+                                              style: TextStyle(
+                                                  color: Colors.black.withOpacity(0.6),
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ],
+                                        ),
+                                      ]),
+                                ),
+                                ButtonBar(
+                                  alignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    FlatButton(
+                                      textColor: const Color(0xFF6200EE),
+                                      onPressed: () {
+                                        // Perform some action
+                                      },
+                                      child: const Text('Editar'),
+                                    ),
+                                  ],
+                                ),
+                                //Image.asset('assets/card-sample-image.jpg'),
+                                //Image.asset('assets/card-sample-image-2.jpg'),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                  ]
+              )
+                : Center(
+                  child: CircularProgressIndicator(),
+                );
+          }
+        ),
+        /*Stack(
           children: <Widget> [ ListView.builder(
               itemCount: entries.length,
               padding: const EdgeInsets.all(5),
@@ -264,7 +450,7 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
                 );
               }),
           ]
-        ),
+        ),*/
         floatingActionButton: new FloatingActionButton.extended(
             onPressed: () {
               Navigator.push(
