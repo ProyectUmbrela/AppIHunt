@@ -41,8 +41,6 @@ class _UserState extends State<UserView> {
     final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", false);
     Navigator.of(context).pushReplacementNamed('/login');
-
-    //Navigator.pushReplacementNamed(context, '/login');
   }
 
 
@@ -66,7 +64,6 @@ class _UserState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
-    //print(" =========> ${tipo_usuario}");
     final lugaresbutton = Material(
       
       elevation: 5.0,
@@ -75,14 +72,16 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         minWidth: (MediaQuery.of(context).size.width/3.3),
          onPressed: () {
-           //Navigator.of(context).pop();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Lugares()));
+              MaterialPageRoute(
+                  builder: (context) => Lugares(),
+                  settings: RouteSettings(
+                    arguments: id_usuario
+              )));
         },
         child: Text("Mis lugares",
             textAlign: TextAlign.center
-            //style: style.copyWith(color: Colors.white)),
       )
       ),
     );
@@ -98,22 +97,11 @@ class _UserState extends State<UserView> {
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
-            //###########################################
-            //###########################################
-            //###########################################
-            //###########################################
               builder: (context)=>MyMaps()));
-              //builder: (context)=>MyMaps()));
-          //builder: (context)=>MapSample()));
-            //###########################################
-            //###########################################
-            //###########################################
-            //###########################################
 
         },
         child: Text("Buscar",
             textAlign: TextAlign.center
-            //style: style.copyWith(color: Colors.white)),
       )
       ),
     );
@@ -178,12 +166,7 @@ class _UserState extends State<UserView> {
             ),
             //getRow(nombre, 30.0, 5.0),
             getRow(id_usuario, 15.0, 0.6),
-            //SizedBox(height: 90.0),
-            //buscarbutton,
-            //SizedBox(height: 0.0,),
-            //buscarbutton
           ],
-          
         ),
       ),
       floatingActionButton: Stack(

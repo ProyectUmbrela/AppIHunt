@@ -1,12 +1,10 @@
-//import 'package:flushbar/flushbar.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-//import 'package:ihunt/vistas/inquilino/userView.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //permissions
 //import 'package:permission_handler/permission_handler.dart';
@@ -50,35 +48,11 @@ class Habitacion {
     this.estado,
     this.periodo,
     this.idhabitacion});
-
-}
-
-class Historial{
-
-
-
-
 }
 
 
+Future getHabitaciones(id_usuario) async {
 
-class ProjectModel {
-  String id;
-  String createdOn;
-  String lastModifiedOn;
-  String title;
-  String description;
-
-  ProjectModel({
-    this.id,
-    this.createdOn,
-    this.lastModifiedOn,
-    this.title,
-    this.description,
-  });
-}
-
-Future getHabitaciones() async {
   Map<int, String> meses = {
                             1:"Enero",
                             2:"Febbrero",
@@ -94,7 +68,7 @@ Future getHabitaciones() async {
                             12:"Diciembre"};
   Api _api = Api();
   final body = jsonEncode({
-    'usuario': 'Eliseo2'
+    'usuario': id_usuario
   });
 
   var response = await _api.GetHabitaciones(body);
@@ -109,13 +83,6 @@ Future getHabitaciones() async {
 
       for (int i=0; i < actual.length; i++){
         var habitacion = actual[i];
-        //print("===> ${actual[i]}");
-
-        /*print("############################################");
-        habitacion.forEach((final String key, final value) {
-          print("${key} <==> ${value}");
-        });
-        print("############################################");*/
 
           var timeInit =  HttpDate.parse(habitacion['fechainicontrato']);
           final mesInit = meses[timeInit.month];
@@ -129,10 +96,7 @@ Future getHabitaciones() async {
               estado: "En Renta",
               periodo: periodo,
               idhabitacion: "${habitacion['idhabitacion']}"));
-
-
       }
-
     }
 
     else{
@@ -146,9 +110,6 @@ Future getHabitaciones() async {
       for (int j=0; j < historial.length; j++){
         print("leng: ${historial.length}");
         var habitacion = historial[j];
-
-        //habitacion.forEach((final String key, final value){
-
 
           var timeInit =  HttpDate.parse(habitacion['fechacontratoinit']);
           var timeFin =  HttpDate.parse(habitacion['fechacontratofin']);
@@ -166,43 +127,23 @@ Future getHabitaciones() async {
               periodo: periodo,
               idhabitacion: "${habitacion['idhabitacion']}"));
 
-        //});
-
       }
     }
     else{
-      print("No hay histirual de habitaciones en renta");
+      print("No hay historial de habitaciones en renta");
     }
-
-
     return habitaciones;
   }
-
-
 }
 
-_getHabitacionesList() async {
-  return await getHabitaciones();
+_getHabitacionesList(id_usuario) async {
+
+  return await getHabitaciones(id_usuario);
 }
 
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-
-
-  /*List<Habitacion> habitaciones = [
-    Habitacion(name: "Fredy Marin", estado: "En Rentada", periodo: "Ene - Actual", idhabitacion: "A"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "B"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "C"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "D"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "E"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "F"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "G"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "H"),
-    Habitacion(name: "Anakin Walker", estado: "Rentada", periodo: "Abr - May", idhabitacion: "I"),
-    Habitacion(name: "Alfonso Suarez", estado: "Rentada", periodo: "Jun - Ago", idhabitacion: "J")
-  ];*/
-
 
   //@override
   Widget habitacionDetails(habitacion) {
@@ -251,15 +192,20 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 
 
-  final Future<String> _calculation = Future<String>.delayed(
-    const Duration(seconds: 2),
-        () => 'Data Loaded',
-  );
-
-
   Future getProjectDetails() async {
-    var result = await getHabitaciones();
+    String id_usuario;
+    //String nombre;
+    //String tipo_usuario;
+    var sharedPreferences = await SharedPreferences.getInstance();
+
+    id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+    //nombre = sharedPreferences.getString("nombre") ?? "Error";
+    //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
+
+    var result = await getHabitaciones(id_usuario);
+
     return result;
+
   }
 
 
@@ -275,7 +221,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   return Column(
                     children: <Widget>[
                       habitacionDetails(habitacion)
-                      // Widget to display the list of project
                     ],
                   );
                 },
@@ -290,8 +235,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis habitaciones'),
