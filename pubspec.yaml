@@ -78,6 +78,7 @@ dependencies:
   nepali_utils: ^3.0.1
   #intl: ^0.16.1
   intl: ^0.17.0
+  firebase_messaging: ^11.1.0
 
 dev_dependencies:
   flutter_test:
