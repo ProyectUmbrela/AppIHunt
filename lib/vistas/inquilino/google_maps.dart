@@ -347,7 +347,7 @@ class MapsPage extends State<MyMaps> {
           child: StreamBuilder(
             stream: FirebaseFirestore
                 .instance
-                .collection("habitaciones")
+                .collection("marker_rent")
                 .where("coords", isNotEqualTo: "")
                 .snapshots(),
             builder: (context, snapshot) {

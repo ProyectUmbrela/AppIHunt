@@ -11,6 +11,7 @@ import 'package:ihunt/vistas/inquilino/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
+import 'package:ihunt/vistas/inquilino/notificaciones.dart';
 
 
 // VISTA PROPIETARIO
@@ -38,7 +39,8 @@ Future<void> main() async {
   if((isLogged) && (tipoUsuario == 'Usuario')) {
     print("Value: $isLogged");
     print("LOGEADO COMO USUARIO");
-    homeView = UserView();
+    //homeView = UserView();
+    homeView = Notificaciones();
   }
   else if((isLogged) && (tipoUsuario == 'Propietario')){
     print("LOGEADO COMO PROPIETARIO");
@@ -73,6 +75,7 @@ Future<void> main() async {
     ],
     locale: const Locale('es'),
     routes: {
+      '/Notificaciones': (context) => Notificaciones(),
       '/login' : (context) => LoginPage(),
       '/user' : (context) => UserView(),
       '/landlord': (context) => Landlord(),
@@ -82,6 +85,7 @@ Future<void> main() async {
       '/detalles': (context) => DetallesHab(),
       '/registerRoom' : (context) => RegisterRoom(),
       '/IHunt': (context) => MainScreen()
+
     },
 
   ));
