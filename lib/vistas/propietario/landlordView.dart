@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/register.dart';
 import 'rooms.dart';
 import 'tenants.dart';
+import 'invitation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Landlord extends StatefulWidget {
@@ -45,6 +45,7 @@ class _LandlordState extends State<Landlord>
                 Tab(icon: Icon(Icons.home)),
                 Tab(icon: Icon(Icons.airline_seat_individual_suite)),
                 Tab(icon: Icon(Icons.accessibility)),
+                Tab(icon: Icon(Icons.card_giftcard))
               ],
             ),
             title: Text('Hola $nombre'),
@@ -54,6 +55,7 @@ class _LandlordState extends State<Landlord>
               Icon(Icons.home),
               rooms(),
               Tenants(),
+              Invitation()
             ],
           ),
         ),
