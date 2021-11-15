@@ -51,7 +51,7 @@ class Habitacion {
 }
 
 
-Future getHabitaciones(id_usuario) async {
+Future getHabitaciones(idUsuario) async {
 
   Map<int, String> meses = {
                             1:"Enero",
@@ -68,7 +68,7 @@ Future getHabitaciones(id_usuario) async {
                             12:"Diciembre"};
   Api _api = Api();
   final body = jsonEncode({
-    'usuario': id_usuario
+    'usuario': idUsuario
   });
 
   var response = await _api.GetHabitaciones(body);
@@ -136,9 +136,9 @@ Future getHabitaciones(id_usuario) async {
   }
 }
 
-_getHabitacionesList(id_usuario) async {
+_getHabitacionesList(idUsuario) async {
 
-  return await getHabitaciones(id_usuario);
+  return await getHabitaciones(idUsuario);
 }
 
 
@@ -193,16 +193,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 
   Future getProjectDetails() async {
-    String id_usuario;
+    String idUsuario;
     //String nombre;
     //String tipo_usuario;
     var sharedPreferences = await SharedPreferences.getInstance();
 
-    id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+    idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
     //nombre = sharedPreferences.getString("nombre") ?? "Error";
     //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
 
-    var result = await getHabitaciones(id_usuario);
+    var result = await getHabitaciones(idUsuario);
 
     return result;
 
@@ -242,43 +242,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
       body: projectWidget(),
     );
-
-
-
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text("Mis habitaciones rentadas"),
-      ),
-      //backgroundColor: Colors.grey[900],
-
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Stack(
-          children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    /*children: <Widget>[
-                      Icon(Icons.menu, size: 35, color: Colors.white),
-                      Text('Notifications',
-                        style: TextStyle (
-                          color: Colors.white,
-                          fontSize: 25
-                        ),
-                      ),
-                      Icon(Icons.notifications_none, size: 35, color: Colors.white)
-                    ],*/
-                  ),
-                  Column(
-                    children: habitaciones.map((p) {
-                      return habitaciondetail(p);
-                    }).toList()
-                  )
-                ],
-              
-          )),
-      );*/
   }
-
 }
 
 _testClicked(idhabitacion, context) {

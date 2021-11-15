@@ -4,13 +4,12 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+//import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 
 
 class Notificaciones extends StatefulWidget{
 
   PushNotificaciones createState()=> PushNotificaciones();
-
 
 }
 
@@ -32,15 +31,15 @@ class PushNotificaciones extends State<Notificaciones> {
   void firebaseCloudMessaging_Listeners() {
     _firebaseMessaging.getToken().then((token){
       print(token);
-
+      /*
       if (tipo_usuario == 'Usuario') {
-        Navigator.pushNamed(context, '/NotificationesInquilino',
+        Navigator.pushNamed(context, '/notificationesInquilino',
             arguments: messageTitle,
             );
       }
 
       else if (tipo_usuario == 'Propietario'){
-        Navigator.pushNamed(context, '/NotificationesPropietario',
+        Navigator.pushNamed(context, '/notificationesPropietario',
             arguments: RouteSettings(
               arguments: messageTitle,
             ));
@@ -51,7 +50,7 @@ class PushNotificaciones extends State<Notificaciones> {
             arguments: RouteSettings(
               arguments: messageTitle,
             ));
-      }
+      }*/
 
 
 
@@ -138,12 +137,12 @@ class PushNotificaciones extends State<Notificaciones> {
   @override
   Widget build(BuildContext context) {
 
-    firebaseCloudMessaging_Listeners();
+//    firebaseCloudMessaging_Listeners();
 
     return Scaffold(
-      /*
+
       appBar: AppBar(
-        title: Text("widget.title"),
+        title: Text("Notificaciones"),
       ),
       body: Center(
         child: Column(
@@ -159,7 +158,7 @@ class PushNotificaciones extends State<Notificaciones> {
           ],
         ),
       ),
-    */);
+    );
   }
 
 }
