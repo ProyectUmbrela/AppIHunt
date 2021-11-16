@@ -16,12 +16,12 @@ import 'package:ihunt/vistas/inquilino/notificaciones.dart';
 
 // VISTA PROPIETARIO
 import 'vistas/propietario/landlordView.dart';
+import 'vistas/propietario/update_room.dart';
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
 import 'vistas/register.dart';
 import 'vistas/login.dart';
-
 
 
 
@@ -84,8 +84,8 @@ Future<void> main() async {
       '/mapa' : (context) => MyMaps(),
       '/detalles': (context) => DetallesHab(),
       '/registerRoom' : (context) => RegisterRoom(),
+      '/update_room': (context) => UpdateRoom(),
       '/IHunt': (context) => MainScreen()
-
     },
 
   ));

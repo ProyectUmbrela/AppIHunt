@@ -120,9 +120,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
         document['fotos'][i.toString()] = img64;
       }
 
-      print("#########################################################################");
-      print(document);
-
       FirebaseFirestore.instance.collection("habitaciones").add(document).then((value) => print('User Added'))
           .catchError((error) => print('Failed to add user: ${error}'));
     }
