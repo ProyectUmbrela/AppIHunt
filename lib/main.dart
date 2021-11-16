@@ -24,38 +24,6 @@ import 'package:ihunt/vistas/propietario/notificaciones_propietario.dart';
 import 'vistas/mainscreen.dart';
 import 'vistas/register.dart';
 import 'vistas/login.dart';
-/*
-Future<void> main() async {
-
-  WidgetsFlutterBinding.ensureInitialized();
-  // init the firebase system
-  await Firebase.initializeApp();
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-
-  bool isLogged = (prefs.getBool('isLogged') ?? false);
-  String tipoUsuario = prefs.getString("Tipo");
-  var homeView;
-  print("Loggeado???? => $isLogged");
-
-  if((isLogged) && (tipoUsuario == 'Usuario')) {
-    print("LOGEADO COMO USUARIO");
-    homeView = UserView();
-
-  }
-  else if((isLogged) && (tipoUsuario == 'Propietario')){
-    print("LOGEADO COMO PROPIETARIO");
-    homeView = Landlord();
-  }
-
-  else{
-    homeView = MainScreen();
-  }
-
-  runApp(IHuntApp(homeView));
-
-}*/
 
 
 class MyHomePage extends StatefulWidget {
@@ -143,9 +111,6 @@ class IHuntApp extends StatelessWidget {
     );
   }
 }
-
-
-
 
 
 
