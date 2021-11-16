@@ -1,9 +1,11 @@
 //import 'dart:js';
 import 'package:flutter/material.dart';
 import 'vistas/propietario/registerRoom.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 
@@ -25,6 +27,38 @@ import 'vistas/mainscreen.dart';
 import 'vistas/register.dart';
 import 'vistas/login.dart';
 
+
+Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // init the firebase system
+  await Firebase.initializeApp();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+  bool isLogged = (prefs.getBool('isLogged') ?? false);
+  String tipoUsuario = prefs.getString("Tipo");
+  var homeView;
+  print("Loggeado???? => $isLogged");
+
+  if((isLogged) && (tipoUsuario == 'Usuario')) {
+    print("LOGEADO COMO USUARIO");
+    homeView = UserView();
+    //homeView = Notificaciones();
+  }
+  else if((isLogged) && (tipoUsuario == 'Propietario')){
+    print("LOGEADO COMO PROPIETARIO");
+    homeView = Landlord();
+  }
+
+  else{
+    homeView = MainScreen();
+  }
+
+  runApp(IHuntApp(homeView));
+
+}
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
