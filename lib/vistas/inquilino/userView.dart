@@ -5,9 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+
 import 'dart:async';
 
-//import 'package:ihunt/vistas/inquilino/mapa.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 class UserView extends StatefulWidget {
@@ -21,10 +23,103 @@ class _UserState extends State<UserView> {
   String nombre;
   String tipo_usuario;
 
+
+  //############################################################################
+  //#########################################################################1
+
+
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  String messageTitle = "Empty";
+  String notificationAlert = "Alert";
+
+
+  //###########################################################################1
+  //############################################################################
+
+
   @override
   void initState(){
     setData();
+
+
+
+    //############################################################################
+    //#########################################################################1
+
+    super.initState();
+    _setFCMToken();
+
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      setState(() {
+        messageTitle = event.notification.title;
+        notificationAlert = "New Notification Alert";
+      });
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage  event) {
+      setState(() {
+        messageTitle = event.notification.title;
+        notificationAlert = "Application opened from Notification";
+      });
+    });
+
+    print("MENSAGE: {$messageTitle}");
+
+
+    //#########################################################################1
+    //############################################################################
+
   }
+
+
+
+
+
+  //############################################################################
+  //###########################################################################1
+  void _setFCMToken() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    /*FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      if (message != null) {
+        print("New message has been received");
+        /*Navigator.pushNamed(context, '/message',
+            arguments: MessageArguments(message, true));*/
+      }
+    });*/
+
+    /*messaging.getInitialMessage().then((RemoteMessage message) {
+
+      Navigator.pushNamed(context, '/NotificationesInquilino',
+          arguments: RouteSettings(
+            arguments: messageTitle));
+    });*/
+
+
+    print("Loggeado como ================> $tipo_usuario");
+
+  }
+
+  //###########################################################################1
+  //############################################################################
+
+
+
+  //############################################################################
+  //###########################################################################1
+
+
+  void firebaseCloudMessaging_Listeners() {
+    _firebaseMessaging.getToken().then((token){
+      print(token);
+    });
+  }
+
+  //###########################################################################1
+  //############################################################################
 
 
   void setData() async{
@@ -35,6 +130,8 @@ class _UserState extends State<UserView> {
       id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
       tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
     });
+
+
   }
 
   Future<void> _logout() async {
@@ -114,7 +211,15 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
-        onPressed: ()=>{},
+        onPressed: (){
+          /*
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context)=>NotificacionesInquilino()));*/
+
+          Navigator.pushNamed(context, '/notificacionesInquilino',
+          arguments: messageTitle);
+
+        },
         child: Text("Mensajes",
             textAlign: TextAlign.center
             //style: style.copyWith(color: Colors.white)),
@@ -122,6 +227,13 @@ class _UserState extends State<UserView> {
       ),
     );
 
+    //##########################################################################
+    //#########################################################################1
+
+    firebaseCloudMessaging_Listeners();
+
+    //#########################################################################1
+    //##########################################################################
 
 
     return Scaffold(
@@ -166,6 +278,10 @@ class _UserState extends State<UserView> {
             ),
             //getRow(nombre, 30.0, 5.0),
             getRow(id_usuario, 15.0, 0.6),
+            Text(
+              messageTitle,
+              style: Theme.of(context).textTheme.headline4,
+            )
           ],
         ),
       ),
