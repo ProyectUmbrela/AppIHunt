@@ -42,7 +42,7 @@ Future<void> main() async {
   if((isLogged) && (tipoUsuario == 'Usuario')) {
     print("LOGEADO COMO USUARIO");
     homeView = UserView();
-    //homeView = Notificaciones();
+
   }
   else if((isLogged) && (tipoUsuario == 'Propietario')){
     print("LOGEADO COMO PROPIETARIO");

@@ -91,13 +91,6 @@ class _UserState extends State<UserView> {
       }
     });*/
 
-    /*messaging.getInitialMessage().then((RemoteMessage message) {
-
-      Navigator.pushNamed(context, '/NotificationesInquilino',
-          arguments: RouteSettings(
-            arguments: messageTitle));
-    });*/
-
 
     print("Loggeado como ================> $tipo_usuario");
 
@@ -113,6 +106,7 @@ class _UserState extends State<UserView> {
 
 
   void firebaseCloudMessaging_Listeners() {
+
     _firebaseMessaging.getToken().then((token){
       print(token);
     });
@@ -220,7 +214,7 @@ class _UserState extends State<UserView> {
           arguments: messageTitle);
 
         },
-        child: Text("Mensajes",
+        child: Text("Invitaciones",
             textAlign: TextAlign.center
             //style: style.copyWith(color: Colors.white)),
       )

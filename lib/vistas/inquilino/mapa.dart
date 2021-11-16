@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 // ignore_for_file: public_member_api_d
-
+/*
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:async';
@@ -28,7 +28,7 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
 
-
+*/
 
   /*
   Completer<GoogleMapController> _controller = Completer();
@@ -68,6 +68,7 @@ class MapSampleState extends State<MapSample> {
   }
   */
 
+  /*
   List<String> links_document = [];
 
 
@@ -121,5 +122,5 @@ class MapSampleState extends State<MapSample> {
     );
   }
 }
-
+*/
 

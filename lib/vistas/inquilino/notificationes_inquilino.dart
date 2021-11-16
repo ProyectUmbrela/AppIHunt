@@ -18,13 +18,13 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
     final todo = ModalRoute.of(context).settings.arguments;
     print("===========> $todo");
-    /*var message;
-    if (todo == null){
-      message = "Empty";
+    var message;
+    if (todo == "Empty"){
+      message = "No tienes nuevas invitaciones";
     }
     else{
       message = todo;
-    }*/
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -34,12 +34,13 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            /*Text(
               "Inquilino",
-            ),
+            ),*/
             Text(
-              "${todo}",
+              "${message}",
               style: Theme.of(context).textTheme.headline4,
+              textAlign: TextAlign.center,
             ),
           ],
         ),

@@ -68,6 +68,7 @@ class MapsPage extends State<MyMaps> {
     );
   }
 
+  /*
   List<String> fotosList = [
     "https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg",
     "https://awsrpia.s3.amazonaws.com/habitaciones/200093415_107240988265907_2391073375870101507_n.jpg",
@@ -75,7 +76,7 @@ class MapsPage extends State<MyMaps> {
     "https://awsrpia.s3.amazonaws.com/habitaciones/201763526_107240834932589_1701097239284879277_n.jpg",
     "https://awsrpia.s3.amazonaws.com/habitaciones/201822557_532998261486582_8554378459947353905_n.jpg",
     "https://awsrpia.s3.amazonaws.com/habitaciones/202073837_501458407829418_6563349131041000474_n.jpg"
-  ];
+  ];*/
 
 
 
