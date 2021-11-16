@@ -24,7 +24,7 @@ import 'package:ihunt/vistas/propietario/notificaciones_propietario.dart';
 import 'vistas/mainscreen.dart';
 import 'vistas/register.dart';
 import 'vistas/login.dart';
-
+/*
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +55,7 @@ Future<void> main() async {
 
   runApp(IHuntApp(homeView));
 
-}
+}*/
 
 
 class MyHomePage extends StatefulWidget {
