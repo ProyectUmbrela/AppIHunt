@@ -42,12 +42,32 @@ class Habitacion {
   String estado;
   String periodo;
   String idhabitacion;
+  String telefono;
+  String costoRenta;
+  String tiempoRenta;
+  String terminosRenta;
+  String direccion;
+  String servicios;
+  String descripcion;
+  String fechaPago;
+
 
   Habitacion({
     this.name,
     this.estado,
     this.periodo,
-    this.idhabitacion});
+    this.idhabitacion,
+    this.telefono,
+    this.costoRenta,
+    this.tiempoRenta,
+    this.terminosRenta,
+    this.direccion,
+    this.servicios,
+    this.descripcion,
+    this.fechaPago
+  });
+
+
 }
 
 
@@ -55,7 +75,7 @@ Future getHabitaciones(idUsuario) async {
 
   Map<int, String> meses = {
                             1:"Enero",
-                            2:"Febbrero",
+                            2:"Febrero",
                             3:"Marzo",
                             4:"Abril",
                             5:"Mayo",
@@ -80,7 +100,7 @@ Future getHabitaciones(idUsuario) async {
     print("###################################");
     List actual = resp['habitacion_rentada'];
     if (actual.length > 0){
-
+      print("HABITACION ACTUAL");
       for (int i=0; i < actual.length; i++){
         var habitacion = actual[i];
 
@@ -95,7 +115,17 @@ Future getHabitaciones(idUsuario) async {
               name: habitacion['nombre'],
               estado: "En Renta",
               periodo: periodo,
-              idhabitacion: "${habitacion['idhabitacion']}"));
+              idhabitacion: "${habitacion['idhabitacion']}",
+              telefono: habitacion['telefono'],
+              costoRenta: "PRECIO DE RENTA",
+              tiempoRenta: habitacion['tiempoRentada'],
+              terminosRenta: habitacion['terminos'],
+              direccion: habitacion['direccion'],
+              servicios: habitacion['servicios'],
+              descripcion: habitacion['descripcion'],
+              fechaPago: 'DIAS DE PAGO'
+          ));
+          print("HABITACION ACTUAL AGREGADA A LA LISTA");
       }
     }
 
@@ -108,7 +138,7 @@ Future getHabitaciones(idUsuario) async {
     if (historial.length > 0){
       print("HISTORIAL DE HABITACIONES");
       for (int j=0; j < historial.length; j++){
-        print("leng: ${historial.length}");
+        //print("leng: ${historial.length}");
         var habitacion = historial[j];
 
           var timeInit =  HttpDate.parse(habitacion['fechacontratoinit']);
@@ -118,15 +148,24 @@ Future getHabitaciones(idUsuario) async {
           final mesFin = meses[timeFin.month];
 
           final periodo = "${meses[timeInit.month]} ${timeInit.year} - ${meses[timeFin.month]} ${timeFin.year}";
-          print("PERIODO = ${periodo}");
-          print("ID_HABITACION: ${habitacion['idhabitacion']}");
 
-          habitaciones.add(Habitacion(
-              name: habitacion['nombre'],
-              estado: "Rentada",
-              periodo: periodo,
-              idhabitacion: "${habitacion['idhabitacion']}"));
-
+          habitaciones.add(
+              Habitacion(
+                  name: habitacion['nombre'],
+                  estado: "En Renta",
+                  periodo: periodo,
+                  idhabitacion: "${habitacion['idhabitacion']}",
+                  telefono: habitacion['telefono'],
+                  costoRenta: "PRECIO DE RENTA",
+                  tiempoRenta: habitacion['tiempoRentada'].toString(),
+                  terminosRenta: habitacion['terminos'],
+                  direccion: habitacion['direccion'],
+                  servicios: habitacion['servicios'],
+                  descripcion: habitacion['descripcion'],
+                  fechaPago: "DIAS DE PAGO"
+              )
+          );
+          print("NEXT HABITACION");
       }
     }
     else{
@@ -147,12 +186,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   //@override
   Widget habitacionDetails(habitacion) {
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Card(
         color: Colors.grey[800],
         child: InkWell(
-          onTap: ()=> _testClicked(habitacion.idhabitacion, context),
+          onTap: ()=> _DetallesHabitacion(habitacion, context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -245,14 +285,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-_testClicked(idhabitacion, context) {
+_DetallesHabitacion(habitacion, context) {
 
   Navigator.of(context).push(MaterialPageRoute(
-      builder: (context)=>DetallesHab(),
-      settings: RouteSettings(
-        arguments: {0: "1"},
-      )
-      ));
-  print("HABITACION $idhabitacion");
+      builder: (_) => new DetallesHab(
+          name: habitacion.name,
+          estado: habitacion.estado,
+          periodo: habitacion.periodo,
+          idhabitacion: habitacion.idhabitacion,
+          telefono: habitacion.telefono,
+          costoRenta: habitacion.costoRenta,
+          tiempoRenta: habitacion.tiempoRenta,
+          terminosRenta: habitacion.terminosRenta,
+          direccion: habitacion.direccion,
+          servicios: habitacion.servicios,
+          descripcion: habitacion.descripcion,
+          fechaPago: habitacion.fechaPago,
+      ),
+  ));
+  //print("HABITACION $habitacion");
 
 }
