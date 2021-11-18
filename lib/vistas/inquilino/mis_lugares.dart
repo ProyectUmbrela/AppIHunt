@@ -129,9 +129,9 @@ Future getHabitaciones(idUsuario) async {
       }
     }
 
-    else{
+    /*else{
       print("No hay habitacion actual en renta");
-    }
+    }*/
 
 
     List historial = resp['historial'];
@@ -168,9 +168,12 @@ Future getHabitaciones(idUsuario) async {
           print("NEXT HABITACION");
       }
     }
-    else{
+
+    /*else{
       print("No hay historial de habitaciones en renta");
-    }
+    }*/
+
+
     return habitaciones;
   }
 }
@@ -250,6 +253,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 
   Widget projectWidget() {
+
+    //Widget resumenHabitaciones =
+
     return FutureBuilder(
       future: getProjectDetails(),
       builder: (context, snapshot) {

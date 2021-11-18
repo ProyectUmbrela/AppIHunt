@@ -356,7 +356,7 @@ class MapsPage extends State<MyMaps> {
                 for(int i = 0; i < snapshot.data.docs.length; i++){
                   //print("=====> ${snapshot.data.docs[i].data()}");
 
-                  //print("=====> ${snapshot.data.docs[i].id}");
+                  print("=====> ${snapshot.data.docs[i].id}");
 
                   String id_document = snapshot.data.docs[i].id;
                   //listExample(id_document);

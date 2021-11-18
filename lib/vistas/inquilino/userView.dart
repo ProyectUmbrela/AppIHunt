@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+//import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 
 import 'dart:async';
 
@@ -217,7 +217,7 @@ class _UserState extends State<UserView> {
         child: Text("Invitaciones",
             textAlign: TextAlign.center
             //style: style.copyWith(color: Colors.white)),
-      )
+        )
       ),
     );
 
@@ -262,7 +262,6 @@ class _UserState extends State<UserView> {
         child: Column(
           //mainAxisSize: MainAxisSize.max,
           //mainAxisAlignment: MainAxisAlignment.start,
-
           children: <Widget>[
              Container(
                child: Icon(Icons.person ,
