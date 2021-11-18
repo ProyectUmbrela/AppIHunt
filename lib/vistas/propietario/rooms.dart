@@ -322,6 +322,13 @@ class _roomsState extends State<rooms> with SingleTickerProviderStateMixin {
                                       },
                                       child: const Text('Editar'),
                                     ),
+                                    FlatButton(
+                                      textColor: const Color(0xFF6200EE),
+                                      onPressed: snapshot.data[index].status==1?
+                                          () {} :
+                                          () {} ,
+                                      child: const Text('Eliminar'),
+                                    )
                                   ],
                                 ),
                                 //Image.asset('assets/card-sample-image.jpg'),
