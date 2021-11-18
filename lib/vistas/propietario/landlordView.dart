@@ -21,6 +21,11 @@ class _LandlordState extends State<Landlord>
     setData();
   }
 
+  Future<void> _logout() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool("isLogged", false);
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
 
   void setData() async{
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -48,6 +53,19 @@ class _LandlordState extends State<Landlord>
                 Tab(icon: Icon(Icons.card_giftcard))
               ],
             ),
+            actions: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text("Salir"),
+                  new IconButton(
+                    icon: Icon(
+                        Icons.exit_to_app,
+                        color: Colors.white),
+                    onPressed: _logout,
+                  )
+                ],
+              )
+            ],
             title: Text('Hola $nombre'),
           ),
           body: TabBarView(
