@@ -16,6 +16,9 @@ import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
 import 'package:ihunt/vistas/notificaciones.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+import 'package:ihunt/vistas/inquilino/loginTest.dart';
+
+
 
 // VISTA PROPIETARIO
 import 'vistas/propietario/landlordView.dart';
@@ -44,6 +47,7 @@ Future<void> main() async {
 
   if((isLogged) && (tipoUsuario == 'Usuario')) {
     print("LOGEADO COMO USUARIO");
+    //homeView = LoginTest();
     homeView = UserView();
     //homeView = Notificaciones();
   }
@@ -74,11 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    //PUSH NOTIFICATIONS
-    //PushNotificationsManager().init();
     super.initState();
-
-
   }
 
 

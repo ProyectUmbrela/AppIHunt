@@ -7,6 +7,8 @@ import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -107,6 +109,7 @@ class _UserState extends State<UserView> {
 
   void firebaseCloudMessaging_Listeners() {
 
+
     _firebaseMessaging.getToken().then((token){
       print(token);
     });
@@ -124,6 +127,27 @@ class _UserState extends State<UserView> {
       id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
       tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
     });
+
+    /*
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          //email: "barry.allen@example.com",
+          email: "virus_dfgh@hotmail.com",
+          password: "SuperSecretPassword!"
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.*****************');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.*****************');
+      }
+      else{
+        print("USER HAS BEEN REGISTERED**********");
+      }
+    } catch (e) {
+      print(e);
+    }*/
+
 
 
   }

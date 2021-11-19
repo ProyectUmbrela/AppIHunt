@@ -110,6 +110,8 @@ Future getHabitaciones(idUsuario) async {
           final periodo = "${meses[timeInit.month]} ${timeInit.year} - Actual";
           //print("PERIODO = ${periodo}");
           //print("ID_HABITACION: ${habitacion['idhabitacion']}");
+          var diasPago =  HttpDate.parse(habitacion['fechapago']);
+
 
           habitaciones.add(Habitacion(
               name: habitacion['nombre'],
@@ -117,13 +119,13 @@ Future getHabitaciones(idUsuario) async {
               periodo: periodo,
               idhabitacion: "${habitacion['idhabitacion']}",
               telefono: habitacion['telefono'],
-              costoRenta: "PRECIO DE RENTA",
+              costoRenta: habitacion['precio'].toString(),
               tiempoRenta: habitacion['tiempoRentada'],
               terminosRenta: habitacion['terminos'],
               direccion: habitacion['direccion'],
               servicios: habitacion['servicios'],
               descripcion: habitacion['descripcion'],
-              fechaPago: 'DIAS DE PAGO'
+              fechaPago: diasPago.day.toString()
           ));
           print("HABITACION ACTUAL AGREGADA A LA LISTA");
       }
@@ -152,7 +154,7 @@ Future getHabitaciones(idUsuario) async {
           habitaciones.add(
               Habitacion(
                   name: habitacion['nombre'],
-                  estado: "En Renta",
+                  estado: "Rentada",
                   periodo: periodo,
                   idhabitacion: "${habitacion['idhabitacion']}",
                   telefono: habitacion['telefono'],
@@ -165,7 +167,7 @@ Future getHabitaciones(idUsuario) async {
                   fechaPago: "DIAS DE PAGO"
               )
           );
-          print("NEXT HABITACION");
+          //print("NEXT HABITACION");
       }
     }
 
@@ -188,7 +190,7 @@ _getHabitacionesList(idUsuario) async {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   //@override
-  Widget habitacionDetails(habitacion) {
+  Widget habitacionDetalles(habitacion) {
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -266,7 +268,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   Habitacion habitacion = snapshot.data[index];
                   return Column(
                     children: <Widget>[
-                      habitacionDetails(habitacion)
+                      habitacionDetalles(habitacion)
                     ],
                   );
                 },

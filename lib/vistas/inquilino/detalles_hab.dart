@@ -39,49 +39,52 @@ class DetallesHab extends StatefulWidget {
 
 class _DetallesHab extends State<DetallesHab> {
 
-
-
-  @override
-  Widget build(BuildContext context) {
-    //var todo = ModalRoute.of(context).settings.arguments;
-    //Habitacion detalles = todo as Habitacion;
-    print("**************>>>>> ${widget.name.toString()}");
-    return Scaffold(
-        appBar: AppBar(
-            title: Text("Resumen de habitacion")
-        ),
-      body: Column(
-        children: <Widget>[
-          Card(
-            color: Colors.grey[800],
-            child: Column(
-              children: <Widget>[
-                Row(
+  Widget detallesPropietario() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        color: Colors.grey[800],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
                   children: <Widget>[
                     Text(widget.name.toString(),
                         style: TextStyle(color: Colors.white, fontSize: 18))]
-                ),
-                Row(
-                    children: <Widget>[
-                      Text(widget.telefono.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
-                )
-              ],
-            ),
-          ),
-          Card(
-            color: Colors.grey[800],
+              ),
+              Row(
+                  children: <Widget>[
+                    Text(widget.telefono.toString(),
+                        style: TextStyle(color: Colors.white, fontSize: 16))]
+            )
+          ],
+        ),)
+      ),
+
+
+    );
+  }
+
+  Widget detallesRenta() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        color: Colors.grey[800],
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
                 Row(
                     children: <Widget>[
-                      Text(widget.costoRenta.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Text("Costo de renta \$ " + widget.costoRenta.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 18))]
                 ),
                 Row(
                     children: <Widget>[
-                    Text(widget.fechaPago.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Text("Dias de pago: " + widget.fechaPago.toString() + " de cada mes",
+                          style: TextStyle(color: Colors.white, fontSize: 18))]
                 ),
                 Row(
                     children: <Widget>[
@@ -99,10 +102,21 @@ class _DetallesHab extends State<DetallesHab> {
                           style: TextStyle(color: Colors.white, fontSize: 18))]
                 )
               ],
-            ),
-          ),
-          Card(
-            color: Colors.grey[800],
+            )
+        ),
+      ),
+    );
+
+  }
+
+  Widget detallesHabitacion() {
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        color: Colors.grey[800],
+        child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
                 Row(
@@ -121,8 +135,28 @@ class _DetallesHab extends State<DetallesHab> {
                           style: TextStyle(color: Colors.white, fontSize: 18))]
                 )
               ],
-            ),
-          )
+            )
+        ),
+      ),
+    );
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    //var todo = ModalRoute.of(context).settings.arguments;
+    //Habitacion detalles = todo as Habitacion;
+    print("**************>>>>> ${widget.name.toString()}");
+    return Scaffold(
+        appBar: AppBar(
+            title: Text("Resumen de habitacion")
+        ),
+      body: Column(
+        children: <Widget>[
+          detallesPropietario(),
+          detallesRenta(),
+          detallesHabitacion()
         ],
       ),
     );
