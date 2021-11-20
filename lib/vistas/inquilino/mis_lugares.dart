@@ -105,13 +105,22 @@ Future getHabitaciones(idUsuario) async {
         var habitacion = actual[i];
 
           var timeInit =  HttpDate.parse(habitacion['fechainicontrato']);
-          final mesInit = meses[timeInit.month];
-
+          //final mesInit = meses[timeInit.month];
           final periodo = "${meses[timeInit.month]} ${timeInit.year} - Actual";
-          //print("PERIODO = ${periodo}");
-          //print("ID_HABITACION: ${habitacion['idhabitacion']}");
           var diasPago =  HttpDate.parse(habitacion['fechapago']);
 
+          final date2 = DateTime.now();
+
+          var currentMonths = (date2.difference(timeInit).inDays)/30;
+          var tiempoRentada = currentMonths.toInt().toString();
+          //print("*****************MESES TRANSCURRIDOS: ${tiempoRentada}");
+          /*
+          *
+            final birthday = DateTime(1967, 10, 12);
+            final date2 = DateTime.now();
+            final difference = date2.difference(birthday).inDays;
+            *
+          * */
 
           habitaciones.add(Habitacion(
               name: habitacion['nombre'],
@@ -120,7 +129,7 @@ Future getHabitaciones(idUsuario) async {
               idhabitacion: "${habitacion['idhabitacion']}",
               telefono: habitacion['telefono'],
               costoRenta: habitacion['precio'].toString(),
-              tiempoRenta: habitacion['tiempoRentada'],
+              tiempoRenta: tiempoRentada,
               terminosRenta: habitacion['terminos'],
               direccion: habitacion['direccion'],
               servicios: habitacion['servicios'],
@@ -146,8 +155,8 @@ Future getHabitaciones(idUsuario) async {
           var timeInit =  HttpDate.parse(habitacion['fechacontratoinit']);
           var timeFin =  HttpDate.parse(habitacion['fechacontratofin']);
 
-          final mesInit = meses[timeInit.month];
-          final mesFin = meses[timeFin.month];
+          //final mesInit = meses[timeInit.month];
+          //final mesFin = meses[timeFin.month];
 
           final periodo = "${meses[timeInit.month]} ${timeInit.year} - ${meses[timeFin.month]} ${timeFin.year}";
 
@@ -180,16 +189,16 @@ Future getHabitaciones(idUsuario) async {
   }
 }
 
-_getHabitacionesList(idUsuario) async {
+/*_getHabitacionesList(idUsuario) async {
 
   return await getHabitaciones(idUsuario);
-}
+}*/
 
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
-  //@override
+
   Widget habitacionDetalles(habitacion) {
 
     return Padding(
@@ -205,8 +214,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    width: 50.0,
-                    height: 50.0,
+                    /*width: 1.0,
+                    height: 1.0,*/
                     decoration: new BoxDecoration(shape: BoxShape.circle),
                   ),
                 ),
@@ -220,11 +229,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     ),
                     Text(
                       habitacion.estado,
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                     Text(
                       habitacion.periodo,
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                   ],
                 )
@@ -256,26 +265,52 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   Widget projectWidget() {
 
-    //Widget resumenHabitaciones =
-
     return FutureBuilder(
       future: getProjectDetails(),
       builder: (context, snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  Habitacion habitacion = snapshot.data[index];
-                  return Column(
-                    children: <Widget>[
-                      habitacionDetalles(habitacion)
-                    ],
-                  );
-                },
-              )
-            : Center(
-                child: CircularProgressIndicator(),
+        if(!snapshot.hasData){
+          // Esperando la respuesta de la API
+          return Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text('Cargando...'),
+                ]
+            ),
+          );
+
+        }
+        else if(snapshot.hasData && snapshot.data.isEmpty) {
+          // Informacion obtenida de la API pero esta vacio el response
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Aún no tienes habitaciones rentadas",
+                  style: Theme.of(context).textTheme.headline4,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        }
+        else  {
+          // Informacion obtenida y con datos en el response
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              Habitacion habitacion = snapshot.data[index];
+              return Column(
+                children: <Widget>[
+                  habitacionDetalles(habitacion)
+                ],
               );
+            },
+          );
+        }
       },
     );
   }
