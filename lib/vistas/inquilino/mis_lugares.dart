@@ -113,14 +113,6 @@ Future getHabitaciones(idUsuario) async {
 
           var currentMonths = (date2.difference(timeInit).inDays)/30;
           var tiempoRentada = currentMonths.toInt().toString();
-          //print("*****************MESES TRANSCURRIDOS: ${tiempoRentada}");
-          /*
-          *
-            final birthday = DateTime(1967, 10, 12);
-            final date2 = DateTime.now();
-            final difference = date2.difference(birthday).inDays;
-            *
-          * */
 
           habitaciones.add(Habitacion(
               name: habitacion['nombre'],
@@ -140,11 +132,6 @@ Future getHabitaciones(idUsuario) async {
       }
     }
 
-    /*else{
-      print("No hay habitacion actual en renta");
-    }*/
-
-
     List historial = resp['historial'];
     if (historial.length > 0){
       print("HISTORIAL DE HABITACIONES");
@@ -155,8 +142,7 @@ Future getHabitaciones(idUsuario) async {
           var timeInit =  HttpDate.parse(habitacion['fechacontratoinit']);
           var timeFin =  HttpDate.parse(habitacion['fechacontratofin']);
 
-          //final mesInit = meses[timeInit.month];
-          //final mesFin = meses[timeFin.month];
+          var diasPago =  HttpDate.parse(habitacion['fechacontratoinit']);
 
           final periodo = "${meses[timeInit.month]} ${timeInit.year} - ${meses[timeFin.month]} ${timeFin.year}";
 
@@ -167,32 +153,20 @@ Future getHabitaciones(idUsuario) async {
                   periodo: periodo,
                   idhabitacion: "${habitacion['idhabitacion']}",
                   telefono: habitacion['telefono'],
-                  costoRenta: "PRECIO DE RENTA",
+                  costoRenta: habitacion['precio'].toString(),
                   tiempoRenta: habitacion['tiempoRentada'].toString(),
                   terminosRenta: habitacion['terminos'],
                   direccion: habitacion['direccion'],
                   servicios: habitacion['servicios'],
                   descripcion: habitacion['descripcion'],
-                  fechaPago: "DIAS DE PAGO"
+                  fechaPago: diasPago.day.toString()
               )
           );
-          //print("NEXT HABITACION");
       }
     }
-
-    /*else{
-      print("No hay historial de habitaciones en renta");
-    }*/
-
-
     return habitaciones;
   }
 }
-
-/*_getHabitacionesList(idUsuario) async {
-
-  return await getHabitaciones(idUsuario);
-}*/
 
 
 /// This is the private State class that goes with MyStatefulWidget.
@@ -280,7 +254,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ]
             ),
           );
-
         }
         else if(snapshot.hasData && snapshot.data.isEmpty) {
           // Informacion obtenida de la API pero esta vacio el response
@@ -322,7 +295,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       appBar: AppBar(
         title: Text('Mis habitaciones'),
       ),
-
       body: projectWidget(),
     );
   }
@@ -346,6 +318,4 @@ _DetallesHabitacion(habitacion, context) {
           fechaPago: habitacion.fechaPago,
       ),
   ));
-  //print("HABITACION $habitacion");
-
 }

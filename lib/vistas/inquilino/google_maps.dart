@@ -46,7 +46,6 @@ class infoHabitacion{
 
 class MapsPage extends State<MyMaps> {
 
-  //style map
   String _mapStyle;
 
   //google controller and markers
@@ -68,26 +67,14 @@ class MapsPage extends State<MyMaps> {
     );
   }
 
-  /*
-  List<String> fotosList = [
-    "https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg",
-    "https://awsrpia.s3.amazonaws.com/habitaciones/200093415_107240988265907_2391073375870101507_n.jpg",
-    "https://awsrpia.s3.amazonaws.com/habitaciones/201482550_532932834826458_3630072694624410304_n.jpg",
-    "https://awsrpia.s3.amazonaws.com/habitaciones/201763526_107240834932589_1701097239284879277_n.jpg",
-    "https://awsrpia.s3.amazonaws.com/habitaciones/201822557_532998261486582_8554378459947353905_n.jpg",
-    "https://awsrpia.s3.amazonaws.com/habitaciones/202073837_501458407829418_6563349131041000474_n.jpg"
-  ];*/
-
-
 
   void initMarker(position, specifyId, habitacion, setFotos) async{
 
-    //var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(specifyId);
     infoHabitacion info = habitacion;
 
     double sizeText = 14;
-    //var setList = await listExample(specifyId);
+
     final Marker marker = new Marker(
       markerId: markerId,
       position: position,
@@ -122,17 +109,7 @@ class MapsPage extends State<MyMaps> {
                                   options: CarouselOptions(
                                       autoPlay: true
                                   ),
-                                  // listExample(specifyId)
-                                  //items: links_document.map(
-                                  items: setFotos/*.map(
-                                          (img) => Center(
-                                            child: Image.memory(base64Decode(img))
-                                            /*child: Image.network(
-                                              img,
-                                              fit: BoxFit.cover,
-                                            )*/,
-                                          )
-                                  ).toList()*/,
+                                  items: setFotos
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(10.0),
@@ -296,54 +273,14 @@ class MapsPage extends State<MyMaps> {
   }
 
 
-  //######################################################
-  //######################################################
-  //######################################################
-  //######################################################
-
-  /*
-  Future<List> listExample(String document) async {
-
-    List<String> links_document = [];
-
-    firebase_storage.ListResult result =
-    await firebase_storage.FirebaseStorage.instance.ref(document).listAll();
-
-    result.items.forEach((firebase_storage.Reference ref) async {
-
-      final link = await ref.getDownloadURL();
-      //print("===> $link");
-      links_document.add(link);
-
-    });
-
-    /*result.prefixes.forEach((firebase_storage.Reference ref) {
-      print('Found directory: $ref');
-    });*/
-
-
-    return links_document;
-  }*/
-
-  //######################################################
-  //######################################################
-  //######################################################
-  //######################################################
 
   @override
   Widget build(BuildContext context){
     Set<Marker> markers = Set();
 
+
+
     return Scaffold(
-        /*appBar: AppBar(
-          leading: BackButton(
-            onPressed: () => {
-              Navigator.of(context).pop(),
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserView()))
-            },
-          ),
-          title: Text("Volver"),
-        ),*/
         body: SafeArea(
           child: StreamBuilder(
             stream: FirebaseFirestore
@@ -353,35 +290,47 @@ class MapsPage extends State<MyMaps> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+
+                /*var notavailable =  '';
+                FirebaseFirestore
+                    .instance
+                    .collection("marker_rent")
+                    .doc("NotAvailable")
+                    .get()
+                    .then((docRef) => {
+                  notavailable = docRef.get('image'),
+                });*/
+
                 for(int i = 0; i < snapshot.data.docs.length; i++){
-                  //print("=====> ${snapshot.data.docs[i].data()}");
 
-                  print("=====> ${snapshot.data.docs[i].id}");
-
-                  String id_document = snapshot.data.docs[i].id;
-                  //listExample(id_document);
-
-                  //var setList = listExample(id_document);
-                  final List<String> setFotos = [];
                   List<Widget> widgets = [];
+
                   var rawFotos = snapshot.data.docs[i]['fotos'];
 
-                  rawFotos.forEach((final String key, final value) {
-                    //print("###########################################");
-                    //print("--> value: ${value}");
-                    //setFotos.add(value);
-                    //print("###########################################");
-                    // do with this info whatever you want
-                    widgets.add(Image.memory(base64Decode(value)));
-                  });
+                  if (rawFotos.length == 0 ){
+                    print("sin fotos");
+                    //widgets.add(Image.memory(base64Decode(notavailable)));
+                    FirebaseFirestore
+                        .instance
+                        .collection("marker_rent")
+                        .doc("NotAvailable")
+                        .get()
+                        .then((docRef) => {
+                          widgets.add(Image.memory(base64Decode(docRef.get('image'))))
+                    });
+                  }
 
+                  else{
+                    rawFotos.forEach((final String key, final value) {
 
-
+                      widgets.add(Image.memory(base64Decode(value)));
+                    });
+                  }
 
                   double lat = snapshot.data.docs[i]['coords'].latitude;
                   double lng = snapshot.data.docs[i]['coords'].longitude;
 
-                  var numHab = snapshot.data.docs[i]['habitaciones'];
+
                   var latLng = LatLng(lat, lng);
 
                   String direccion = snapshot.data.docs[i]['direccion'];
@@ -392,16 +341,6 @@ class MapsPage extends State<MyMaps> {
                   String detalles = snapshot.data.docs[i]['detalles'];
                   int habitaciones = snapshot.data.docs[i]['habitaciones'];
 
-                  /*
-                  List<infoHabitacion> listaInfo = [];
-                  for(int i=0; i<listTab.length; i++){
-                    print(listTab[i]);
-                    String servicios = listTab[i]['servicios'];
-                    String costo = listTab[i]['costo'];
-                    String detalles = listTab[i]['detalles'];
-
-                    listaInfo.add(infoHabitacion(servicios, costo, detalles));
-                  }*/
 
                   infoHabitacion habitacion = infoHabitacion(
                       servicios,
@@ -411,7 +350,6 @@ class MapsPage extends State<MyMaps> {
                       habitaciones,
                       titular);
 
-                  //initMarker(latLng, snapshot.data.docs[i].id, numHab);
                   initMarker(
                       latLng,
                       snapshot.data.docs[i].id,

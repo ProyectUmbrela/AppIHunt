@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -27,13 +28,13 @@ class _UserState extends State<UserView> {
 
 
   //############################################################################
-  //#########################################################################1
+  //###########################################################################1
 
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String messageTitle = "Empty";
   String notificationAlert = "Alert";
-
+  var tokenBy = '';
 
   //###########################################################################1
   //############################################################################
@@ -83,19 +84,6 @@ class _UserState extends State<UserView> {
   void _setFCMToken() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    /*FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage message) {
-      if (message != null) {
-        print("New message has been received");
-        /*Navigator.pushNamed(context, '/message',
-            arguments: MessageArguments(message, true));*/
-      }
-    });*/
-
-
-    print("Loggeado como ================> $tipo_usuario");
-
   }
 
   //###########################################################################1
@@ -106,12 +94,31 @@ class _UserState extends State<UserView> {
   //############################################################################
   //###########################################################################1
 
+  Future<void> saveTokenToDatabase(String token) async {
+
+    //String userId = FirebaseAuth.instance.currentUser.uid;
+
+    await FirebaseFirestore.instance
+        .collection('usuario')
+        .doc(id_usuario)
+        .set({
+      //'tokens': FieldValue.arrayUnion([token]),
+        'tokens': FieldValue.arrayUnion([token]),
+    });
+
+    //print("Token has been saved into users collection");
+    tokenBy = token;
+  }
+
 
   void firebaseCloudMessaging_Listeners() {
 
 
-    _firebaseMessaging.getToken().then((token){
-      print(token);
+    _firebaseMessaging.getToken().then((token) async {
+      //print(token);
+      await saveTokenToDatabase(token);
+      _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
+
     });
   }
 
@@ -128,28 +135,6 @@ class _UserState extends State<UserView> {
       tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
     });
 
-    /*
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          //email: "barry.allen@example.com",
-          email: "virus_dfgh@hotmail.com",
-          password: "SuperSecretPassword!"
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.*****************');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.*****************');
-      }
-      else{
-        print("USER HAS BEEN REGISTERED**********");
-      }
-    } catch (e) {
-      print(e);
-    }*/
-
-
-
   }
 
   Future<void> _logout() async {
@@ -161,6 +146,7 @@ class _UserState extends State<UserView> {
 
 
   Widget getRow(String stringval, double textSize, double opacity){
+
       return Opacity(
         opacity: opacity,
         child:  Container(
@@ -196,8 +182,7 @@ class _UserState extends State<UserView> {
               )));
         },
         child: Text("Mis lugares",
-            textAlign: TextAlign.center
-      )
+            textAlign: TextAlign.center)
       ),
     );
 
@@ -230,9 +215,6 @@ class _UserState extends State<UserView> {
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
-          /*
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context)=>NotificacionesInquilino()));*/
 
           Navigator.pushNamed(context, '/notificacionesInquilino',
           arguments: messageTitle);
@@ -240,7 +222,6 @@ class _UserState extends State<UserView> {
         },
         child: Text("Invitaciones",
             textAlign: TextAlign.center
-            //style: style.copyWith(color: Colors.white)),
         )
       ),
     );
@@ -293,12 +274,13 @@ class _UserState extends State<UserView> {
                  size: 50.0,
                ),
             ),
-            //getRow(nombre, 30.0, 5.0),
             getRow(id_usuario, 15.0, 0.6),
             Text(
               messageTitle,
               style: Theme.of(context).textTheme.headline4,
-            )
+            ),
+            Text(tokenBy,
+              style: Theme.of(context).textTheme.headline6,)
           ],
         ),
       ),

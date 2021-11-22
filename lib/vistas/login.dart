@@ -24,10 +24,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _saving = false;
-
+  //bool _loading = false;
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
-
+  TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
 
   Widget _divider() {
     return Container(
@@ -127,31 +127,13 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext builderContext) {
         Future.delayed(Duration(seconds: seconds), () {
-          //Navigator.of(context).pop();
         });
         return AlertDialog(
-          // Retrieve the text the that user has entered by using the
-          // TextEditingController.
           content: Text(message),
         );
       },
     );
   }
-
-  void _submit() {
-    setState(() {
-      _saving = true;
-    });
-
-    //print('submitting to backend...');
-    new Future.delayed(new Duration(seconds: 2), () {
-
-      setState(() {
-        _saving = false;
-      });
-    });
-  }
-
 
   onSuccess() async{
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -159,10 +141,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
+
   Future _sendRequest(emailField, passwordField) async {
 
     Api _api = Api();
-    _submit();
+
     print("====================");
     print(emailField.text);
     print(passwordField.text);
@@ -173,29 +156,41 @@ class _LoginPageState extends State<LoginPage> {
           'contrasena': passwordField.text
         });
 
-    var response = await _api.loginPost(body);
+    var response;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: FutureBuilder(
+          future: _api.loginPost(body),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              response = snapshot.data;
+              Navigator.pop(context);
+            }
+            return CircularProgressIndicator();
+          },
+        ),
+      ),
+    );
+
     int statusCode = response.statusCode;
-
     var resp = json.decode(response.body);
-
-
     var sharedPreferences = await SharedPreferences.getInstance();
+
     if (statusCode == 201) {
-
-
+      _saving = true;
       sharedPreferences.setBool("isLogged", true);
       sharedPreferences.setString("nombre", resp['nombre']);
       sharedPreferences.setString("idusuario", resp['idusuario']);
       sharedPreferences.setString("Tipo", resp['Tipo']);
 
       if (resp['Tipo'] == 'Propietario') {
-        //Navigator.of(context).pop();
         Navigator.pushReplacementNamed(context, '/landlord');
       }
       if (resp['Tipo'] == 'Usuario') {
-        //Navigator.of(context).pop();
         Navigator.pushReplacementNamed(context, '/user');
-       
       }
 
     } else {
@@ -203,10 +198,12 @@ class _LoginPageState extends State<LoginPage> {
       sharedPreferences.setBool("isLogged", false);
       _showDialog(2, "El usuario o contraseña son incorrectos");
     }
+
   }
 
 
-  TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -230,15 +227,42 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () => _sendRequest(myControllerEmail, myControllerPassword),
+        //onPressed: () => _sendRequest(myControllerEmail, myControllerPassword),
+        onPressed: (){
+          _sendRequest(myControllerEmail, myControllerPassword);
+          //setState(() => _loading = true);
+        },
         child: Text("Ingresar",
             textAlign: TextAlign.center,
             style: style.copyWith(color: Colors.white)),
-      ),
+      )
     );
 
+      /*Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              child: CircularProgressIndicator(
+                valueColor : AlwaysStoppedAnimation(Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),*/
 
-    //final height = MediaQuery.of(context).size.height;
+
+      /*Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircularProgressIndicator()
+            ]
+        ),
+      ),*/
+
+
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
@@ -294,7 +318,6 @@ class _LoginPageState extends State<LoginPage> {
                   _divider(),
                   Padding(
                     padding: const EdgeInsets.all(50.0),
-
                   ),
                   _createAccountLabel()
                 ],

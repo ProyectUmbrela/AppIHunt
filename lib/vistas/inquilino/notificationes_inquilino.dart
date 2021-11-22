@@ -34,9 +34,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            /*Text(
-              "Inquilino",
-            ),*/
             Text(
               "${message}",
               style: Theme.of(context).textTheme.headline4,
