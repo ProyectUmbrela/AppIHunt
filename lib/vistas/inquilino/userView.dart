@@ -82,15 +82,27 @@ class _UserState extends State<UserView> {
 
     //String userId = FirebaseAuth.instance.currentUser.uid;
 
-    await FirebaseFirestore.instance
+    /*await FirebaseFirestore.instance
         .collection(tipo_usuario.toLowerCase())
         .doc(id_usuario)
         .set({
         'tokens': FieldValue.arrayUnion([token]),
-    });
+    });*/
 
     //print("Token has been saved into users collection");
     //tokenBy = token;
+
+    // upsert, insert if not exists or update if already exists
+    await FirebaseFirestore.instance
+        .collection(tipo_usuario.toLowerCase())
+        .doc(id_usuario)
+        .set({
+          'tokens': FieldValue.arrayUnion([token])},
+          SetOptions(merge: true)
+          );
+
+
+
   }
 
 
