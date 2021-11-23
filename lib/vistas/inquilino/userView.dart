@@ -6,9 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 
 import 'dart:async';
 
@@ -33,7 +33,7 @@ class _UserState extends State<UserView> {
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String messageTitle = "Empty";
-  String notificationAlert = "Alert";
+  //String notificationAlert = "Alert";
   var tokenBy = '';
 
   //###########################################################################1
@@ -41,53 +41,37 @@ class _UserState extends State<UserView> {
 
 
   @override
-  void initState(){
+  void initState() {
     setData();
-
-
 
     //############################################################################
     //#########################################################################1
 
     super.initState();
-    _setFCMToken();
+    firebaseCloudMessaging_Listeners();
 
+
+    FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       setState(() {
         messageTitle = event.notification.title;
-        notificationAlert = "New Notification Alert";
+        //notificationAlert = "New Notification Alert";
       });
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage  event) {
       setState(() {
         messageTitle = event.notification.title;
-        notificationAlert = "Application opened from Notification";
+        //notificationAlert = "Application opened from Notification";
       });
     });
-
-    print("MENSAGE: {$messageTitle}");
-
 
     //#########################################################################1
     //############################################################################
 
   }
 
-
-
-
-
-  //############################################################################
-  //###########################################################################1
-  void _setFCMToken() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  }
-
-  //###########################################################################1
-  //############################################################################
 
 
 
@@ -99,24 +83,23 @@ class _UserState extends State<UserView> {
     //String userId = FirebaseAuth.instance.currentUser.uid;
 
     await FirebaseFirestore.instance
-        .collection('usuario')
+        .collection(tipo_usuario.toLowerCase())
         .doc(id_usuario)
         .set({
-      //'tokens': FieldValue.arrayUnion([token]),
         'tokens': FieldValue.arrayUnion([token]),
     });
 
     //print("Token has been saved into users collection");
-    tokenBy = token;
+    //tokenBy = token;
   }
 
 
   void firebaseCloudMessaging_Listeners() {
 
-
     _firebaseMessaging.getToken().then((token) async {
       //print(token);
       await saveTokenToDatabase(token);
+      //tokenBy = token;
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
 
     });
@@ -226,13 +209,6 @@ class _UserState extends State<UserView> {
       ),
     );
 
-    //##########################################################################
-    //#########################################################################1
-
-    firebaseCloudMessaging_Listeners();
-
-    //#########################################################################1
-    //##########################################################################
 
 
     return Scaffold(
@@ -279,8 +255,8 @@ class _UserState extends State<UserView> {
               messageTitle,
               style: Theme.of(context).textTheme.headline4,
             ),
-            Text(tokenBy,
-              style: Theme.of(context).textTheme.headline6,)
+            /*Text(tokenBy,
+              style: Theme.of(context).textTheme.headline6,)*/
           ],
         ),
       ),

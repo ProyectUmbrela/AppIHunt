@@ -59,13 +59,14 @@ class MapsPage extends State<MyMaps> {
         'assets/marker_1.png');
   }
 
+  /*
   Future backToUser() async {
     Navigator.pop(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => UserView()),
     );
-  }
+  }*/
 
 
   void initMarker(position, specifyId, habitacion, setFotos) async{
@@ -278,8 +279,6 @@ class MapsPage extends State<MyMaps> {
   Widget build(BuildContext context){
     Set<Marker> markers = Set();
 
-
-
     return Scaffold(
         body: SafeArea(
           child: StreamBuilder(
@@ -291,25 +290,12 @@ class MapsPage extends State<MyMaps> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
 
-                /*var notavailable =  '';
-                FirebaseFirestore
-                    .instance
-                    .collection("marker_rent")
-                    .doc("NotAvailable")
-                    .get()
-                    .then((docRef) => {
-                  notavailable = docRef.get('image'),
-                });*/
-
                 for(int i = 0; i < snapshot.data.docs.length; i++){
-
                   List<Widget> widgets = [];
-
                   var rawFotos = snapshot.data.docs[i]['fotos'];
 
                   if (rawFotos.length == 0 ){
-                    print("sin fotos");
-                    //widgets.add(Image.memory(base64Decode(notavailable)));
+
                     FirebaseFirestore
                         .instance
                         .collection("marker_rent")

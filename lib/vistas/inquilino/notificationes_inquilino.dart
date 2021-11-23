@@ -17,7 +17,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   Widget build(BuildContext context) {
 
     final todo = ModalRoute.of(context).settings.arguments;
-    print("===========> $todo");
+
     var message;
     if (todo == "Empty"){
       message = "No tienes nuevas invitaciones";
