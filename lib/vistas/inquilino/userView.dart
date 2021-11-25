@@ -51,7 +51,7 @@ class _UserState extends State<UserView> {
     firebaseCloudMessaging_Listeners();
 
 
-    FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
+    //FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       setState(() {
