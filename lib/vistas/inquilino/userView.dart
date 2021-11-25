@@ -100,9 +100,6 @@ class _UserState extends State<UserView> {
           'tokens': FieldValue.arrayUnion([token])},
           SetOptions(merge: true)
           );
-
-
-
   }
 
 
@@ -210,10 +207,12 @@ class _UserState extends State<UserView> {
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
-
+          //####################################################################
+          //###################################################################1
           Navigator.pushNamed(context, '/notificacionesInquilino',
           arguments: messageTitle);
-
+          //###################################################################1
+          //####################################################################
         },
         child: Text("Invitaciones",
             textAlign: TextAlign.center
