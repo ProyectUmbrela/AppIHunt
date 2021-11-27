@@ -7,8 +7,6 @@ import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
 
 import 'dart:async';
 
@@ -21,6 +19,7 @@ class UserView extends StatefulWidget {
 }
 
 class _UserState extends State<UserView> {
+
 
   String id_usuario;
   String nombre;
@@ -44,7 +43,7 @@ class _UserState extends State<UserView> {
   void initState() {
     setData();
 
-    //############################################################################
+    //##########################################################################
     //#########################################################################1
 
     super.initState();
@@ -68,7 +67,7 @@ class _UserState extends State<UserView> {
     });
 
     //#########################################################################1
-    //############################################################################
+    //##########################################################################
 
   }
 

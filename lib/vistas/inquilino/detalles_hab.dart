@@ -150,7 +150,7 @@ class _DetallesHab extends State<DetallesHab> {
     print("**************>>>>> ${widget.name.toString()}");
     return Scaffold(
         appBar: AppBar(
-            title: Text("Resumen de habitacion")
+            title: Text("Resumen de habitación")
         ),
       body: Column(
         children: <Widget>[

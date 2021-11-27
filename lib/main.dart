@@ -1,11 +1,10 @@
-//import 'dart:js';
-import 'package:flutter/material.dart';
-import 'vistas/propietario/registerRoom.dart';
 
+import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/inquilino/Admobhelper.dart';
+import 'vistas/propietario/registerRoom.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 
@@ -16,8 +15,6 @@ import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
 import 'package:ihunt/vistas/notificaciones.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
-import 'package:ihunt/vistas/inquilino/loginTest.dart';
-
 
 
 // VISTA PROPIETARIO
@@ -31,13 +28,34 @@ import 'vistas/register.dart';
 import 'vistas/login.dart';
 
 
+
+
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+
+
+
+
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+
+
+  AdmobHelper.initialization();
+
+
   // init the firebase system
   await Firebase.initializeApp();
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
+
+
+
+
+
+
+
+
 
 
   bool isLogged = (prefs.getBool('isLogged') ?? false);
