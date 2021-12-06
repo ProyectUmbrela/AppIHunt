@@ -30,10 +30,6 @@ import 'vistas/login.dart';
 
 
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-
-
 
 
 Future<void> main() async {
@@ -41,7 +37,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
 
-  AdmobHelper.initialization();
+  //**********************************************AdmobHelper.initialization();
 
 
   // init the firebase system

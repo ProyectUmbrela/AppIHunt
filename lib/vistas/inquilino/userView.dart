@@ -6,16 +6,18 @@ import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
 import 'dart:async';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 
+import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 class UserView extends StatefulWidget {
+
   @override
   _UserState createState() => _UserState();
+
 }
 
 class _UserState extends State<UserView> {
@@ -31,7 +33,7 @@ class _UserState extends State<UserView> {
 
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  String messageTitle = "Empty";
+  String messageTitle = "Empty!";
   //String notificationAlert = "Alert";
   var tokenBy = '';
 
@@ -42,15 +44,12 @@ class _UserState extends State<UserView> {
   @override
   void initState() {
     setData();
-
+    AdmobHelper.initialization();
     //##########################################################################
     //#########################################################################1
 
     super.initState();
     firebaseCloudMessaging_Listeners();
-
-
-    //FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       setState(() {
@@ -79,19 +78,7 @@ class _UserState extends State<UserView> {
 
   Future<void> saveTokenToDatabase(String token) async {
 
-    //String userId = FirebaseAuth.instance.currentUser.uid;
-
-    /*await FirebaseFirestore.instance
-        .collection(tipo_usuario.toLowerCase())
-        .doc(id_usuario)
-        .set({
-        'tokens': FieldValue.arrayUnion([token]),
-    });*/
-
-    //print("Token has been saved into users collection");
-    //tokenBy = token;
-
-    // upsert, insert if not exists or update if already exists
+    // upsert, insert if not exists or add anew one if already exists
     await FirebaseFirestore.instance
         .collection(tipo_usuario.toLowerCase())
         .doc(id_usuario)
@@ -103,11 +90,10 @@ class _UserState extends State<UserView> {
 
 
   void firebaseCloudMessaging_Listeners() {
-
     _firebaseMessaging.getToken().then((token) async {
-      //print(token);
+      print(token);
       await saveTokenToDatabase(token);
-      //tokenBy = token;
+      tokenBy = token;
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
 
     });
@@ -121,6 +107,7 @@ class _UserState extends State<UserView> {
     var sharedPreferences = await SharedPreferences.getInstance();
 
     setState(() {
+
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
       tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
@@ -156,6 +143,9 @@ class _UserState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     final lugaresbutton = Material(
       
       elevation: 5.0,
@@ -253,7 +243,21 @@ class _UserState extends State<UserView> {
         child: Column(
           //mainAxisSize: MainAxisSize.max,
           //mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
+            children: <Widget>[
+            Align(
+                alignment: FractionalOffset.topCenter,
+                child: Padding(
+                    padding: EdgeInsets.only(top: 2.0),
+                    child: Container(
+                      child: AdWidget(
+                        ad: AdmobHelper.getBannerAd()..load(),
+                        key: UniqueKey(),
+                      ),
+                        height: AdmobHelper.getBannerAd().size.height.toDouble(),
+                        width: AdmobHelper.getBannerAd().size.width.toDouble()
+                    )
+                )
+            ),
              Container(
                child: Icon(Icons.person ,
                  color: Colors.white,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 import 'package:provider/provider.dart';
 
+
+/*
 class RewardedAdsPage extends StatelessWidget {
 
   @override
@@ -25,4 +27,4 @@ class RewardedAdsPage extends StatelessWidget {
       ),
     );
   }
-}
+}*/
