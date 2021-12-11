@@ -250,6 +250,27 @@ class _RegisterTenantState extends State<RegisterTenant> {
         form.save();
         Api _api = Api();
 
+        var response = await _api.RegisterTenantPost(msg);
+        Map data = jsonDecode(response.body);
+
+        print("################# ESTATUS CODE REGISTRO INQUILINO: ");
+        print(response.statusCode);
+
+        if (response.statusCode == 201) {
+          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+          debugPrint("Data posted successfully");
+          Navigator.push(context, new MaterialPageRoute(
+              builder: (context) => new Landlord())
+          );
+        } else {
+          if (Platform.isAndroid) {
+            _materialAlertDialog(context, data['message'], 'Notificación');
+            print(response.statusCode);
+          } else if (Platform.isIOS) {
+            _cupertinoDialog(context, data['message'], 'Notificación');
+          }
+        }
+
       } else {
         if (Platform.isAndroid) {
           _materialAlertDialog(

@@ -71,9 +71,9 @@ class _LandlordState extends State<Landlord>
           body: TabBarView(
             children: [
               Icon(Icons.home),
-              rooms(),
+              Rooms(),
               Tenants(),
-              Invitation()
+              Invitations()
             ],
           ),
         ),
