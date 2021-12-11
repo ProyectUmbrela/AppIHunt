@@ -56,11 +56,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   location_permissions: ^4.0.0
-  location: ^4.3.0
+  #####################################################################location: ^4.3.0
 
   # new added
   android_intent: ^2.0.2
-  geocoder: ^0.2.1
+  #####################################geocoder: ^0.2.1
   google_geocoding: ^0.2.0
   latlong: ^0.6.1
   flutter_application_id: ^1.0.0
@@ -68,7 +68,7 @@ dependencies:
 
   #manejo de imagenes
   # carga de imagenes
-  image_picker: 0.5.4+2
+  image_picker: 0.5.4+2 #
   flutter_multi_carousel: ^1.0.0
 
   #fecha
