@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/inquilino/Admobhelper.dart';
+//import 'package:ihunt/vistas/inquilino/Admobhelper.dart';
 import 'vistas/propietario/registerRoom.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
