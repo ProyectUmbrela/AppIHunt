@@ -78,7 +78,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data.forEach((index, room) {
-        //print('****************key: $index , ${room['idpropietario']}');
+        print('****************key: $index , ${room['idpropietario']} , estatus ${room['estatus']}');
         _rooms.add(Room(
             descripcion: room['descripcion'],
             dimension: room['dimension'],
@@ -90,7 +90,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
             idusuario: room['idusuario'],
             precio: room['precio'],
             servicios: room['servicios'],
-            status: room['status'],
+            status: room['estatus'],
             terminos: room['terminos']
         ));
 
@@ -327,7 +327,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
           );
         },
         icon: Icon(Icons.add),
-        label: Text("Registrar inquilino"),
+        label: Text("Registrar habitación"),
         foregroundColor: Colors.black,
         backgroundColor: Colors.cyan,
       ),

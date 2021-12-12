@@ -235,14 +235,14 @@ class _RegisterTenantState extends State<RegisterTenant> {
       if (form.validate()) {
         final msg = jsonEncode({
           "idusario": iduserCtrl.text,
-          "idhabitacion": "",
+          "idhabitacion": "ggg",
           "idpropietario": id_prop,
-          "contrato": _contrato,
-          "meses": monthsCtrl.text,
+          "contrato": _contrato=='Sí'? "1":"0",
+          "meses": int.parse(monthsCtrl.text), // conversion a entero
           "fecha_inicio": startdateCtrl.text,
           "fecha_fin": enddateCtrl.text,
           "fecha_pago": paydateCtrl.text,
-          "plazo": plazoCtrl.text,
+          "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
         print("############################# \n ${msg}");
