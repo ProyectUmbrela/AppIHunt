@@ -27,8 +27,7 @@ class Lugares extends StatelessWidget {
   }
 }
 
-// https://medium.com/dlt-labs-publication/how-to-build-a-flutter-card-list-in-less-than-10-minutes-9839f79a6c08
-/// This is the stateful widget that the main application instantiates.
+
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget() : super();
  
@@ -97,10 +96,10 @@ Future getHabitaciones(idUsuario) async {
   var resp = json.decode(response.body);
 
   if (statusCode == 201) {
-    print("###################################");
+    //print("###################################");
     List actual = resp['habitacion_rentada'];
     if (actual.length > 0){
-      print("HABITACION ACTUAL");
+      //print("HABITACION ACTUAL");
       for (int i=0; i < actual.length; i++){
         var habitacion = actual[i];
 
@@ -128,13 +127,13 @@ Future getHabitaciones(idUsuario) async {
               descripcion: habitacion['descripcion'],
               fechaPago: diasPago.day.toString()
           ));
-          print("HABITACION ACTUAL AGREGADA A LA LISTA");
+          //print("HABITACION ACTUAL AGREGADA A LA LISTA");
       }
     }
 
     List historial = resp['historial'];
     if (historial.length > 0){
-      print("HISTORIAL DE HABITACIONES");
+      //print("HISTORIAL DE HABITACIONES");
       for (int j=0; j < historial.length; j++){
         //print("leng: ${historial.length}");
         var habitacion = historial[j];
@@ -169,7 +168,7 @@ Future getHabitaciones(idUsuario) async {
 }
 
 
-/// This is the private State class that goes with MyStatefulWidget.
+
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 
@@ -188,14 +187,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    /*width: 1.0,
-                    height: 1.0,*/
                     decoration: new BoxDecoration(shape: BoxShape.circle),
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-
                   children: <Widget>[
                     Text(
                       habitacion.name,
@@ -231,7 +227,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
 
     var result = await getHabitaciones(idUsuario);
-
     return result;
 
   }

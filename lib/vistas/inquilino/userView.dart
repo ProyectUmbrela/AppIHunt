@@ -11,6 +11,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
+
+// AdMob
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class UserView extends StatefulWidget {
@@ -147,7 +149,6 @@ class _UserState extends State<UserView> {
 
 
     final lugaresbutton = Material(
-      
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
       color: Color(0xff01A0C7),
@@ -187,7 +188,7 @@ class _UserState extends State<UserView> {
       ),
     );
 
-    final mensagesbutton = Material(
+    final invitacionesbutton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
       color: Color(0xff01A0C7),
@@ -241,8 +242,6 @@ class _UserState extends State<UserView> {
             borderRadius: BorderRadius.circular(10.0)),
         alignment: FractionalOffset.center,
         child: Column(
-          //mainAxisSize: MainAxisSize.max,
-          //mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
             Align(
                 alignment: FractionalOffset.topCenter,
@@ -257,20 +256,18 @@ class _UserState extends State<UserView> {
                         width: AdmobHelper.getBannerAd().size.width.toDouble()
                     )
                 )
-            ),
+            ),/*
              Container(
                child: Icon(Icons.person ,
                  color: Colors.white,
                  size: 50.0,
                ),
             ),
-            getRow(id_usuario, 15.0, 0.6),
+            getRow(id_usuario, 15.0, 0.6), ##################################### icono de usuario y notificaciones
             Text(
               messageTitle,
               style: Theme.of(context).textTheme.headline4,
-            ),
-            /*Text(tokenBy,
-              style: Theme.of(context).textTheme.headline6,)*/
+            ),*/
           ],
         ),
       ),
@@ -293,7 +290,7 @@ class _UserState extends State<UserView> {
               padding: EdgeInsets.only(left:30),
               child: Align(
                 alignment: Alignment.bottomRight,
-                child: mensagesbutton,
+                child: invitacionesbutton,
           )),
         ],
       )

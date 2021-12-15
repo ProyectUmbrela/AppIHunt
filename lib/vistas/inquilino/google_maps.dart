@@ -1,10 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ihunt/vistas/inquilino/userView.dart';
-import 'dart:async';
 
 // slider images
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,7 +16,6 @@ import 'package:flutter/services.dart' show rootBundle;
 
 
 class MyMaps extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   MapsPage createState() => MapsPage();
 }
@@ -59,16 +55,6 @@ class MapsPage extends State<MyMaps> {
         'assets/marker_1.png');
   }
 
-  /*
-  Future backToUser() async {
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UserView()),
-    );
-  }*/
-
-
   void initMarker(position, specifyId, habitacion, setFotos) async{
 
     final MarkerId markerId = MarkerId(specifyId);
@@ -80,8 +66,7 @@ class MapsPage extends State<MyMaps> {
       markerId: markerId,
       position: position,
       icon: _mapMarker,
-      onTap: ()=> {
-      },
+      onTap: ()=> {},
       infoWindow: InfoWindow(
         snippet: "Ver más detalles",
         title: "Habitación en Renta",
@@ -192,7 +177,6 @@ class MapsPage extends State<MyMaps> {
                                             fontSize: sizeText,
                                           ),
                                         ),
-
                                       ],
                                     ),
                                   ),
@@ -277,7 +261,6 @@ class MapsPage extends State<MyMaps> {
 
   @override
   Widget build(BuildContext context){
-    Set<Marker> markers = Set();
 
     return Scaffold(
         body: SafeArea(
@@ -308,7 +291,6 @@ class MapsPage extends State<MyMaps> {
 
                   else{
                     rawFotos.forEach((final String key, final value) {
-
                       widgets.add(Image.memory(base64Decode(value)));
                     });
                   }

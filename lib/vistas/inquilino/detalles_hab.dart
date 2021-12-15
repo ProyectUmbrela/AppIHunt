@@ -145,9 +145,7 @@ class _DetallesHab extends State<DetallesHab> {
 
   @override
   Widget build(BuildContext context) {
-    //var todo = ModalRoute.of(context).settings.arguments;
-    //Habitacion detalles = todo as Habitacion;
-    print("**************>>>>> ${widget.name.toString()}");
+    //print("**************>>>>> ${widget.name.toString()}");
     return Scaffold(
         appBar: AppBar(
             title: Text("Resumen de habitación")

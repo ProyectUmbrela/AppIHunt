@@ -23,8 +23,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   bool _saving = false;
-  //bool _loading = false;
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
@@ -146,10 +146,10 @@ class _LoginPageState extends State<LoginPage> {
 
     Api _api = Api();
 
-    print("====================");
+    /*print("====================");
     print(emailField.text);
     print(passwordField.text);
-    print("====================");
+    print("====================");*/
 
     final body = jsonEncode({
           'usuario': emailField.text,
@@ -166,10 +166,21 @@ class _LoginPageState extends State<LoginPage> {
           future: _api.loginPost(body),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+
               response = snapshot.data;
               Navigator.pop(context);
             }
             return CircularProgressIndicator();
+            /*return Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    //Text('Cargando...'),
+                  ]
+              ),
+            );*/
           },
         ),
       ),
@@ -202,12 +213,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-
-
-
   @override
   Widget build(BuildContext context) {
-
 
     final emailField = TextFormField(
         autofocus: true,
@@ -237,30 +244,6 @@ class _LoginPageState extends State<LoginPage> {
             style: style.copyWith(color: Colors.white)),
       )
     );
-
-      /*Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              child: CircularProgressIndicator(
-                valueColor : AlwaysStoppedAnimation(Colors.white),
-              ),
-            ),
-          ],
-        ),
-      ),*/
-
-
-      /*Center(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularProgressIndicator()
-            ]
-        ),
-      ),*/
 
 
     return Scaffold(

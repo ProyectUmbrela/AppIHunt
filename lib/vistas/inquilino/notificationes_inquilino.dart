@@ -19,7 +19,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     final todo = ModalRoute.of(context).settings.arguments;
 
     var message;
-    if (todo == "Empty"){
+    if (todo == "Empty!"){
       message = "No tienes nuevas invitaciones";
     }
     else{

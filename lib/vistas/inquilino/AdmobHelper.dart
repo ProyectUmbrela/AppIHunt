@@ -25,16 +25,16 @@ class AdmobHelper extends ChangeNotifier {
         adUnitId: 'ca-app-pub-7955489602208233/5868040865' ,
         listener: BannerAdListener(
             onAdClosed: (Ad ad){
-              print("Ad Closed");
+              //print("Ad Closed");
               },
             onAdFailedToLoad: (Ad ad,LoadAdError error){
               ad.dispose();
               },
             onAdLoaded: (Ad ad){
-              print('Ad Loaded');
+              //print('Ad Loaded');
             },
             onAdOpened: (Ad ad){
-              print('Ad opened');
+              //print('Ad opened');
             }
             ),
         request: AdRequest());
