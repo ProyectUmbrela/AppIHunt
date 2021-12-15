@@ -199,11 +199,6 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                 children: [
                                   FlatButton(
                                     textColor: const Color(0xFF6200EE),
-                                    onPressed: () {},
-                                    child: const Text('Editar'),
-                                  ),
-                                  FlatButton(
-                                    textColor: const Color(0xFF6200EE),
                                     onPressed: () => deleteTenant(id, snapshot.data[index].idhabitacion, snapshot.data[index].idusuario),
                                     child: const Text('Eliminar'),
                                   )
