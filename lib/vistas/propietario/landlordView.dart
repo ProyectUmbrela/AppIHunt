@@ -38,8 +38,6 @@ class _LandlordState extends State<Landlord>
 
   @override
   Widget build(BuildContext context) {
-    print(" usuario $nombre" + "idusuario $id_usuario");
-
     return MaterialApp(
       home: DefaultTabController(
         length: 4,

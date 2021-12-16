@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -98,30 +99,64 @@ class _RegisterRoomState extends State<RegisterRoom> {
       }
     }
 
-    void addDocument(latitude, longitude, price, description, address, services, name) async{
+    void addDocument(latitude, longitude, price, description, address, services, name, id_room) async{
       final now = new DateTime.now();
       String date = DateFormat('yMd').format(now);// 28/03/2020
 
-      var document = {
-        'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
-        'costo': price,
-        'detalles': description,
-        'direccion': address,
-        'fotos': {},
-        'habitaciones': 1,
-        'servicios': services,
-        'titular': name
-      };
+      if(image_files.length == 0){
+        var document = {
+          'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+          'costo': price,
+          'detalles': description,
+          'direccion': address,
+          'check_images': 0,
+          'habitaciones': 1,
+          'servicios': services,
+          'titular': name
+        };
 
-      // AGREGAR IMAGENES STR
-      for (int i = 0; i < image_files.length; i++){
-        final bytes = image_files[i].readAsBytesSync();
-        String img64 = base64Encode(bytes);
-        document['fotos'][i.toString()] = img64;
+        await FirebaseFirestore.instance
+            .collection("habitaciones")
+            .doc(id_room)
+            .set(
+            {
+              'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+              'costo': price,
+              'detalles': description,
+              'direccion': address,
+              'check_images': 0,
+              'habitaciones': 1,
+              'servicios': services,
+              'titular': name
+            },
+            SetOptions(merge: true)
+            );
+      }else{
+        var document = {
+          'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+          'costo': price,
+          'detalles': description,
+          'direccion': address,
+          'check_images': 1,
+          'fotos': {},
+          'habitaciones': 1,
+          'servicios': services,
+          'titular': name
+        };
+
+        // AGREGAR IMAGENES STR
+        for (int i = 0; i < image_files.length; i++){
+          final bytes = image_files[i].readAsBytesSync();
+          String img64 = base64Encode(bytes);
+          document['fotos'][i.toString()] = img64;
+        }
+        await FirebaseFirestore.instance
+            .collection("habitaciones")
+            .doc(id_room)
+            .set(document,
+            SetOptions(merge: true)
+        );
       }
-
-      FirebaseFirestore.instance.collection("habitaciones").add(document).then((value) => print('User Added'))
-          .catchError((error) => print('Failed to add user: ${error}'));
     }
 
     final roomId = TextFormField(
@@ -262,7 +297,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         await getLocation(adressCtrl.text);
         print('############################');
         print("lat ${lat}  long ${lngt}");
-        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre);
+        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre, roomidCtrl.text);
 
         var response = await _api.RegisterRoomPost(msg);
         Map data = jsonDecode(response.body);
@@ -353,6 +388,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
                       SizedBox(height: 15.0),
                       //longButtons("Registrar", submit),
+
                       Row(
                         children: <Widget>[
                           Expanded(

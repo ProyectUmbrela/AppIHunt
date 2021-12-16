@@ -61,11 +61,8 @@ class Api {
     return response;
   }
   Future<dynamic> GetRooms(data) async {
-    print('******* GET ROOMS ************ ');
-    print(data.toString());
     var response = await http.post(Uri.parse(this._url + this._rooms),
         body: data, headers: this._headers);
-    //print("??? responsecode ${response.statusCode}");
     return response;
   }
 
@@ -80,7 +77,6 @@ class Api {
     return response;
   }
   Future<dynamic> GetTenants(data) async {
-    print(data.toString());
     var response = await http.post(Uri.parse(this._url + this._tenants),
         body: data, headers: this._headers);
     return response;

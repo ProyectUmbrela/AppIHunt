@@ -1,40 +1,45 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
+import 'package:date_field/date_field.dart';
+import 'package:ihunt/vistas/propietario/rooms.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
+import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
-
-import 'package:date_field/date_field.dart';
 import 'package:intl/intl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:ihunt/utils/validators.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'landlordView.dart';
 
-class RegisterTenant extends StatefulWidget {
+class DetailTenant extends StatefulWidget {
+
+  const DetailTenant({Key key, this.tenant}) : super(key: key);
+  final tenant;
+
   @override
-  _RegisterTenantState createState() => _RegisterTenantState();
+  _DetailTenantState createState() => _DetailTenantState();
 }
 
 
-class _RegisterTenantState extends State<RegisterTenant> {
+class _DetailTenantState extends State<DetailTenant> {
   void setData() async{
     var sharedPreferences = await SharedPreferences.getInstance();
 
     setState(() {
       nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id_prop = sharedPreferences.getString("idusuario") ?? "Error";
-      //list_rooms = getRooms(id_prop) as List<String>;
+      id = sharedPreferences.getString("idusuario") ?? "Error";
     });
   }
 
   // VARIABLES DE SESION
-  String id_prop;
+  String id;
   String nombre;
-  List<String> list_rooms = [''];
 
   @override
   void initState(){
@@ -44,57 +49,23 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
   final formKey = new GlobalKey<FormState>();
 
-  TextEditingController iduserCtrl = new TextEditingController();
-  TextEditingController monthsCtrl = new TextEditingController();
-  TextEditingController startdateCtrl = new TextEditingController();
-  TextEditingController enddateCtrl = new TextEditingController();
-  TextEditingController paydateCtrl = new TextEditingController();
-  TextEditingController plazoCtrl = new TextEditingController();
-  TextEditingController detailsCtrl = new TextEditingController();
-
-
-  String _iduser, _room, _contrato, _months, _startdate, _enddate, _paydate, _plazo, _details ;
-
-  final dateFormat = DateFormat("dd-M-yyyy");
-
-  Future getRooms(id) async{
-    Api _api = Api();
-
-    final msg = jsonEncode({
-      "usuario": id
-    });
-
-    var response = await _api.GetRooms(msg);
-    var data = jsonDecode(response.body);
-    List<String> _rooms = [];
-
-    if (response.statusCode == 200) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-
-      data.forEach((index, room) {
-        if (room['estatus']==1){
-          _rooms.add('idhabitacion');
-        }
-
-      });
-
-      return _rooms;
-    } else {
-      if (Platform.isAndroid) {
-        //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
-      } else if (Platform.isIOS) {
-        //_cupertinoDialog(context, data['message'], 'Notificación');
-      }
-    }
-  }
+  String _iduser, _contrato, _months, _startdate, _enddate, _paydate, _plazo, _details ;
 
   @override
   Widget build(BuildContext context) {
 
+    TextEditingController iduserCtrl = new TextEditingController(text: widget.tenant['idusuario']);
+    TextEditingController monthsCtrl = new TextEditingController(text: widget.tenant['']);
+    TextEditingController startdateCtrl = new TextEditingController(text: widget.tenant['fechainicontrato']);
+    TextEditingController enddateCtrl = new TextEditingController(text: widget.tenant['fechafincontrato']);
+    TextEditingController paydateCtrl = new TextEditingController(text: widget.tenant['fechapago']);
+    TextEditingController plazoCtrl = new TextEditingController(text: widget.tenant['']);
+    TextEditingController detailsCtrl = new TextEditingController(text: widget.tenant['']);
+
     final userId = TextFormField(
       autofocus: false,
       controller: iduserCtrl,
+      enabled: false,
       validator: (value) => value.isEmpty ? "Ingrese el id del usuario a registrar" : null,
       onSaved: (value) => _iduser = value,
       decoration: buildInputDecoration("iduser", Icons.person_add),
@@ -118,26 +89,10 @@ class _RegisterTenantState extends State<RegisterTenant> {
       }).toList(),
     );
 
-    /*final room = DropdownButtonFormField<String>(
-      value: _room,
-      hint: Text(
-        'Seleccione la habitación',
-      ),
-      onChanged: (value) =>
-          setState(() => _room = value),
-      validator: (value) => value == null ? 'Por favor elija una opción' : null,
-      items:
-      list_rooms.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );*/
-
     final months = TextFormField(
       autofocus: false,
       controller: monthsCtrl,
+      enabled: false,
       validator: numberValidator,
       onSaved: (value) => _months = value,
       decoration: buildInputDecoration("Meses", Icons.more_vert),
@@ -145,21 +100,21 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
 
     final startDate = DateTimeFormField(
-      decoration: const InputDecoration(
-        hintStyle: TextStyle(color: Colors.black45),
-        errorStyle: TextStyle(color: Colors.redAccent),
-        border: OutlineInputBorder(),
-        suffixIcon: Icon(Icons.event_note),
-        //labelText: 'Only time',
-      ),
-      dateFormat: DateFormat.yMMMMd('es'),
-      mode: DateTimeFieldPickerMode.date,
-      autovalidateMode: AutovalidateMode.always,
-      validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-      onDateSelected: (DateTime value) {
-        print(value);
-      },
-      onSaved: (value) => _startdate = value.toString()
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          //labelText: 'Only time',
+        ),
+        dateFormat: DateFormat.yMMMMd('es'),
+        mode: DateTimeFieldPickerMode.date,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          print(value);
+        },
+        onSaved: (value) => _startdate = value.toString()
     );
 
     final endDate = DateTimeFormField(
@@ -201,6 +156,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
     final Plazo = TextFormField(
       autofocus: false,
       controller: plazoCtrl,
+      enabled: false,
       validator: numberValidator,
       onSaved: (value) => _plazo = value,
       decoration:
@@ -210,6 +166,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
     final Details = TextFormField(
       autofocus: false,
       controller: detailsCtrl,
+      enabled: false,
       onSaved: (value) => _details = value,
       decoration:
       buildInputDecoration("Términos", Icons.more_vert),
@@ -272,72 +229,67 @@ class _RegisterTenantState extends State<RegisterTenant> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.push(
-        context,
-        new MaterialPageRoute(
-          builder: (context) => new RegisterTenant(),
-        ),
-      );
+      Navigator.pushReplacementNamed(context, '/landlord');
     };
 
-    Future submit() async {
-      final form = formKey.currentState;
+    Future deleteRoom(id, idhabitacion) async{
 
-      if (form.validate()) {
-        final msg = jsonEncode({
-          "idusario": iduserCtrl.text,
-          "idhabitacion": "ggg",
-          "idpropietario": id_prop,
-          "contrato": _contrato=='Sí'? "1":"0",
-          "meses": int.parse(monthsCtrl.text), // conversion a entero
-          "fecha_inicio": startdateCtrl.text,
-          "fecha_fin": enddateCtrl.text,
-          "fecha_pago": paydateCtrl.text,
-          "plazo": int.parse(plazoCtrl.text), // conversion a entero,
-          "detalles": detailsCtrl.text
-        });
-        print("############################# \n ${msg}");
+      Api _api = Api();
 
-        form.save();
-        Api _api = Api();
+      final msg = jsonEncode({
+        "usuario": id,
+        "idhabitacion": idhabitacion
+      });
 
-        var response = await _api.RegisterTenantPost(msg);
-        Map data = jsonDecode(response.body);
+      var response = await _api.DeleteRoomPost(msg);
+      var data = jsonDecode(response.body);
 
-        print("################# ESTATUS CODE REGISTRO INQUILINO: ");
-        print(response.statusCode);
-
-        if (response.statusCode == 201) {
-          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("Data posted successfully");
-          Navigator.push(context, new MaterialPageRoute(
-              builder: (context) => new Landlord())
-          );
-        } else {
-          if (Platform.isAndroid) {
-            _materialAlertDialog(context, data['message'], 'Notificación');
-            print(response.statusCode);
-          } else if (Platform.isIOS) {
-            _cupertinoDialog(context, data['message'], 'Notificación');
-          }
-        }
-
+      if (response.statusCode == 201) {
+        // CREAR UN REFRESH EN LA PAGINA
+        debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE");
+        Navigator.push(context, new MaterialPageRoute(
+            builder: (context) => new Landlord())
+        );
+        //Navigator.of(context).pop();
       } else {
+
         if (Platform.isAndroid) {
-          _materialAlertDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
+          //_materialAlertDialog(context, data['message'], 'Notificación');
+          print(response.statusCode);
         } else if (Platform.isIOS) {
-          _cupertinoDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
+          //_cupertinoDialog(context, data['message'], 'Notificación');
         }
+
       }
     }
 
-    ;
+    Future deleteTenant(id, idhabitacion, idinquilino) async{
+
+      Api _api = Api();
+
+      final msg = jsonEncode({
+        "idinquilino": idinquilino,
+        "idhabitacion": idhabitacion,
+        "idpropietario": id
+      });
+
+      var response = await _api.DeleteTenantPost(msg);
+      var data = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        // CREAR UN REFRESH EN LA PAGINA
+
+
+      } else {
+
+        if (Platform.isAndroid) {
+          //_materialAlertDialog(context, data['message'], 'Notificación');
+        } else if (Platform.isIOS) {
+          //_cupertinoDialog(context, data['message'], 'Notificación');
+        }
+
+      }
+    }
 
     return SafeArea(
         child: Scaffold(
@@ -394,22 +346,28 @@ class _RegisterTenantState extends State<RegisterTenant> {
                       SizedBox(height: 5.0),
                       Details,
                       SizedBox(height: 15.0),
-
-                      //longButtons("Registrar", submit),
+                      //() => deleteTenant(id, snapshot.data[index].idhabitacion, snapshot.data[index].idusuario)
                       Row(
                         children: <Widget>[
-                          Expanded(
-                              child: Container(
-                                child: longButtons("Aceptar", submit),
-                                alignment: Alignment.centerLeft,
-                              )),
-                          Expanded(
-                              child: Container(
-                                child: longButtons("Cancelar", canceled),
-                                alignment: Alignment.centerRight,
-                              )),
+                          MaterialButton(
+                              onPressed:() => deleteTenant(id, widget.tenant['idhabitacion'], widget.tenant['idusuario']),
+                              textColor: Colors.white,
+                              color: Color(0xff01A0C7),
+                              minWidth: 120,
+                              child: SizedBox(
+                                child: Text(
+                                    "Eliminar",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 12)
+                                ),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                              )
+                          )
                         ],
-                      ),
+                      )
                     ],
                   ),
                 )),

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ihunt/providers/api.dart';
+import 'details_tenant.dart';
 import 'landlordView.dart';
 import 'registerTenants.dart';
 
@@ -49,12 +50,10 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     var data = jsonDecode(response.body);
     List<Tenant> _tenants = [];
 
-    print("############################# responsecode inquilino ${response.statusCode}");
     if (response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data["inquilinos"].forEach((index, tenant) {
-        print('****************key: $index , ${tenant['idpropietario']}');
         _tenants.add(Tenant(
             fechafincontrato: tenant['fechafincontrato'],
             fechainicontrato: tenant['fechainicontrato'] ,
@@ -66,12 +65,10 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
             idusuario: tenant['idusuario']
         ));
       });
-      print('**************** FIN ${_tenants.length}');
       return _tenants;
     } else {
       if (Platform.isAndroid) {
         //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
       } else if (Platform.isIOS) {
         //_cupertinoDialog(context, data['message'], 'Notificación');
       }
@@ -107,17 +104,14 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     var response = await _api.DeleteTenantPost(msg);
     var data = jsonDecode(response.body);
 
-    //print("############################# responsecode ${response.statusCode}");
     if (response.statusCode == 201) {
       // CREAR UN REFRESH EN LA PAGINA
-      debugPrint("############## INQUILINO ELIMINADO CORRECTAMENTE");
 
 
     } else {
 
       if (Platform.isAndroid) {
         //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
       } else if (Platform.isIOS) {
         //_cupertinoDialog(context, data['message'], 'Notificación');
       }
@@ -128,9 +122,6 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     String title = 'Lista de inquilinos';
-
-    var _rooms;
-
     return Scaffold(
       appBar: AppBar(
           title: Text(title),
@@ -145,68 +136,80 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                     itemCount: snapshot.data.length,
                     padding: const EdgeInsets.all(5),
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        shadowColor: Colors.deepPurpleAccent,
-                        clipBehavior: Clip.antiAlias,
-                        child: Material(
-                          color: Colors.black12,
-                          shadowColor: Colors.deepPurpleAccent,
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.airline_seat_individual_suite),
-                                title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
-                                subtitle: Text(
-                                  'Texto secundario',
-                                  style:
-                                  TextStyle(color: Colors.black.withOpacity(0.6)),
-                                ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                              builder: (context) =>
+                              new DetailTenant(tenant:
+                                {
+                                'fechafincontrato': snapshot.data[index].fechafincontrato,
+                                'fechainicontrato': snapshot.data[index].fechainicontrato,
+                                'fechamax': snapshot.data[index].fechamax,
+                                'fechapago': snapshot.data[index].fechapago,
+                                'id': snapshot.data[index].id,
+                                'idhabitacion': snapshot.data[index].idhabitacion,
+                                'idpropietario': snapshot.data[index].idpropietario,
+                                'idusuario': snapshot.data[index].idusuario
+                                }
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 10),
-                                child: Row(
-                                  //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
+                            ),
+                          );
+                        },
+                        child: Card(
+                          shadowColor: Colors.deepPurpleAccent,
+                          clipBehavior: Clip.antiAlias,
+                          child: Material(
+                            color: Colors.black12,
+                            shadowColor: Colors.deepPurpleAccent,
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.airline_seat_individual_suite),
+                                  title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
+                                  subtitle: Text(
+                                    'Texto secundario',
+                                    style:
+                                    TextStyle(color: Colors.black.withOpacity(0.6)),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 2, horizontal: 10),
+                                  child: Row(
+                                    //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              'inquilino: ',
+                                              style: TextStyle(
+                                                  color: Colors.black.withOpacity(0.6),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
                                           Text(
-                                            'inquilino: ',
+                                            snapshot.data[index].idusuario,
                                             style: TextStyle(
                                                 color: Colors.black.withOpacity(0.6),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                        Text(
-                                          snapshot.data[index].idusuario,
-                                          style: TextStyle(
-                                              color: Colors.black.withOpacity(0.6),
-                                              fontWeight: FontWeight.normal),
-                                        )
-                                        ],
-                                      ),
-                                    ]),
-                              ),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  FlatButton(
-                                    textColor: const Color(0xFF6200EE),
-                                    onPressed: () => deleteTenant(id, snapshot.data[index].idhabitacion, snapshot.data[index].idusuario),
-                                    child: const Text('Eliminar'),
-                                  )
-                                ],
-                              ),
-                              //Image.asset('assets/card-sample-image.jpg'),
-                              //Image.asset('assets/card-sample-image-2.jpg'),
-                            ],
+                                                fontWeight: FontWeight.normal),
+                                          )
+                                          ],
+                                        ),
+                                      ]),
+                                )
+                                //Image.asset('assets/card-sample-image.jpg'),
+                                //Image.asset('assets/card-sample-image-2.jpg'),
+                              ],
+                            ),
                           ),
                         ),
                       );
