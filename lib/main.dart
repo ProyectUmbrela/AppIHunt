@@ -26,8 +26,6 @@ import 'vistas/login.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //**********************************************AdmobHelper.initialization();
-
   // init the firebase system
   await Firebase.initializeApp();
 
@@ -36,15 +34,15 @@ Future<void> main() async {
   bool isLogged = (prefs.getBool('isLogged') ?? false);
   String tipoUsuario = prefs.getString("Tipo");
   var homeView;
-  print("Loggeado???? => $isLogged");
+  //print("Loggeado???? => $isLogged");
 
   if ((isLogged) && (tipoUsuario == 'Usuario')) {
-    print("LOGEADO COMO USUARIO");
+    //print("LOGEADO COMO USUARIO");
     //homeView = LoginTest();
     homeView = UserView();
     //homeView = Notificaciones();
   } else if ((isLogged) && (tipoUsuario == 'Propietario')) {
-    print("LOGEADO COMO PROPIETARIO");
+    //print("LOGEADO COMO PROPIETARIO");
     homeView = Landlord();
   } else {
     homeView = MainScreen();
@@ -122,71 +120,3 @@ class IHuntApp extends StatelessWidget {
     );
   }
 }
-
-/*
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // init the firebase system
-  await Firebase.initializeApp();
-  
-
-  WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLogged = (prefs.getBool('isLogged') ?? false);
-  String tipoUsuario = prefs.getString("Tipo");
-  var homeView;
-  if((isLogged) && (tipoUsuario == 'Usuario')) {
-    print("Value: $isLogged");
-    print("LOGEADO COMO USUARIO");
-    //homeView = UserView();
-    homeView = Notificaciones();
-  }
-  else if((isLogged) && (tipoUsuario == 'Propietario')){
-    print("LOGEADO COMO PROPIETARIO");
-    homeView = Landlord();
-  }
-
-  else{
-    print("LOGGEADO: $isLogged");
-    homeView = MainScreen();
-  }
-
-
-  runApp(MaterialApp(
-    title: 'i-hunt',
-    home: homeView,
-    localizationsDelegates: [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ],
-    supportedLocales: [
-      const Locale('en'),
-      const Locale('es'),
-      const Locale('zh'),
-      const Locale('he'),
-      const Locale('ru'),
-      const Locale('fr', 'BE'),
-      const Locale('fr', 'CA'),
-      const Locale('ja'),
-      const Locale('de'),
-      const Locale('hi'),
-      const Locale('ar'),
-    ],
-    locale: const Locale('es'),
-    routes: {
-      '/Notificaciones': (context) => Notificaciones(),
-      '/login' : (context) => LoginPage(),
-      '/user' : (context) => UserView(),
-      '/landlord': (context) => Landlord(),
-      '/register' : (context) => Register(),
-      '/lugares': (context) => Lugares(),
-      '/mapa' : (context) => MyMaps(),
-      '/detalles': (context) => DetallesHab(),
-      '/registerRoom' : (context) => RegisterRoom(),
-      '/IHunt': (context) => MainScreen()
-
-    },
-
-  ));
-
-}*/

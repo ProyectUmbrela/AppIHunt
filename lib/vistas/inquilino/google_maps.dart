@@ -267,14 +267,35 @@ class MapsPage extends State<MyMaps> {
           child: StreamBuilder(
             stream: FirebaseFirestore
                 .instance
-                .collection("marker_rent")
+                .collection("habitaciones")
                 .where("coords", isNotEqualTo: "")
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-
                 for(int i = 0; i < snapshot.data.docs.length; i++){
                   List<Widget> widgets = [];
+
+                  int hasImage = snapshot.data.docs[i]['check_images'];
+                  //print("======================================> HAS IMAGE? : $hasImage");
+                  if (hasImage == 1){
+                    var rawFotos = snapshot.data.docs[i]['fotos'];
+                    rawFotos.forEach((final String key, final value) {
+                      widgets.add(Image.memory(base64Decode(value)));
+                    });
+
+                  }
+                  else{
+                    FirebaseFirestore
+                        .instance
+                        .collection("habitaciones")
+                        .doc("NotAvailable")
+                        .get()
+                        .then((docRef) => {
+                      widgets.add(Image.memory(base64Decode(docRef.get('image'))))
+                    });
+
+                  }
+                  /*
                   var rawFotos = snapshot.data.docs[i]['fotos'];
 
                   if (rawFotos.length == 0 ){
@@ -293,7 +314,7 @@ class MapsPage extends State<MyMaps> {
                     rawFotos.forEach((final String key, final value) {
                       widgets.add(Image.memory(base64Decode(value)));
                     });
-                  }
+                  }*/
 
                   double lat = snapshot.data.docs[i]['coords'].latitude;
                   double lng = snapshot.data.docs[i]['coords'].longitude;
@@ -307,6 +328,7 @@ class MapsPage extends State<MyMaps> {
                   String servicios = snapshot.data.docs[i]['servicios'];
                   String costo = snapshot.data.docs[i]['costo'];
                   String detalles = snapshot.data.docs[i]['detalles'];
+
                   int habitaciones = snapshot.data.docs[i]['habitaciones'];
 
 
@@ -325,9 +347,7 @@ class MapsPage extends State<MyMaps> {
                       widgets);
 
                 }
-
                 return GoogleMap(
-
                   myLocationButtonEnabled: true,
                   mapType: MapType.normal,
                   initialCameraPosition: initCameraPosition,
