@@ -1,13 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-//import 'package:image_picker/image_picker.dart';
+import 'dart:ui';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+/////////////////////////////////////////import 'package:location/location.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'landlordView.dart';
 
@@ -31,6 +37,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
   String id_usuario;
   String nombre;
 
+  // VARIABLE DE IMAGENES
+  List<File> image_files = new List();
+
   @override
   void initState(){
     setData();
@@ -49,8 +58,106 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms;
 
+  // VARIABLES PARA COORDENADAS
+  double lat;
+  double lngt;
+
   @override
   Widget build(BuildContext context) {
+
+    // OBTENER LATITUD Y LONGITUD
+    void getLocation(address) async{
+      try {
+        var locations = await locationFromAddress(address);
+        print("########################QQQQQQQQQQQ ${address}");
+        lat = locations[0].latitude;
+        lngt = locations[0].longitude;
+      } catch(err){
+        lat = 46.8597000;
+        lngt = -97.2212000;
+      }
+    }
+
+    // OBTENER IMAGENES
+    _imgFromGallery() async {
+      File image = await ImagePicker.pickImage(
+          source: ImageSource.gallery);
+
+      setState(() {
+        image_files.add(image);
+        print("########################## ############## LOGITUD DE LISTA ${image_files.length}");
+      });
+    }
+   _images_to_base64() async{
+      var dicc = {
+
+      };
+      for (int i = 0; i < image_files.length; i++){
+        final bytes = image_files[i].readAsBytesSync();
+        String img64 = base64Encode(bytes);
+        dicc[i] = img64;
+      }
+    }
+
+    void addDocument(latitude, longitude, price, description, address, services, name, id_room) async{
+      final now = new DateTime.now();
+      String date = DateFormat('yMd').format(now);// 28/03/2020
+
+      if(image_files.length == 0){
+        var document = {
+          'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+          'costo': price,
+          'detalles': description,
+          'direccion': address,
+          'check_images': 0,
+          'habitaciones': 1,
+          'servicios': services,
+          'titular': name
+        };
+
+        await FirebaseFirestore.instance
+            .collection("habitaciones")
+            .doc(id_room)
+            .set(
+            {
+              'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+              'costo': price,
+              'detalles': description,
+              'direccion': address,
+              'check_images': 0,
+              'habitaciones': 1,
+              'servicios': services,
+              'titular': name
+            },
+            SetOptions(merge: true)
+            );
+      }else{
+        var document = {
+          'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
+          'costo': price,
+          'detalles': description,
+          'direccion': address,
+          'check_images': 1,
+          'fotos': {},
+          'habitaciones': 1,
+          'servicios': services,
+          'titular': name
+        };
+
+        // AGREGAR IMAGENES STR
+        for (int i = 0; i < image_files.length; i++){
+          final bytes = image_files[i].readAsBytesSync();
+          String img64 = base64Encode(bytes);
+          document['fotos'][i.toString()] = img64;
+        }
+        await FirebaseFirestore.instance
+            .collection("habitaciones")
+            .doc(id_room)
+            .set(document,
+            SetOptions(merge: true)
+        );
+      }
+    }
 
     final roomId = TextFormField(
       autofocus: false,
@@ -100,6 +207,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       decoration:
       buildInputDecoration("Precio", Icons.monetization_on),
     );
+
     final terms = TextFormField(
       autofocus: false,
       controller: termsCtrl,
@@ -165,7 +273,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/register');
+      Navigator.pushReplacementNamed(context, '/landlord');
     };
 
     Future submit() async {
@@ -174,18 +282,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
       if (form.validate()) {
         form.save();
         Api _api = Api();
-
-        print("############# JSON ");
-        print({
-          "idhabitacion": roomidCtrl.text,
-          "idpropietario": id_usuario,
-          "direccion": adressCtrl.text,
-          "dimension": dimensionsCtrl.text,
-          "servicios": servicesCtrl.text,
-          "descripcion": descriptionCtrl.text,
-          "precio": double.parse(priceCtrl.text),
-          "terminos": termsCtrl.text
-        });
 
         final msg = jsonEncode({
           "idhabitacion": roomidCtrl.text,
@@ -197,6 +293,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
           "precio": double.parse(priceCtrl.text),
           "terminos": termsCtrl.text
         });
+
+        await getLocation(adressCtrl.text);
+        print('############################');
+        print("lat ${lat}  long ${lngt}");
+        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre, roomidCtrl.text);
 
         var response = await _api.RegisterRoomPost(msg);
         Map data = jsonDecode(response.body);
@@ -287,6 +388,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
                       SizedBox(height: 15.0),
                       //longButtons("Registrar", submit),
+
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -299,6 +401,25 @@ class _RegisterRoomState extends State<RegisterRoom> {
                                 child: longButtons("Cancelar", canceled),
                                 alignment: Alignment.centerRight,
                               )),
+                        ],
+                      ),
+
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: MaterialButton(
+                                color: Colors.blue,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                onPressed: () {
+                                  _imgFromGallery();
+                                },
+                                child: Text(
+                                  "selccionar imagen",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ))
                         ],
                       )
                     ],

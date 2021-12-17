@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/register.dart';
 import 'rooms.dart';
 import 'tenants.dart';
+import 'invitation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Landlord extends StatefulWidget {
@@ -21,6 +21,11 @@ class _LandlordState extends State<Landlord>
     setData();
   }
 
+  Future<void> _logout() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool("isLogged", false);
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
 
   void setData() async{
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -33,11 +38,9 @@ class _LandlordState extends State<Landlord>
 
   @override
   Widget build(BuildContext context) {
-    print(" usuario $nombre" + "idusuario $id_usuario");
-
     return MaterialApp(
       home: DefaultTabController(
-        length: 3,
+        length: 4,
         child: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
@@ -45,15 +48,30 @@ class _LandlordState extends State<Landlord>
                 Tab(icon: Icon(Icons.home)),
                 Tab(icon: Icon(Icons.airline_seat_individual_suite)),
                 Tab(icon: Icon(Icons.accessibility)),
+                Tab(icon: Icon(Icons.card_giftcard))
               ],
             ),
+            actions: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text("Salir"),
+                  new IconButton(
+                    icon: Icon(
+                        Icons.exit_to_app,
+                        color: Colors.white),
+                    onPressed: _logout,
+                  )
+                ],
+              )
+            ],
             title: Text('Hola $nombre'),
           ),
           body: TabBarView(
             children: [
               Icon(Icons.home),
-              rooms(),
+              Rooms(),
               Tenants(),
+              Invitations()
             ],
           ),
         ),

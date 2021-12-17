@@ -1,38 +1,72 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
+import 'package:ihunt/vistas/propietario/rooms.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
+import 'package:intl/intl.dart';
 
-class RegisterRoom extends StatefulWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'landlordView.dart';
+
+class DetailRoom extends StatefulWidget {
+
+  const DetailRoom({Key key, this.room}) : super(key: key);
+  final room;
+
   @override
-  _RegisterRoomState createState() => _RegisterRoomState();
+  _DetailRoomState createState() => _DetailRoomState();
 }
 
 
-class _RegisterRoomState extends State<RegisterRoom> {
+class _DetailRoomState extends State<DetailRoom> {
+  void setData() async{
+    var sharedPreferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      nombre = sharedPreferences.getString("nombre") ?? "Error";
+      id = sharedPreferences.getString("idusuario") ?? "Error";
+    });
+  }
+
+  // VARIABLES DE SESION
+  String id;
+  String nombre;
+
+  // VARIABLE DE IMAGENES
+  List<File> image_files = new List();
+
+  @override
+  void initState(){
+    setData();
+  }
+
 
   final formKey = new GlobalKey<FormState>();
-
-  TextEditingController roomidCtrl = new TextEditingController();
-  TextEditingController adressCtrl = new TextEditingController();
-  TextEditingController dimensionsCtrl = new TextEditingController();
-  TextEditingController servicesCtrl = new TextEditingController();
-  TextEditingController descriptionCtrl = new TextEditingController();
-  TextEditingController priceCtrl = new TextEditingController();
-  TextEditingController termsCtrl = new TextEditingController();
-
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms;
 
   @override
   Widget build(BuildContext context) {
 
+    TextEditingController roomidCtrl = new TextEditingController(text: widget.room['idhabitacion']);
+    TextEditingController adressCtrl = new TextEditingController(text: widget.room['direccion']);
+    TextEditingController dimensionsCtrl = new TextEditingController(text: widget.room['dimension']);
+    TextEditingController servicesCtrl = new TextEditingController(text: widget.room['servicios']);
+    TextEditingController descriptionCtrl = new TextEditingController(text: widget.room['descripcion']);
+    TextEditingController priceCtrl = new TextEditingController(text: widget.room['precio'].toString());
+    TextEditingController termsCtrl = new TextEditingController(text: widget.room['terminos']);
+
     final roomId = TextFormField(
       autofocus: false,
       controller: roomidCtrl,
+      enabled: false,
       validator: (value) => value.isEmpty ? "Your roomId is required" : null,
       onSaved: (value) => _roomid = value,
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
@@ -41,6 +75,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final adress = TextFormField(
       autofocus: false,
       controller: adressCtrl,
+      enabled: false,
       validator: (value) => value.isEmpty ? "La dirección de la habitación es requerida" : null,
       onSaved: (value) => _adress = value,
       decoration:
@@ -50,6 +85,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final dimensions = TextFormField(
       autofocus: false,
       controller: dimensionsCtrl,
+      enabled: false,
       validator: (value) => value.isEmpty ? "La dimensión de la habitacón es requerida" : null,
       onSaved: (value) => _dimensions = value,
       decoration: buildInputDecoration("Dimensión", Icons.menu),
@@ -58,17 +94,16 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final services = TextFormField(
       autofocus: false,
       controller: servicesCtrl,
-      obscureText: true,
+      enabled: false,
       onSaved: (value) => _services = value,
-      decoration:
-      buildInputDecoration("Servicios", Icons.local_laundry_service),
+      decoration: buildInputDecoration("Servicios", Icons.local_laundry_service),
     );
 
     final description = TextFormField(
       autofocus: false,
       controller: descriptionCtrl,
+      enabled: false,
       onSaved: (value) => _description = value,
-      obscureText: true,
       decoration:
       buildInputDecoration("Descripción", Icons.description),
     );
@@ -76,16 +111,18 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final price = TextFormField(
       autofocus: false,
       controller: priceCtrl,
+      validator: numberValidator,
+      enabled: false,
       onSaved: (value) => _price = value,
-      obscureText: true,
       decoration:
       buildInputDecoration("Precio", Icons.monetization_on),
     );
+
     final terms = TextFormField(
       autofocus: false,
       controller: termsCtrl,
+      enabled: false,
       onSaved: (value) => _terms = value,
-      obscureText: true,
       decoration:
       buildInputDecoration("Términos", Icons.add_alert),
     );
@@ -147,61 +184,39 @@ class _RegisterRoomState extends State<RegisterRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/register');
+      Navigator.pushReplacementNamed(context, '/landlord');
     };
 
-    Future submit() async {
-      final form = formKey.currentState;
+    Future deleteRoom(id, idhabitacion) async{
 
-      if (form.validate()) {
-        form.save();
-        Api _api = Api();
+      Api _api = Api();
 
-        var date = new DateTime.now();
-        final msg = jsonEncode({
-          'idhabitación': roomidCtrl.text,
-          'direccion': adressCtrl.text,
-          'dimension': dimensionsCtrl.text,
-          'servicios': servicesCtrl.text,
-          'descripcion': descriptionCtrl.text,
-          'precio' : priceCtrl.text,
-          'terminos' : termsCtrl.text,
-          'fecharegistro': date
-        });
+      final msg = jsonEncode({
+        "usuario": id,
+        "idhabitacion": idhabitacion
+      });
 
-        print(msg);
+      var response = await _api.DeleteRoomPost(msg);
+      var data = jsonDecode(response.body);
 
-        var response = await _api.registerPost(msg);
-        Map data = jsonDecode(response.body);
-
-        if (response.statusCode == 201) {
-          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("Data posted successfully");
-          Navigator.pushReplacementNamed(context, '/homeS');
-        } else {
-          if (Platform.isAndroid) {
-            _materialAlertDialog(context, data['message'], 'Notificación');
-            print(response.statusCode);
-          } else if (Platform.isIOS) {
-            _cupertinoDialog(context, data['message'], 'Notificación');
-          }
-        }
+      if (response.statusCode == 201) {
+        // CREAR UN REFRESH EN LA PAGINA
+        debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE");
+        Navigator.push(context, new MaterialPageRoute(
+          builder: (context) => new Landlord())
+        );
+        //Navigator.of(context).pop();
       } else {
+
         if (Platform.isAndroid) {
-          _materialAlertDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
+          //_materialAlertDialog(context, data['message'], 'Notificación');
+          print(response.statusCode);
         } else if (Platform.isIOS) {
-          _cupertinoDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
+          //_cupertinoDialog(context, data['message'], 'Notificación');
         }
+
       }
     }
-
-    ;
 
     return SafeArea(
         child: Scaffold(
@@ -257,18 +272,27 @@ class _RegisterRoomState extends State<RegisterRoom> {
                       //longButtons("Registrar", submit),
                       Row(
                         children: <Widget>[
-                          Expanded(
-                              child: Container(
-                                child: longButtons("Aceptar", submit),
-                                alignment: Alignment.centerLeft,
-                              )),
-                          Expanded(
-                              child: Container(
-                                child: longButtons("Cancelar", canceled),
-                                alignment: Alignment.centerRight,
-                              )),
+                          MaterialButton(
+                              onPressed: widget.room['status']==1?
+                                () {} :
+                                () => deleteRoom(id, widget.room['idhabitacion']),
+                              textColor: Colors.white,
+                              color: Color(0xff01A0C7),
+                              minWidth: 120,
+                              child: SizedBox(
+                                child: Text(
+                                    "Eliminar",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 12)
+                                ),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                              )
+                          )
                         ],
-                      )
+                      ),
                     ],
                   ),
                 )),

@@ -23,11 +23,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _saving = false;
 
+  bool _saving = false;
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
-
+  TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
 
   Widget _divider() {
     return Container(
@@ -127,31 +127,13 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext builderContext) {
         Future.delayed(Duration(seconds: seconds), () {
-          //Navigator.of(context).pop();
         });
         return AlertDialog(
-          // Retrieve the text the that user has entered by using the
-          // TextEditingController.
           content: Text(message),
         );
       },
     );
   }
-
-  void _submit() {
-    setState(() {
-      _saving = true;
-    });
-
-    //print('submitting to backend...');
-    new Future.delayed(new Duration(seconds: 2), () {
-
-      setState(() {
-        _saving = false;
-      });
-    });
-  }
-
 
   onSuccess() async{
     var sharedPreferences = await SharedPreferences.getInstance();
@@ -159,31 +141,57 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
+
   Future _sendRequest(emailField, passwordField) async {
 
     Api _api = Api();
-    _submit();
-    print("====================");
+
+    /*print("====================");
     print(emailField.text);
     print(passwordField.text);
-    print("====================");
+    print("====================");*/
 
-    final body = jsonEncode(
-        {
+    final body = jsonEncode({
           'usuario': emailField.text,
           'contrasena': passwordField.text
         });
 
-    var response = await _api.loginPost(body);
+    var response;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: FutureBuilder(
+          future: _api.loginPost(body),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+
+              response = snapshot.data;
+              Navigator.pop(context);
+            }
+            return CircularProgressIndicator();
+            /*return Center(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    //Text('Cargando...'),
+                  ]
+              ),
+            );*/
+          },
+        ),
+      ),
+    );
+
     int statusCode = response.statusCode;
-
     var resp = json.decode(response.body);
-
-
     var sharedPreferences = await SharedPreferences.getInstance();
+
     if (statusCode == 201) {
-
-
+      _saving = true;
       sharedPreferences.setBool("isLogged", true);
       sharedPreferences.setString("nombre", resp['nombre']);
       sharedPreferences.setString("idusuario", resp['idusuario']);
@@ -194,48 +202,19 @@ class _LoginPageState extends State<LoginPage> {
       }
       if (resp['Tipo'] == 'Usuario') {
         Navigator.pushReplacementNamed(context, '/user');
-       
       }
 
     } else {
       _saving = false;
       sharedPreferences.setBool("isLogged", false);
       _showDialog(2, "El usuario o contraseña son incorrectos");
-
-=======
-  Future _sendRequest(emailField, passwordField) async {
-    Api _api = Api();
-    _submit();
-    //print("====================");
-    //print(emailField.text);
-    //print(passwordField.text);
-    //print("====================");
-    final body = jsonEncode(
-        {'idusuario': emailField.text, 'contrasena': passwordField.text});
-
-    var response = await _api.loginPost(body);
-    int statusCode = response.statusCode;
-    statusCode = 201;
-    if (statusCode == 201) {
-      //_showDialog(1, "Loggeado");
-      //String responseBody = response.body;
-      //print(responseBody);
-      Navigator.pushReplacementNamed(context, '/landlord');
-      //Navigator.push(
-      //  context,
-      //  MaterialPageRoute(builder: (context) => Landlord()),
-      //);
-    } else {
-      _showDialog(2, "El usuario o contraseña son incorrectos");
-
     }
+
   }
 
-  TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
 
   @override
   Widget build(BuildContext context) {
-
 
     final emailField = TextFormField(
         autofocus: true,
@@ -255,130 +234,22 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () => _sendRequest(myControllerEmail, myControllerPassword),
+        //onPressed: () => _sendRequest(myControllerEmail, myControllerPassword),
+        onPressed: (){
+          _sendRequest(myControllerEmail, myControllerPassword);
+          //setState(() => _loading = true);
+        },
         child: Text("Ingresar",
             textAlign: TextAlign.center,
             style: style.copyWith(color: Colors.white)),
-      ),
+      )
     );
 
-    /*
-    List<String> fotos = [
-      "https://awsrpia.s3.amazonaws.com/habitaciones/199709810_3930934096956302_8955632156523703761_n.jpg",
-      "https://awsrpia.s3.amazonaws.com/habitaciones/200093415_107240988265907_2391073375870101507_n.jpg",
-      "https://awsrpia.s3.amazonaws.com/habitaciones/201482550_532932834826458_3630072694624410304_n.jpg",
-      "https://awsrpia.s3.amazonaws.com/habitaciones/201763526_107240834932589_1701097239284879277_n.jpg",
-      "https://awsrpia.s3.amazonaws.com/habitaciones/201822557_532998261486582_8554378459947353905_n.jpg",
-      "https://awsrpia.s3.amazonaws.com/habitaciones/202073837_501458407829418_6563349131041000474_n.jpg"
-    ];
-  
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Fotos de la habitacion en renta"),
-      ),
-      body: ListView.builder(
-        itemCount: fotos.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: Image.network(fotos[index]),
-          );
-        },
-      ),
-    );
-  */
 
-    /*
-    return Scaffold(
-      body: ModalProgressHUD(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  label("Correo o usuario"),
-                  SizedBox(height: 15.0),
-                  emailField,
-                  SizedBox(height: 15.0),
-                  //space
-                  label("Contraseña"),
-                  SizedBox(height: 15.0),
-                  passwordField,
-                  SizedBox(
-                    height: 45.0,
-                  ),
-                  //space
-                  loginbuton,
-
-                  /*SizedBox(
-                    height: 35.0,
-                  ),*/
-                  _divider(),
-                ],
-              ),
-            ),
-          ),
-          inAsyncCall: _saving),
-    );*/
-    /*
-    bool _isInAsyncCall = false;
-
-    bool _isInvalidAsyncUser = false; // managed after response from server
-    bool _isInvalidAsyncPass = false; // managed after response from server
-
-    String _username;
-    String _password;
-    bool _isLoggedIn = false;
-    void _submit() {
-      //if (_loginFormKey.currentState.validate()) {
-//        _loginFormKey.currentState.save();
-
-        // dismiss keyboard during async call
-        FocusScope.of(context).requestFocus(new FocusNode());
-
-        // start the modal progress HUD
-        setState(() {
-          _isInAsyncCall = true;
-        });
-
-        // Simulate a service call
-        Future.delayed(Duration(seconds: 1), () {
-          final _accountUsername = 'username1';
-          final _accountPassword = 'password1';
-          setState(() {
-            if (_username == _accountUsername) {
-              _isInvalidAsyncUser = false;
-              if (_password == _accountPassword) {
-                // username and password are correct
-                _isInvalidAsyncPass = false;
-                _isLoggedIn = true;
-              } else
-                // username is correct, but password is incorrect
-                _isInvalidAsyncPass = true;
-            } else {
-              // incorrect username and have not checked password result
-              _isInvalidAsyncUser = true;
-              // no such user, so no need to trigger async password validator
-              _isInvalidAsyncPass = false;
-            }
-            // stop the modal progress HUD
-            _isInAsyncCall = false;
-          });
-          //if (_isLoggedIn)
-            // do something
-
-        });
-      //}
-    }*/
-
-    //final height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
             child: SingleChildScrollView(
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -430,7 +301,6 @@ class _LoginPageState extends State<LoginPage> {
                   _divider(),
                   Padding(
                     padding: const EdgeInsets.all(50.0),
-
                   ),
                   _createAccountLabel()
                 ],

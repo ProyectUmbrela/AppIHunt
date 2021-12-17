@@ -23,13 +23,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter         # Add this line
   http: ^0.13.3
   modal_progress_hud: ^0.1.3
   flushbar: ^1.10.4
   shared_preferences: ^2.0.8
-
+  google_mobile_ads: ^0.13.0 # #################################################################
   provider: ^6.0.1
   firebase_database: ^8.0.0
+  firebase_storage: ^10.0.5
+
 
   # Add the dependency for the FlutterFire plugin for Google Analytics
   firebase_analytics: ^8.3.3
@@ -37,10 +41,11 @@ dependencies:
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
   firebase_auth: ^3.1.2
+  firebase_auth_web: ^3.1.3
+
   firebase_core: ^1.7.0
   cloud_firestore: ^2.5.3
   google_maps_flutter: ^2.0.11 # added
-
 
   # to get current direction when starts google maps
   geolocator: ^7.6.2
@@ -51,19 +56,35 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   location_permissions: ^4.0.0
-  location: ^4.3.0
+  #####################################################################location: ^4.3.0
 
   # new added
   android_intent: ^2.0.2
-  geocoder: ^0.2.1
+  #####################################geocoder: ^0.2.1
   google_geocoding: ^0.2.0
   latlong: ^0.6.1
   flutter_application_id: ^1.0.0
+  carousel_slider: ^4.0.0
+
+  #manejo de imagenes
+  # carga de imagenes
+  image_picker: 0.5.4+2 #
+  flutter_multi_carousel: ^1.0.0
+
+  #fecha
+  date_field: ^2.1.2
+  nepali_date_picker: ^5.2.0
+  nepali_utils: ^3.0.1
+  intl: ^0.17.0
+  firebase_messaging: ^11.1.0
+  firebase_in_app_messaging: ^0.5.0+13
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter         # Add this line
 
 
 flutter_application_id:
