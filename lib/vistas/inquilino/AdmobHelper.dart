@@ -7,7 +7,7 @@ class AdmobHelper extends ChangeNotifier {
 
   //int _rewardedPoint = 0 ;
   //int getrewardpoint() => _rewardedPoint;
-  //static String get bannerUnit => 'ca-app-pub-7955489602208233/5868040865';
+  static String get bannerUnit => 'ca-app-pub-7955489602208233/5868040865';
   //InterstitialAd _interstitialAd;
   //RewardedAd _rewardedAd;
   int num_of_attempt_load = 0;
@@ -22,7 +22,7 @@ class AdmobHelper extends ChangeNotifier {
   static BannerAd getBannerAd(){
     BannerAd bAd = new BannerAd(
         size: AdSize.largeBanner,
-        adUnitId: 'ca-app-pub-7955489602208233/5868040865' ,
+        adUnitId: 'ca-app-pub-7955489602208233/5868040865',
         listener: BannerAdListener(
             onAdClosed: (Ad ad){
               //print("Ad Closed");

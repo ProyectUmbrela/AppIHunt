@@ -85,7 +85,8 @@ class _UserState extends State<UserView> {
         .collection(tipo_usuario.toLowerCase())
         .doc(id_usuario)
         .set({
-          'tokens': FieldValue.arrayUnion([token])},
+          'updatedOn':FieldValue.serverTimestamp(),
+          'token': token}, //FieldValue.arrayUnion([token, FieldValue.serverTimestamp()])},
           SetOptions(merge: true)
           );
   }
@@ -93,7 +94,7 @@ class _UserState extends State<UserView> {
 
   void firebaseCloudMessaging_Listeners() {
     _firebaseMessaging.getToken().then((token) async {
-      print(token);
+      //print(token);
       await saveTokenToDatabase(token);
       tokenBy = token;
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
