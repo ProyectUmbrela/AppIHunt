@@ -74,7 +74,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     var data = jsonDecode(response.body);
     List<Room> _rooms = [];
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode==201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data.forEach((index, room) {

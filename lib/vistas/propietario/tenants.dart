@@ -47,6 +47,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     });
 
     var response = await _api.GetTenants(msg);
+    print("############ ${msg} , ${response.statusCode}");
     var data = jsonDecode(response.body);
     List<Tenant> _tenants = [];
 
@@ -66,7 +67,10 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
         ));
       });
       return _tenants;
-    } else {
+    }
+    if (response.statusCode == 403){ // este status es para caso sin inquilino
+      return _tenants;
+    }else {
       if (Platform.isAndroid) {
         //_materialAlertDialog(context, data['message'], 'Notificación');
       } else if (Platform.isIOS) {
@@ -79,16 +83,51 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     setState(() {
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id = sharedPreferences.getString("idusuario") ?? "Error";
+      getRooms();
+      print(rooms);
     });
   }
 
   // VARIABLES DE SESION
   String id;
   String nombre;
+  List<String> rooms = [];
 
   @override
   void initState(){
     setData();
+  }
+
+  Future getRooms() async{
+    Api _api = Api();
+
+    final msg = jsonEncode({
+      "usuario": id
+    });
+
+    var response = await _api.GetRooms(msg);
+    print("################# OBTENIENDO HABITACIONES ${msg}, ${response.statusCode}");
+    var data = jsonDecode(response.body);
+    List<String> _rooms = [];
+
+    if (response.statusCode == 200) {
+      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+
+      data.forEach((index, room) {
+        if (room['estatus']==0){
+          rooms.add(room['idhabitacion']);
+        }
+
+      });
+      return rooms;
+    } else {
+      if (Platform.isAndroid) {
+        //_materialAlertDialog(context, data['message'], 'Notificación');
+        print(response.statusCode);
+      } else if (Platform.isIOS) {
+        //_cupertinoDialog(context, data['message'], 'Notificación');
+      }
+    }
   }
 
   Future deleteTenant(id, idhabitacion, idinquilino) async{
@@ -104,7 +143,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     var response = await _api.DeleteTenantPost(msg);
     var data = jsonDecode(response.body);
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode==200) {
       // CREAR UN REFRESH EN LA PAGINA
 
 
@@ -226,7 +265,11 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
           Navigator.push(
             context,
             new MaterialPageRoute(
-              builder: (context) => new RegisterTenant(),
+              builder: (context) =>
+              new RegisterTenant(rooms:{
+                              'rooms': rooms
+                            }
+              ),
             ),
           );
         },

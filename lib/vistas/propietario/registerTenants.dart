@@ -15,6 +15,10 @@ import 'package:ihunt/utils/validators.dart';
 import 'landlordView.dart';
 
 class RegisterTenant extends StatefulWidget {
+
+  const RegisterTenant({Key key, this.rooms}) : super(key: key);
+  final rooms;
+
   @override
   _RegisterTenantState createState() => _RegisterTenantState();
 }
@@ -53,7 +57,10 @@ class _RegisterTenantState extends State<RegisterTenant> {
   TextEditingController detailsCtrl = new TextEditingController();
 
 
-  String _iduser, _room, _contrato, _months, _startdate, _enddate, _paydate, _plazo, _details ;
+  String _iduser, _room, _contrato, _months, _plazo, _details ;
+  String _startdate = "";
+  String _enddate = "";
+  String _paydate = "";
 
   final dateFormat = DateFormat("dd-M-yyyy");
 
@@ -118,7 +125,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       }).toList(),
     );
 
-    /*final room = DropdownButtonFormField<String>(
+    final room = DropdownButtonFormField<String>(
       value: _room,
       hint: Text(
         'Seleccione la habitación',
@@ -127,13 +134,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
           setState(() => _room = value),
       validator: (value) => value == null ? 'Por favor elija una opción' : null,
       items:
-      list_rooms.map<DropdownMenuItem<String>>((String value) {
+      widget.rooms['rooms'].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
       }).toList(),
-    );*/
+    );
 
     final months = TextFormField(
       autofocus: false,
@@ -160,6 +167,24 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print(value);
       },
       onSaved: (value) => _startdate = value.toString()
+    );
+
+    final payDate2 = DateTimeFormField(
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          //labelText: 'Only time',
+        ),
+        dateFormat: DateFormat.yMMMMd('es'),
+        mode: DateTimeFieldPickerMode.date,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          print(value);
+        },
+        onSaved: (value) => _paydate = value.toString()
     );
 
     final endDate = DateTimeFormField(
@@ -195,7 +220,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         onDateSelected: (DateTime value) {
           print(value);
         },
-        onSaved: (value) => _startdate = value.toString()
+        onSaved: (value) => _paydate = value.toString()
     );
 
     final Plazo = TextFormField(
@@ -275,7 +300,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       Navigator.push(
         context,
         new MaterialPageRoute(
-          builder: (context) => new RegisterTenant(),
+          builder: (context) => new Landlord(),
         ),
       );
     };
@@ -286,18 +311,17 @@ class _RegisterTenantState extends State<RegisterTenant> {
       if (form.validate()) {
         final msg = jsonEncode({
           "idusario": iduserCtrl.text,
-          "idhabitacion": "ggg",
+          "idhabitacion": _room,
           "idpropietario": id_prop,
           "contrato": _contrato=='Sí'? "1":"0",
           "meses": int.parse(monthsCtrl.text), // conversion a entero
-          "fecha_inicio": startdateCtrl.text,
-          "fecha_fin": enddateCtrl.text,
-          "fecha_pago": paydateCtrl.text,
+          "fecha_inicio": _startdate,
+          "fecha_fin": _enddate,
+          "fecha_pago": _paydate,
           "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
-        print("############################# \n ${msg}");
-
+        print(msg);
         form.save();
         Api _api = Api();
 
@@ -358,6 +382,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
                         height: 15,
                       ),
 
+                      label("Seleccione la habitación"),
+                      SizedBox(height: 5),
+                      room,
+                      SizedBox(
+                        height: 15,
+                      ),
+
                       label("Indique si hay contrato"),
                       SizedBox(height: 5),
                       contrato,
@@ -382,7 +413,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
                       label("Indique la fecha de pago (el dia es el tomado)"),
                       SizedBox(height: 5.0),
-                      payDate,
+                      payDate2,
                       SizedBox(height: 15.0),
 
                       label("Num. días de plazo para el pago"),
