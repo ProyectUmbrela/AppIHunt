@@ -110,6 +110,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     return Scaffold(
       appBar: AppBar(
         title: Text("Invitaciones"),
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(

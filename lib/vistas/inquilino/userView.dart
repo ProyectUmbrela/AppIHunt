@@ -216,6 +216,7 @@ class _UserState extends State<UserView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('$nombre'),
+        automaticallyImplyLeading: false,
         actions: <Widget>[
           Row(
             children: <Widget>[

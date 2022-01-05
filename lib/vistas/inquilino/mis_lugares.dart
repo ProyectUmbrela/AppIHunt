@@ -289,6 +289,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mis habitaciones'),
+        automaticallyImplyLeading: false,
       ),
       body: projectWidget(),
     );
