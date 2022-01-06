@@ -76,8 +76,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
     if (response.statusCode == 200 || response.statusCode==201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-
-      data.forEach((index, room) {
+      data['habitaciones'].forEach((room) {
         _rooms.add(Room(
             descripcion: room['descripcion'],
             dimension: room['dimension'],
@@ -94,7 +93,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         ));
 
       });
-
+      print(_rooms);
       return _rooms;
     } else {
       if (Platform.isAndroid) {

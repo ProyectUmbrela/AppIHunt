@@ -42,12 +42,10 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
     var data = jsonDecode(response.body);
     List<Invitation> _invitations = [];
 
-    print("############################# responsecode invitaciones ${response.statusCode}");
     if (response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
-      data["invitaciones"].forEach((index, invitation) {
-        print('****************key: $index , ${invitation['idusuario']}');
+      data["invitaciones"].forEach((invitation) {
         _invitations.add(Invitation(
             idusuario: invitation['idusuario'],
             idhabitacion: invitation['idhabitacion'],
@@ -56,7 +54,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
             estatus: invitation['estatus']
         ));
       });
-      print('**************** FIN ${_invitations.length}');
       return _invitations;
     } else {
       if (Platform.isAndroid) {

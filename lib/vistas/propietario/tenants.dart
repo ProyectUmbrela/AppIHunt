@@ -47,14 +47,13 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     });
 
     var response = await _api.GetTenants(msg);
-    print("############ ${msg} , ${response.statusCode}");
     var data = jsonDecode(response.body);
     List<Tenant> _tenants = [];
 
     if (response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
-      data["inquilinos"].forEach((index, tenant) {
+      data['inquilinos'].forEach((tenant) {
         _tenants.add(Tenant(
             fechafincontrato: tenant['fechafincontrato'],
             fechainicontrato: tenant['fechainicontrato'] ,
