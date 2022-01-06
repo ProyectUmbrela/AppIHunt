@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificacionesInquilino extends StatefulWidget{
   @override
@@ -91,8 +92,13 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     );
   }
   */
+  String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUspOzCxOzTM3V9IBCmckJmWWJCZn5ucBZYpS80oSwcIFRfkFmaklUB2uOUAd-Uq1AJYDGSo.Yb9Psw.ogC2XOTskSte54PURbGQAcUrCmE';
 
-
+  void _launchURL() async {
+    if (!await launch(_url,
+        forceSafariVC: true,
+        forceWebView: true)) throw 'Could not launch $_url';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +126,10 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
               "${message}",
               style: Theme.of(context).textTheme.headline4,
               textAlign: TextAlign.center,
+            ),
+            RaisedButton(
+              onPressed: _launchURL,
+              child: Text('Show Flutter homepage'),
             ),
           ],
         ),
