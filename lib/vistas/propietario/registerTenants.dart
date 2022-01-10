@@ -309,20 +309,21 @@ class _RegisterTenantState extends State<RegisterTenant> {
       final form = formKey.currentState;
 
       if (form.validate()) {
+        form.save();
+
         final msg = jsonEncode({
-          "idusario": iduserCtrl.text,
+          "idusuario": iduserCtrl.text,
           "idhabitacion": _room,
           "idpropietario": id_prop,
           "contrato": _contrato=='Sí'? "1":"0",
           "meses": int.parse(monthsCtrl.text), // conversion a entero
-          "fecha_inicio": _startdate,
-          "fecha_fin": _enddate,
-          "fecha_pago": _paydate,
+          "fecha_inicio": _startdate.split(" ")[0],
+          "fecha_fin": _enddate.split(" ")[0],
+          "fecha_pago": _paydate.split(" ")[0],
           "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
         print(msg);
-        form.save();
         Api _api = Api();
 
         var response = await _api.RegisterTenantPost(msg);
@@ -331,7 +332,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print("################# ESTATUS CODE REGISTRO INQUILINO: ");
         print(response.statusCode);
 
-        if (response.statusCode == 201) {
+        if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
           Navigator.push(context, new MaterialPageRoute(
@@ -413,7 +414,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
                       label("Indique la fecha de pago (el dia es el tomado)"),
                       SizedBox(height: 5.0),
-                      payDate2,
+                      payDate,
                       SizedBox(height: 15.0),
 
                       label("Num. días de plazo para el pago"),
