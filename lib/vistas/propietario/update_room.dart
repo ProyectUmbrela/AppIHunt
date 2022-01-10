@@ -33,12 +33,26 @@ class _UpdateRoomState extends State<UpdateRoom> {
     setState(() {
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+      roomidCtrl = new TextEditingController(text: widget.room['idhabitacion']);
+      adressCtrl = new TextEditingController(text: widget.room['direccion']);
+      dimensionsCtrl = new TextEditingController(text: widget.room['dimension']);
+      servicesCtrl = new TextEditingController(text: widget.room['servicios']);
+      descriptionCtrl = new TextEditingController(text: widget.room['descripcion']);
+      priceCtrl = new TextEditingController(text: widget.room['precio'].toString());
+      termsCtrl = new TextEditingController(text: widget.room['terminos']);
     });
   }
 
   // VARIABLES DE SESION
   String id_usuario;
   String nombre;
+  TextEditingController roomidCtrl;
+  TextEditingController adressCtrl;
+  TextEditingController dimensionsCtrl;
+  TextEditingController servicesCtrl;
+  TextEditingController descriptionCtrl;
+  TextEditingController priceCtrl;
+  TextEditingController termsCtrl;
 
   // VARIABLE DE IMAGENES
   List<File> image_files = new List();
@@ -67,15 +81,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
   @override
   Widget build(BuildContext context) {
-
-    TextEditingController roomidCtrl = new TextEditingController(text: widget.room['idhabitacion']);
-    TextEditingController adressCtrl = new TextEditingController(text: widget.room['direccion']);
-    TextEditingController dimensionsCtrl = new TextEditingController(text: widget.room['dimension']);
-    TextEditingController servicesCtrl = new TextEditingController(text: widget.room['servicios']);
-    TextEditingController descriptionCtrl = new TextEditingController(text: widget.room['descripcion']);
-    TextEditingController priceCtrl = new TextEditingController(text: widget.room['precio'].toString());
-    TextEditingController termsCtrl = new TextEditingController(text: widget.room['terminos']);
-
     // OBTENER LATITUD Y LONGITUD
     void getLocation(address) async{
       try {
@@ -95,7 +100,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
       setState(() {
         image_files.add(image);
-        print("########################## ############## LOGITUD DE LISTA ${image_files.length}");
+        //print("######################################## LOGITUD DE LISTA ${image_files.length}");
       });
     }
     _images_to_base64() async{
@@ -131,8 +136,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
         document['fotos'][i.toString()] = img64;
       }
 
-      print("#########################################################################");
-      print(document);
+      //print("#########################################################################");
+      //print(document);
 
       /*FirebaseFirestore.instance.collection("habitaciones").add(document).then((value) => print('User Added'))
           .catchError((error) => print('Failed to add user: ${error}'));*/
@@ -270,6 +275,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
         Api _api = Api();
 
         final msg = jsonEncode({
+          "idhabitacion_anterior": widget.room['idhabitacion'],
           "idhabitacion": roomidCtrl.text,
           "idpropietario": id_usuario,
           "direccion": adressCtrl.text,
@@ -281,8 +287,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
         });
 
         await getLocation(adressCtrl.text);
-        print('############################');
-        print("lat ${lat}  long ${lngt}");
+        print('############################ ACTUALIZAR HABITACION');
+        print("body ${msg}");
         addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre);
 
         var response = await _api.RegisterRoomPost(msg);

@@ -105,14 +105,13 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     });
 
     var response = await _api.GetRooms(msg);
-    print("################# OBTENIENDO HABITACIONES ${msg}, ${response.statusCode}");
     var data = jsonDecode(response.body);
     List<String> _rooms = [];
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
-      data.forEach((index, room) {
+      data['habitaciones'].forEach((room) {
         if (room['estatus']==0){
           rooms.add(room['idhabitacion']);
         }

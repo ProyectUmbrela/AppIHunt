@@ -93,12 +93,11 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         ));
 
       });
-      print(_rooms);
       return _rooms;
     } else {
       if (Platform.isAndroid) {
         //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
+        print('ERROR EN GET ROOMS ${response.statusCode}');
       } else if (Platform.isIOS) {
         //_cupertinoDialog(context, data['message'], 'Notificación');
       }
