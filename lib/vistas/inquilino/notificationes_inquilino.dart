@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -92,7 +93,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     );
   }
   */
-  String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUspOzCxOzTM3V9IBCmckJmWWJCZn5ucBZYpS80oSwcIFRfkFmaklUB2uOUAd-Uq1AJYDGSo.Yb9Psw.ogC2XOTskSte54PURbGQAcUrCmE';
+  String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUspOzCxOzTM3V9IBCmckJmWWJCZn5ucBZQpS80oy8kuLUy2LSxKLwPIFRfkFmaklUK0uiUXZfpnpGSVKtQDzGx35.YdpOZw.a1NCfWNgc1N6Pn0vBOhAY41IuT0';
 
   void _launchURL() async {
     if (!await launch(_url,
@@ -130,6 +131,13 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
             RaisedButton(
               onPressed: _launchURL,
               child: Text('Show Flutter homepage'),
+            ),
+            RaisedButton(
+              onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context)=>DetallesInvitacion()));
+              },
+              child: Text('Detalles'),
             ),
           ],
         ),
