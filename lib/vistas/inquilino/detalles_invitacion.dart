@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
-import 'package:ihunt/vistas/inquilino/userView.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -13,7 +11,7 @@ class DetallesInvitacion extends StatefulWidget {
 
 class _DetallesInvitacionState extends State<DetallesInvitacion> {
 
-  String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUspOzCxOzTM3V9IBCmckJmWWJCZn5ucBZQpS80oy8kuLUy2LSxKLwPIFRfkFmaklUK0uiUXZfpnpGSVKtQDzGx35.YdqFTQ.pzsfMQIYYVeoBRp5pVyUPEnyC00';
+  String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUkorSk2pNDIwtFDSAYpnJCZlliQmZ-bnAaUKUvNKMvJLi1Mti0sSi8DyBUX5BZmpJVC9LolF2X6Z6RklSrUA-W0d9Q.YdtHow.922-MCgER8UJsnattFcE_fZZQuU';
 
   void _launchURL() async {
     if (!await launch(_url,
@@ -21,36 +19,70 @@ class _DetallesInvitacionState extends State<DetallesInvitacion> {
         forceWebView: true)) throw 'Could not launch $_url';
   }
 
+  showAlertDialogRejected(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      title: Text("Advertencia"),
+      content: Text("Se ha cancelado la invitación exitosamente. Está habitación ya no se encuentra disponible."),
+      actions: [
+      ],
+    );
 
-  showAlertDialog(BuildContext context) {
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
+  showAlertDialogAccepted(BuildContext context) {
 
-    Widget cancelButton = TextButton(
+    Widget aceptarRentaButton = Material(
+      borderRadius: BorderRadius.circular(5),
+      color: Color(0xff01A0C7),
+      child: MaterialButton(
+        //minWidth: (MediaQuery.of(context).size.width/3),
+        onPressed:() {
+          Navigator.of(context).pop();
+          _launchURL();
+          /*Navigator.of(context).push(MaterialPageRoute(
+            builder: (context)=>NotificacionesInquilino()));*/
+        },
+        child: Text(
+          "Aceptar",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+          color: Colors.white,
+            fontSize: 15.0,
+          ),
+        )
+      )
+    );
+
+    /*Widget cancelButton = TextButton(
       child: Text("Cancelar"),
       onPressed:  () {},
-    );
-    Widget launchButton = TextButton(
-      child: Text(
-        "Rentar",
-        style: TextStyle(
-          fontSize: 19.0,
-        ),
-      ),
+    );*/
+
+    /*Widget launchButton = TextButton(
+      child: aceptarRentaButton,
       onPressed:  () {
         Navigator.of(context).pop();
         _launchURL();
         /*Navigator.of(context).push(MaterialPageRoute(
             builder: (context)=>NotificacionesInquilino()));*/
       },
-    );
+    );*/
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Notice"),
+      title: Text("Advertencia"),
       content: Text("¿Estás seguro de que deseas rentar esta habitación? acepta para indicar que has leído los términos mencionados."),
       actions: [
         //cancelButton,
-        launchButton,
+        //launchButton,
+        aceptarRentaButton
       ],
     );
 
@@ -67,14 +99,16 @@ class _DetallesInvitacionState extends State<DetallesInvitacion> {
   @override
   Widget build(BuildContext context) {
 
-
-
     final rechazarButton = Material(
         borderRadius: BorderRadius.circular(5),
         color: Color(0xFFEEF5350), //EF9A9A, E57373, EF5350, B71C1C, C62828, D32F2F, D50000
         child: MaterialButton(
             minWidth: (MediaQuery.of(context).size.width/3),
-            onPressed: ()=>{},
+            onPressed: (){
+              Navigator.of(context).pop();
+              showAlertDialogRejected(context);
+
+            },
             child: Text(
               "Rechazar",
               textAlign: TextAlign.center,
@@ -91,9 +125,8 @@ class _DetallesInvitacionState extends State<DetallesInvitacion> {
         color: Color(0xFF1B5E20), // C8E6C9, A5D6A7, 81C784,2E7D32, 388E3C, 1B5E20
         child: MaterialButton(
             minWidth: (MediaQuery.of(context).size.width/3),
-
             onPressed: (){
-              showAlertDialog(context);
+              showAlertDialogAccepted(context);
             },
             child: Text(
               "Rentar",
