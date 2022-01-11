@@ -103,31 +103,30 @@ Future getHabitaciones(idUsuario) async {
       for (int i=0; i < actual.length; i++){
         var habitacion = actual[i];
 
-          var timeInit =  HttpDate.parse(habitacion['fechainicontrato']);
-          //final mesInit = meses[timeInit.month];
-          final periodo = "${meses[timeInit.month]} ${timeInit.year} - Actual";
-          var diasPago =  HttpDate.parse(habitacion['fechapago']);
+        var timeInit =  HttpDate.parse(habitacion['fechainicontrato']);
+        final periodo = "${meses[timeInit.month]} ${timeInit.year} - Actual";
+        var diasPago =  HttpDate.parse(habitacion['fechapago']);
 
-          final date2 = DateTime.now();
+        final date2 = DateTime.now();
 
-          var currentMonths = (date2.difference(timeInit).inDays)/30;
-          var tiempoRentada = currentMonths.toInt().toString();
+        var currentMonths = (date2.difference(timeInit).inDays)/30;
+        var tiempoRentada = currentMonths.toInt().toString();
 
-          habitaciones.add(Habitacion(
-              name: habitacion['nombre'],
-              estado: "En Renta",
-              periodo: periodo,
-              idhabitacion: "${habitacion['idhabitacion']}",
-              telefono: habitacion['telefono'],
-              costoRenta: habitacion['precio'].toString(),
-              tiempoRenta: tiempoRentada,
-              terminosRenta: habitacion['terminos'],
-              direccion: habitacion['direccion'],
-              servicios: habitacion['servicios'],
-              descripcion: habitacion['descripcion'],
-              fechaPago: diasPago.day.toString()
-          ));
-          //print("HABITACION ACTUAL AGREGADA A LA LISTA");
+        habitaciones.add(Habitacion(
+            name: habitacion['nombre'],
+            estado: "En Renta",
+            periodo: periodo,
+            idhabitacion: "${habitacion['idhabitacion']}",
+            telefono: habitacion['telefono'],
+            costoRenta: habitacion['precio'].toString(),
+            tiempoRenta: tiempoRentada,
+            terminosRenta: habitacion['terminos'],
+            direccion: habitacion['direccion'],
+            servicios: habitacion['servicios'],
+            descripcion: habitacion['descripcion'],
+            fechaPago: diasPago.day.toString()
+        ));
+        //print("HABITACION ACTUAL AGREGADA A LA LISTA");
       }
     }
 
@@ -165,6 +164,8 @@ Future getHabitaciones(idUsuario) async {
     }
     return habitaciones;
   }
+
+
 }
 
 

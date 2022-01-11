@@ -12,6 +12,7 @@ class Api {
   String _register = "/register";
   String _login = '/login';
   String _habitacionesRentadas = '/historialInquilino';
+  String _listarInvitaciones = '/listarInvitacionesUsuario';
 
   // urls correspondientes a propietario
   String _registerRoom = '/registerRoom';
@@ -34,19 +35,28 @@ class Api {
   }
 
   Future<dynamic> loginPost(data) async {
-    var response =
-        await http.post(Uri.parse(this._url + _login), body: data, headers: this._headers);
+    var response = await http.post(Uri.parse(this._url + _login), body: data, headers: this._headers);
 
     return response;
   }
 
   Future<dynamic> GetHabitaciones(data) async {
-    print(data.toString());
+
     var response = await http.post(Uri.parse(this._url + this._habitacionesRentadas),
         body: data, headers: this._headers);
 
     return response;
   }
+
+  Future<dynamic> GetInvitacionesRecientes(data) async {
+
+    var response = await http.post(Uri.parse(this._url + this._listarInvitaciones),
+        body: data, headers: this._headers);
+    return response;
+  }
+
+
+
 
   /*#####  api de propietario #####*/
   Future<dynamic> RegisterRoomPost(data) async {

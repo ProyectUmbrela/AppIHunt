@@ -2,14 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
-class DetallesInvitacion extends StatefulWidget {
+/*class DetallesInvitacion extends StatefulWidget {
   const DetallesInvitacion({Key key}) : super(key: key);
 
   @override
   _DetallesInvitacionState createState() => _DetallesInvitacionState();
+}*/
+
+
+class DetallesInvitacion extends StatefulWidget {
+  String contrato;
+  String descripcion;
+  String detalles;
+  String dimension;
+  String direccion;
+  String enlace;
+  String fechaEnvio;
+  String fechaFin;
+  String fechaInicio;
+  String fechaPago;
+  String idhabitacion;
+  String idpropietario;
+  String meses;
+  String nombre;
+  String plazo;
+  String precio;
+  String servicios;
+  String telefono;
+  String terminos;
+
+  DetallesInvitacion({
+    this.contrato,
+    this.descripcion,
+    this.detalles,
+    this.dimension,
+    this.direccion,
+    this.enlace,
+    this.fechaEnvio,
+    this.fechaFin,
+    this.fechaInicio,
+    this.fechaPago,
+    this.idhabitacion,
+    this.idpropietario,
+    this.meses,
+    this.nombre,
+    this.plazo,
+    this.precio,
+    this.servicios,
+    this.telefono,
+    this.terminos
+  });
+
+
+  @override
+  _DetallesInvitacion createState() => _DetallesInvitacion();
 }
 
-class _DetallesInvitacionState extends State<DetallesInvitacion> {
+
+class _DetallesInvitacion extends State<DetallesInvitacion> {
 
   String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUkorSk2pNDIwtFDSAYpnJCZlliQmZ-bnAaUKUvNKMvJLi1Mti0sSi8DyBUX5BZmpJVC9LolF2X6Z6RklSrUA-W0d9Q.YdtHow.922-MCgER8UJsnattFcE_fZZQuU';
 
@@ -151,8 +201,8 @@ class _DetallesInvitacionState extends State<DetallesInvitacion> {
                 Row(
                     children: <Widget>[
                       Container(
-                        width: 410.0,
-                        height: 540.0,
+                        width:MediaQuery.of(context).size.width ,//410.0,
+                        height: MediaQuery.of(context).size.height * 0.79,//540.0,
                         child: Card(
                           color: Colors.grey[400],
                           child: SingleChildScrollView(
