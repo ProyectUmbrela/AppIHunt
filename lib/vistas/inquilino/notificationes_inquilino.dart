@@ -75,20 +75,20 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     final body = jsonEncode({
       'usuario': idUsuario
     });
-    print("################## usuario : ${idUsuario}");
+    //print("################## usuario : ${idUsuario}");
     var response = await _api.GetInvitacionesRecientes(body);
 
     List<Invitacion> invitaciones = [];
     int statusCode = response.statusCode;
     var resp = json.decode(response.body);
 
-    print("==================> ${statusCode}");
+    //print("==================> ${statusCode}");
     if (statusCode == 201) {
 
       List invitacion = resp['invitaciones'];
-      print("2 ==================> ${invitacion.length}");
+      //print("2 ==================> ${invitacion.length}");
       if (invitacion.length > 0){
-        print("2 ==================> ${invitacion.length}");
+        //print("2 ==================> ${invitacion.length}");
         for (int i=0; i < invitacion.length; i++){
           var current = invitacion[i];
 
@@ -213,7 +213,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Aún no tienes habitaciones rentadas",
+                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones.",
                   style: Theme.of(context).textTheme.headline4,
                   textAlign: TextAlign.center,
                 ),

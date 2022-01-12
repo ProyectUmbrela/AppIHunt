@@ -1,3 +1,5 @@
+//import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -61,19 +63,21 @@ class DetallesInvitacion extends StatefulWidget {
 
 class _DetallesInvitacion extends State<DetallesInvitacion> {
 
-  String _url = 'https://appiuserstest.herokuapp.com/ihunt/registerTenant/.eJyrVspMKS0uTSzKzFeyUkorSk2pNDIwtFDSAYpnJCZlliQmZ-bnAaUKUvNKMvJLi1Mti0sSi8DyBUX5BZmpJVC9LolF2X6Z6RklSrUA-W0d9Q.YdtHow.922-MCgER8UJsnattFcE_fZZQuU';
+
 
   void _launchURL() async {
-    if (!await launch(_url,
+
+    if (!await launch(widget.enlace.toString(),
         forceSafariVC: true,
-        forceWebView: true)) throw 'Could not launch $_url';
+        forceWebView: true)) throw 'Could not launch ${widget.enlace.toString()}';
   }
 
   showAlertDialogRejected(BuildContext context) {
     AlertDialog alert = AlertDialog(
       title: Text("Advertencia"),
-      content: Text("Se ha cancelado la invitación exitosamente. Está habitación ya no se encuentra disponible."),
+      content: Text("Invitación cancelada. Está habitación ya no se encuentra disponible."),
       actions: [
+
       ],
     );
 
@@ -81,7 +85,9 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+
         return alert;
+
       },
     );
   }
@@ -130,8 +136,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
       title: Text("Advertencia"),
       content: Text("¿Estás seguro de que deseas rentar esta habitación? acepta para indicar que has leído los términos mencionados."),
       actions: [
-        //cancelButton,
-        //launchButton,
         aceptarRentaButton
       ],
     );
@@ -155,8 +159,11 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         child: MaterialButton(
             minWidth: (MediaQuery.of(context).size.width/3),
             onPressed: (){
-              Navigator.of(context).pop();
               showAlertDialogRejected(context);
+              Future.delayed(Duration(seconds: 2), () {//#####################################################
+                //Navigator.of(context).pop(); //###############################################################
+                Navigator.pushNamed(context, '/notificacionesInquilino'); //##################################
+              });
 
             },
             child: Text(
@@ -201,7 +208,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                 Row(
                     children: <Widget>[
                       Container(
-                        width:MediaQuery.of(context).size.width ,//410.0,
+                        width: MediaQuery.of(context).size.width ,//410.0,
                         height: MediaQuery.of(context).size.height * 0.79,//540.0,
                         child: Card(
                           color: Colors.grey[400],
@@ -236,22 +243,22 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                 Row(
                     children: <Widget>[
                       Container(
-                          width: 410.0,
-                          height: 60.0,
+                          width: MediaQuery.of(context).size.width ,
+                          height: MediaQuery.of(context).size.height * 0.09,
                           child: Row(
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(left:30, bottom: 5),
                                 child: Align(
                                   alignment: Alignment.bottomLeft,
-                                  child: rechazarButton,//Icon(Icons.camera_alt),),
+                                  child: rechazarButton,
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left:80, bottom: 5),
                                 child: Align(
                                   alignment: Alignment.bottomRight,
-                                  child: rentarButton,//Icon(Icons.camera_alt),),
+                                  child: rentarButton,
                                 ),
                               ),
                             ],
