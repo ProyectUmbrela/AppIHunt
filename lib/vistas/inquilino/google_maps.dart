@@ -43,6 +43,7 @@ class infoHabitacion{
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
+  String _coleccion = "marker_rent"; // habitaciones
 
   //google controller and markers
   GoogleMapController _controller;
@@ -267,7 +268,7 @@ class MapsPage extends State<MyMaps> {
           child: StreamBuilder(
             stream: FirebaseFirestore
                 .instance
-                .collection("habitaciones")
+                .collection(_coleccion)
                 .where("coords", isNotEqualTo: "")
                 .snapshots(),
             builder: (context, snapshot) {
@@ -276,45 +277,36 @@ class MapsPage extends State<MyMaps> {
                   List<Widget> widgets = [];
 
                   int hasImage = snapshot.data.docs[i]['check_images'];
+                  int publicar = snapshot.data.docs[i]['publicar'];
+
                   //print("======================================> HAS IMAGE? : $hasImage");
-                  if (hasImage == 1){
-                    var rawFotos = snapshot.data.docs[i]['fotos'];
-                    rawFotos.forEach((final String key, final value) {
-                      widgets.add(Image.memory(base64Decode(value)));
-                    });
+                  // Si tiene imagenes y se quiere publicar
+                  if (hasImage == 1 && publicar == 1){
+                    //if(publicar == 1){
+                      var rawFotos = snapshot.data.docs[i]['fotos'];
+                      rawFotos.forEach((final String key, final value) {
+                        widgets.add(Image.memory(base64Decode(value)));
+                      });
 
                   }
+                  //Si no tiene imagenes
                   else{
-                    FirebaseFirestore
-                        .instance
-                        .collection("habitaciones")
-                        .doc("NotAvailable")
-                        .get()
-                        .then((docRef) => {
-                      widgets.add(Image.memory(base64Decode(docRef.get('image'))))
-                    });
-
+                    // si no tiene imagenes pero se quiere publicar usando una imagen default
+                    if (publicar == 1){
+                      FirebaseFirestore
+                          .instance
+                          .collection(_coleccion)
+                          .doc("NotAvailable")
+                          .get()
+                          .then((docRef) => {
+                        widgets.add(Image.memory(base64Decode(docRef.get('image'))))
+                      });
+                    }
+                    // si no tiene imagenes y no se quiere publicar
+                    else{
+                      continue;
+                    }
                   }
-                  /*
-                  var rawFotos = snapshot.data.docs[i]['fotos'];
-
-                  if (rawFotos.length == 0 ){
-
-                    FirebaseFirestore
-                        .instance
-                        .collection("marker_rent")
-                        .doc("NotAvailable")
-                        .get()
-                        .then((docRef) => {
-                          widgets.add(Image.memory(base64Decode(docRef.get('image'))))
-                    });
-                  }
-
-                  else{
-                    rawFotos.forEach((final String key, final value) {
-                      widgets.add(Image.memory(base64Decode(value)));
-                    });
-                  }*/
 
                   double lat = snapshot.data.docs[i]['coords'].latitude;
                   double lng = snapshot.data.docs[i]['coords'].longitude;

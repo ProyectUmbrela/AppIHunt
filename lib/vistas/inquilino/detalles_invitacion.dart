@@ -160,10 +160,11 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
             minWidth: (MediaQuery.of(context).size.width/3),
             onPressed: (){
               showAlertDialogRejected(context);
+              /*
               Future.delayed(Duration(seconds: 2), () {//#####################################################
-                //Navigator.of(context).pop(); //###############################################################
+                Navigator.of(context).pop(); //###############################################################
                 Navigator.pushNamed(context, '/notificacionesInquilino'); //##################################
-              });
+              });*/
 
             },
             child: Text(
@@ -230,7 +231,8 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                                     fontSize: 38)
                                             ),//Icon(Icons.camera_alt),),
                                           ),
-                                        )
+                                        ),
+
                                       ]
                                   ),
                                 ],
