@@ -152,10 +152,13 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
   @override
   Widget build(BuildContext context) {
+    double titlesSize = 25.0;
+    double textSize = 20.0;
+
 
     final rechazarButton = Material(
         borderRadius: BorderRadius.circular(5),
-        color: Color(0xFFEEF5350), //EF9A9A, E57373, EF5350, B71C1C, C62828, D32F2F, D50000
+        color: Color(0xFF757575), //EF9A9A, E57373, EF5350, B71C1C, C62828, D32F2F, D50000
         child: MaterialButton(
             minWidth: (MediaQuery.of(context).size.width/3),
             onPressed: (){
@@ -180,7 +183,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
     final rentarButton = Material(
         borderRadius: BorderRadius.circular(5),
-        color: Color(0xFF1B5E20), // C8E6C9, A5D6A7, 81C784,2E7D32, 388E3C, 1B5E20
+        color: Color(0xFF01A0C7), // C8E6C9, A5D6A7, 81C784,2E7D32, 388E3C, 1B5E20
         child: MaterialButton(
             minWidth: (MediaQuery.of(context).size.width/3),
             onPressed: (){
@@ -209,18 +212,18 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                 Row(
                     children: <Widget>[
                       Container(
-                        width: MediaQuery.of(context).size.width ,//410.0,
-                        height: MediaQuery.of(context).size.height * 0.79,//540.0,
+                        width: MediaQuery.of(context).size.width ,
+                        height: MediaQuery.of(context).size.height * 0.79,
                         child: Card(
-                          color: Colors.grey[400],
+                          color: Colors.blue[100],
                           child: SingleChildScrollView(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Column(
                                 children: <Widget>[
                                   Row(
                                       children: <Widget>[
                                         Padding(
-                                          padding: EdgeInsets.only(left: (MediaQuery.of(context).size.width/4)),
+                                          padding: EdgeInsets.only(left: 100.0),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text('Disponible',
@@ -228,11 +231,199 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w800,
                                                     color: Colors.black,
-                                                    fontSize: 38)
+                                                    fontSize: 40)
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
 
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 10),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.nombre.toString(), // NOMBRE
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.telefono.toString(),  // TELEFONO
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.direccion.toString(), // DIRECCION
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: (MediaQuery.of(context).size.width/15), top: 10),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text('Detalles de la habitación',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: titlesSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 10),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.precio.toString() + ' mensual', // PRECIO
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.servicios.toString() + ' incluidos', // SERVICIOS
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.descripcion.toString(), // DESCRIPCION
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.dimension.toString() + ' de espacio', // DIMENSION
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.detalles.toString(), // DETALLES
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 60, top: 10),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text('Términos de renta',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: titlesSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
+                                      ]
+                                  ),
+                                  Row(
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 0, top: 10),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(widget.terminos.toString(), //TERMINOS
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),
                                       ]
                                   ),
                                 ],
