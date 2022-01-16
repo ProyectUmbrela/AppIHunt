@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
+import 'package:ihunt/vistas/inquilino/Search.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -126,7 +127,7 @@ class _UserState extends State<UserView> {
 
 
 
-  Widget getRow(String stringval, double textSize, double opacity){
+  /*Widget getRow(String stringval, double textSize, double opacity){
 
       return Opacity(
         opacity: opacity,
@@ -141,7 +142,7 @@ class _UserState extends State<UserView> {
           ),
         ),
       ) ;
-    }
+    }*/
 
 
   @override
@@ -181,6 +182,8 @@ class _UserState extends State<UserView> {
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context)=>MyMaps()));
+          /*Navigator.of(context).push(MaterialPageRoute(
+              builder: (context)=>MyApp()));*/
 
         },
         child: Text("Buscar",
