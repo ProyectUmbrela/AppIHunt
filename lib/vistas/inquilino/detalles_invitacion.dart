@@ -287,7 +287,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-
                                       ]
                                   ),
                                   Row(
