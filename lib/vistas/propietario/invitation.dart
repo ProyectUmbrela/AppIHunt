@@ -232,20 +232,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
             );
           }
       ),
-      floatingActionButton: new FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            new MaterialPageRoute(
-              builder: (context) => new RegisterTenant(),
-            ),
-          );
-        },
-        icon: Icon(Icons.add),
-        label: Text("Enviar invitación"),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.cyan,
-      ),
     );
   }
 }

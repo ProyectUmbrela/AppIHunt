@@ -12,6 +12,8 @@ import 'update_room.dart';
 import 'details_room.dart';
 import 'landlordView.dart';
 
+import 'package:custom_switch/custom_switch.dart';
+
 class Rooms extends StatefulWidget {
   @override
   _RoomsState createState() => _RoomsState();
@@ -107,6 +109,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     String title = 'Lista de habitaciones';
+    bool status = false;
 
     return Scaffold(
       appBar: AppBar(
@@ -120,7 +123,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
             Stack(
                 children: <Widget> [ ListView.builder(
                     itemCount: snapshot.data.length,
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(10),
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
@@ -150,14 +153,17 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                           child: Material(
                             color: Colors.black12,
                             shadowColor: Colors.deepPurpleAccent,
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(30.0),
                             child: Column(
                               children: [
                                 ListTile(
                                   leading: Icon(Icons.airline_seat_individual_suite),
                                   title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                   subtitle: Text(
-                                    'Texto secundario',
+                                    'Inquilino: ${
+                                        snapshot.data[index].idusuario==null?
+                                            '':snapshot.data[index].idusuario
+                                    }',
                                     style:
                                     TextStyle(color: Colors.black.withOpacity(0.6)),
                                   ),
@@ -166,7 +172,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 2, horizontal: 10),
                                   child: Row(
-                                    //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: <Widget>[
                                         Column(
@@ -184,13 +189,13 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [ snapshot.data[index].status==1?
                                           Text(
-                                            '  Sí',
+                                            ' Sí',
                                             style: TextStyle(
                                                 color: Colors.black.withOpacity(0.6),
                                                 fontWeight: FontWeight.normal),
                                           ):
                                           Text(
-                                            '  No',
+                                            ' No',
                                             style: TextStyle(
                                                 color: Colors.black.withOpacity(0.6),
                                                 fontWeight: FontWeight.normal),
@@ -198,17 +203,37 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           ],
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
+                                          padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.end,
                                             children: [
                                               Text.rich(
                                                 TextSpan(
                                                   children: <TextSpan>[
-                                                    TextSpan(text: 'Precio: ', style: TextStyle(
+                                                    TextSpan(text: 'Precio: \$', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)),
                                                     TextSpan(text: '${snapshot.data[index].precio}' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: .0005, horizontal: 5),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Fecha Act: ', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechaupdate).day}/${HttpDate.parse(snapshot.data[index].fechaupdate).month}/${HttpDate.parse(snapshot.data[index].fechaupdate).year}' , style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.normal)),
                                                   ],
@@ -251,7 +276,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                       ]),
                                 ),
                                 ButtonBar(
-                                  alignment: MainAxisAlignment.spaceEvenly,
+                                  alignment: MainAxisAlignment.center,
                                   children: [
                                     FlatButton(
                                       textColor: const Color(0xFF6200EE),
@@ -277,6 +302,16 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                         );
                                       },
                                       child: const Text('Editar'),
+                                    ),
+                                    CustomSwitch(
+                                      activeColor: Colors.cyan,
+                                      value: status,
+                                      onChanged: (value){
+                                          print("VALUE : $value");
+                                          setState(() {
+                                            status = value;
+                                          });
+                                      },
                                     )
                                   ],
                                 ),

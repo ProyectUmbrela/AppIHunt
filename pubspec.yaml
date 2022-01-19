@@ -70,6 +70,7 @@ dependencies:
   # carga de imagenes
   image_picker: 0.5.4+2 #
   flutter_multi_carousel: ^1.0.0
+  custom_switch: 0.0.1
 
   #fecha
   date_field: ^2.1.2

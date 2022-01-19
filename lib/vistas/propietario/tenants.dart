@@ -205,9 +205,9 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                               children: [
                                 ListTile(
                                   leading: Icon(Icons.airline_seat_individual_suite),
-                                  title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
+                                  title: Text('Inquilino: ${snapshot.data[index].idusuario}'),
                                   subtitle: Text(
-                                    'Texto secundario',
+                                    'Habitacion: ${snapshot.data[index].idhabitacion}',
                                     style:
                                     TextStyle(color: Colors.black.withOpacity(0.6)),
                                   ),
@@ -216,33 +216,98 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 2, horizontal: 10),
                                   child: Row(
-                                    //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(
-                                              'inquilino: ',
-                                              style: TextStyle(
-                                                  color: Colors.black.withOpacity(0.6),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Fecha pago: ', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechapago).day} c/mes' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                          Text(
-                                            snapshot.data[index].idusuario,
-                                            style: TextStyle(
-                                                color: Colors.black.withOpacity(0.6),
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                          ],
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: .0005, horizontal: 5),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Pago: \$', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: 'inserte' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ]),
-                                )
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 2, horizontal: 10),
+                                  child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Inicio: ', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechainicontrato).day}/${HttpDate.parse(snapshot.data[index].fechainicontrato).month}/${HttpDate.parse(snapshot.data[index].fechainicontrato).year}' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Fin: ', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechafincontrato).day}/${HttpDate.parse(snapshot.data[index].fechafincontrato).month}/${HttpDate.parse(snapshot.data[index].fechafincontrato).year}' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ]),
+                                ),
                                 //Image.asset('assets/card-sample-image.jpg'),
                                 //Image.asset('assets/card-sample-image-2.jpg'),
                               ],
