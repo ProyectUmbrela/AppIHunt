@@ -18,7 +18,8 @@ class DetallesInvitacion extends StatefulWidget {
   String detalles;
   String dimension;
   String direccion;
-  String enlace;
+  String enlace_aceptar;
+  String enlace_rechazar;
   String fechaEnvio;
   String fechaFin;
   String fechaInicio;
@@ -39,7 +40,8 @@ class DetallesInvitacion extends StatefulWidget {
     this.detalles,
     this.dimension,
     this.direccion,
-    this.enlace,
+    this.enlace_aceptar,
+    this.enlace_rechazar,
     this.fechaEnvio,
     this.fechaFin,
     this.fechaInicio,
@@ -65,19 +67,43 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
 
 
-  void _launchURL() async {
+  void _launchURL(URL) async {
 
-    if (!await launch(widget.enlace.toString(),
+    if (!await launch(URL,
         forceSafariVC: true,
-        forceWebView: true)) throw 'Could not launch ${widget.enlace.toString()}';
+        forceWebView: true)) throw 'Could not launch ${URL}';
   }
 
   showAlertDialogRejected(BuildContext context) {
+
+    Widget rechazarRentaButton = Material(
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          //minWidth: (MediaQuery.of(context).size.width/3),
+            onPressed:() {
+              Navigator.of(context).pop();
+              _launchURL(widget.enlace_rechazar.toString());
+              /*Navigator.of(context).push(MaterialPageRoute(
+            builder: (context)=>NotificacionesInquilino()));*/
+            },
+            child: Text(
+              "Aceptar",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15.0,
+              ),
+            )
+        )
+    );
+
+
     AlertDialog alert = AlertDialog(
       title: Text("Advertencia"),
-      content: Text("Invitación cancelada. Está habitación ya no se encuentra disponible."),
+      content: Text("Si cancelas esta invitación ya no podrás rentar la habitación."),
       actions: [
-
+        rechazarRentaButton
       ],
     );
 
@@ -101,7 +127,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         //minWidth: (MediaQuery.of(context).size.width/3),
         onPressed:() {
           Navigator.of(context).pop();
-          _launchURL();
+          _launchURL(widget.enlace_aceptar.toString());
           /*Navigator.of(context).push(MaterialPageRoute(
             builder: (context)=>NotificacionesInquilino()));*/
         },
@@ -115,21 +141,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         )
       )
     );
-
-    /*Widget cancelButton = TextButton(
-      child: Text("Cancelar"),
-      onPressed:  () {},
-    );*/
-
-    /*Widget launchButton = TextButton(
-      child: aceptarRentaButton,
-      onPressed:  () {
-        Navigator.of(context).pop();
-        _launchURL();
-        /*Navigator.of(context).push(MaterialPageRoute(
-            builder: (context)=>NotificacionesInquilino()));*/
-      },
-    );*/
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -163,12 +174,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
             minWidth: (MediaQuery.of(context).size.width/3),
             onPressed: (){
               showAlertDialogRejected(context);
-              /*
-              Future.delayed(Duration(seconds: 2), () {//#####################################################
-                Navigator.of(context).pop(); //###############################################################
-                Navigator.pushNamed(context, '/notificacionesInquilino'); //##################################
-              });*/
-
             },
             child: Text(
               "Rechazar",

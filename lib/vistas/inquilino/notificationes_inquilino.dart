@@ -23,7 +23,8 @@ class Invitacion {
   String detalles;
   String dimension;
   String direccion;
-  String enlace;
+  String enlace_aceptar;
+  String enlace_rechazar;
   String fechaEnvio;
   String fechaFin;
   String fechaInicio;
@@ -46,7 +47,8 @@ class Invitacion {
     this.detalles,
     this.dimension,
     this.direccion,
-    this.enlace,
+    this.enlace_aceptar,
+    this.enlace_rechazar,
     this.fechaEnvio,
     this.fechaFin,
     this.fechaInicio,
@@ -102,7 +104,8 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
               detalles: current['detalles'],
               dimension: current['dimension'],
               direccion: current['direccion'],
-              enlace: current['enlace'],
+              enlace_aceptar: current['enlace_aceptar'],
+              enlace_rechazar: current['enlace_rechazar'],
               fechaEnvio: current['fecha_envio'].toString(),
               fechaFin: current['fecha_fin'].toString(),
               fechaInicio: current['fecha_inicio'].toString(),
@@ -303,7 +306,8 @@ _DetallesInivitacion(invitacion, context) {
         detalles: invitacion.detalles,
         dimension: invitacion.dimension,
         direccion: invitacion.direccion,
-        enlace: invitacion.enlace,
+        enlace_aceptar: invitacion.enlace_aceptar,
+        enlace_rechazar: invitacion.enlace_rechazar,
         fechaEnvio: invitacion.fechaEnvio,
         fechaFin: invitacion.fechaFin,
         fechaInicio: invitacion.fechaInicio,
