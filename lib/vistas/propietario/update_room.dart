@@ -264,7 +264,12 @@ class _UpdateRoomState extends State<UpdateRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/landlord');
+      Navigator.push(
+        context,
+        new MaterialPageRoute(
+          builder: (context) => new Landlord(),
+        ),
+      );
     };
 
     Future submit() async {
