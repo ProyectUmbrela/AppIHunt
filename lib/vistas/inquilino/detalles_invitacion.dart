@@ -1,15 +1,7 @@
-//import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-/*class DetallesInvitacion extends StatefulWidget {
-  const DetallesInvitacion({Key key}) : super(key: key);
-
-  @override
-  _DetallesInvitacionState createState() => _DetallesInvitacionState();
-}*/
 
 
 class DetallesInvitacion extends StatefulWidget {
@@ -62,9 +54,7 @@ class DetallesInvitacion extends StatefulWidget {
   _DetallesInvitacion createState() => _DetallesInvitacion();
 }
 
-
 class _DetallesInvitacion extends State<DetallesInvitacion> {
-
 
 
   void _launchURL(URL) async {
@@ -169,10 +159,14 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
     final rechazarButton = Material(
         borderRadius: BorderRadius.circular(5),
-        color: Color(0xFF757575), //EF9A9A, E57373, EF5350, B71C1C, C62828, D32F2F, D50000
+        color: Color(0xFF757575),
+        //EF9A9A, E57373, EF5350, B71C1C, C62828, D32F2F, D50000
         child: MaterialButton(
-            minWidth: (MediaQuery.of(context).size.width/3),
-            onPressed: (){
+            minWidth: (MediaQuery
+                .of(context)
+                .size
+                .width / 3),
+            onPressed: () {
               showAlertDialogRejected(context);
             },
             child: Text(
@@ -188,10 +182,14 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
     final rentarButton = Material(
         borderRadius: BorderRadius.circular(5),
-        color: Color(0xFF01A0C7), // C8E6C9, A5D6A7, 81C784,2E7D32, 388E3C, 1B5E20
+        color: Color(0xFF01A0C7),
+        // C8E6C9, A5D6A7, 81C784,2E7D32, 388E3C, 1B5E20
         child: MaterialButton(
-            minWidth: (MediaQuery.of(context).size.width/3),
-            onPressed: (){
+            minWidth: (MediaQuery
+                .of(context)
+                .size
+                .width / 3),
+            onPressed: () {
               showAlertDialogAccepted(context);
             },
             child: Text(
@@ -204,6 +202,9 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
             )
         )
     );
+
+    FontWeight fontInfo = FontWeight.w500;
+    FontWeight fontTitle = FontWeight.w800;
 
     return Scaffold(
       appBar: AppBar(
@@ -226,6 +227,8 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                               child: Column(
                                 children: <Widget>[
                                   Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      //crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Padding(
                                           padding: EdgeInsets.only(left: 100.0),
@@ -234,7 +237,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text('Disponible',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontTitle,
                                                     color: Colors.black,
                                                     fontSize: 40)
                                             ),//Icon(Icons.camera_alt),),
@@ -252,7 +255,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.nombre.toString(), // NOMBRE
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -269,7 +272,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.telefono.toString(),  // TELEFONO
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -286,7 +289,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.direccion.toString(), // DIRECCION
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -295,15 +298,16 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                       ]
                                   ),
                                   Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: <Widget>[
                                         Padding(
-                                          padding: EdgeInsets.only(left: (MediaQuery.of(context).size.width/15), top: 10),
+                                          padding: EdgeInsets.only(left: 0, top: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text('Detalles de la habitación',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontTitle,
                                                     color: Colors.black,
                                                     fontSize: titlesSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -320,7 +324,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.precio.toString() + ' mensual', // PRECIO
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -337,7 +341,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.servicios.toString() + ' incluidos', // SERVICIOS
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -354,7 +358,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.descripcion.toString(), // DESCRIPCION
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -371,7 +375,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.dimension.toString() + ' de espacio', // DIMENSION
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -388,7 +392,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.detalles.toString(), // DETALLES
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -397,15 +401,17 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                       ]
                                   ),
                                   Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      //crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Padding(
-                                          padding: EdgeInsets.only(left: 60, top: 10),
+                                          padding: EdgeInsets.only(left: 0, top: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text('Términos de renta',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontTitle,
                                                     color: Colors.black,
                                                     fontSize: titlesSize)
                                             ),//Icon(Icons.camera_alt),),
@@ -422,7 +428,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             child: Text(widget.terminos.toString(), //TERMINOS
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
