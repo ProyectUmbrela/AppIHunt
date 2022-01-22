@@ -280,8 +280,7 @@ class _DetailTenantState extends State<DetailTenant> {
 
       if (response.statusCode == 201) {
         // CREAR UN REFRESH EN LA PAGINA
-
-
+        Navigator.pop(context);
       } else {
 
         if (Platform.isAndroid) {

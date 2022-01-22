@@ -125,6 +125,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
               'direccion': address,
               'check_images': 0,
               'habitaciones': 1,
+              'publicar': 1,
               'servicios': services,
               'titular': name
             },
@@ -272,12 +273,13 @@ class _RegisterRoomState extends State<RegisterRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.push(
+      Navigator.pop(context);
+      /*Navigator.push(
         context,
         new MaterialPageRoute(
           builder: (context) => new Landlord(),
         ),
-      );
+      );*/
     };
 
     Future submit() async {
@@ -306,9 +308,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
         if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pop(context);
+          /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
-          );
+          );*/
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');

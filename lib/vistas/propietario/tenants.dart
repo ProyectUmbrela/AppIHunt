@@ -49,6 +49,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     var response = await _api.GetTenants(msg);
     var data = jsonDecode(response.body);
     List<Tenant> _tenants = [];
+    print(data);
 
     if (response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
@@ -297,9 +298,13 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                                     TextSpan(text: 'Fin: ', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)),
-                                                    TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechafincontrato).day}/${HttpDate.parse(snapshot.data[index].fechafincontrato).month}/${HttpDate.parse(snapshot.data[index].fechafincontrato).year}' , style: TextStyle(
+                                                        snapshot.data[index].fechafincontrato!=null?
+                                                          TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechafincontrato).day}/${HttpDate.parse(snapshot.data[index].fechafincontrato).month}/${HttpDate.parse(snapshot.data[index].fechafincontrato).year}' , style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
-                                                        fontWeight: FontWeight.normal)),
+                                                        fontWeight: FontWeight.normal)) :
+                                                        TextSpan(text: '' , style: TextStyle(
+                                                            color: Colors.black.withOpacity(0.6),
+                                                            fontWeight: FontWeight.normal)),
                                                   ],
                                                 ),
                                               )

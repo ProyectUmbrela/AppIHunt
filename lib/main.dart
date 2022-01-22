@@ -114,11 +114,11 @@ class IHuntApp extends StatelessWidget {
         '/lugares': (context) => Lugares(),
         '/mapa': (context) => MyMaps(),
         '/detalles': (context) => DetallesHab(),
-        '/registerRoom': (context) => RegisterRoom(),
         '/notificationesPropietario': (context) => NotificacionesPropietario(),
         '/notificacionesInquilino': (context) => NotificacionesInquilino(),
         '/detallesInvitacion': (context) => DetallesInvitacion(),
-        '/IHunt': (context) => MainScreen()
+        '/IHunt': (context) => MainScreen(),
+        '/registeroom': (context) => RegisterRoom()
       },
     );
   }

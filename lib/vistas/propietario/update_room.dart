@@ -264,12 +264,13 @@ class _UpdateRoomState extends State<UpdateRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.push(
+      Navigator.pop(context);
+      /*Navigator.push(
         context,
         new MaterialPageRoute(
           builder: (context) => new Landlord(),
         ),
-      );
+      );*/
     };
 
     Future submit() async {
@@ -305,9 +306,10 @@ class _UpdateRoomState extends State<UpdateRoom> {
         if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pop(context);
+          /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
-          );
+          );*/
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
