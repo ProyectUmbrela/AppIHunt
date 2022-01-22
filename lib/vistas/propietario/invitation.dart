@@ -20,13 +20,15 @@ class Invitation{
   int num_invitacion;
   String fecha_envio;
   int estatus;
+  String telefono;
 
   Invitation({
     this.idusuario,
     this.idhabitacion,
     this.num_invitacion,
     this.fecha_envio,
-    this.estatus});
+    this.estatus,
+    this.telefono});
 }
 
 class _InvitationsState extends State<Invitations> with SingleTickerProviderStateMixin {
@@ -46,12 +48,14 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data["invitaciones"].forEach((invitation) {
+        print(invitation['telefono']);
         _invitations.add(Invitation(
             idusuario: invitation['idusuario'],
             idhabitacion: invitation['idhabitacion'],
             num_invitacion: invitation['num_invitacion'],
             fecha_envio: invitation['fecha_envio'],
-            estatus: invitation['estatus']
+            estatus: invitation['estatus'],
+            telefono: invitation['telefono']
         ));
       });
       return _invitations;
@@ -219,7 +223,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                                       color: Colors.black.withOpacity(0.6),
                                                       fontWeight: FontWeight.bold)
                                                   ),
-                                                  TextSpan(text: 'xxxxxxxxxx' ,
+                                                  TextSpan(text: snapshot.data[index].telefono ,
                                                       style:
                                                       TextStyle(
                                                           color: Colors.black.withOpacity(0.6),

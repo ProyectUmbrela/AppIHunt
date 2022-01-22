@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:ihunt/providers/api.dart';
 import 'registerRoom.dart';
 import 'update_room.dart';
@@ -32,6 +35,7 @@ class Room{
   String servicios;
   int status;
   String terminos;
+  int publicar;
 
   Room({
     this.descripcion,
@@ -45,7 +49,8 @@ class Room{
     this.precio,
     this.servicios,
     this.status,
-    this.terminos});
+    this.terminos,
+    this.publicar});
 }
 
 class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
@@ -65,7 +70,25 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     setData();
   }
 
-  Future getRooms(id) async{
+  Map values_publ = {};
+  Future getSpecie(String id_room) async {
+    int check = await FirebaseFirestore.instance
+        .collection('habitaciones')
+        .doc(id_room)
+        .get()
+        .then((value) {
+      return value['publicar']; // Access your after your get the data
+    });
+
+    if (check == 1){
+      values_publ[id_room] = true;
+    }
+    if (check == 0){
+      values_publ[id_room] = false;
+    }
+  }
+
+  Future getRooms(id) async {
     Api _api = Api();
 
     final msg = jsonEncode({
@@ -77,8 +100,11 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     List<Room> _rooms = [];
 
     if (response.statusCode == 200 || response.statusCode==201) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-      data['habitaciones'].forEach((room) {
+      // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
+
+      data['habitaciones'].forEach((room) async {
+
+        getSpecie(room['idhabitacion']);
         _rooms.add(Room(
             descripcion: room['descripcion'],
             dimension: room['dimension'],
@@ -95,6 +121,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         ));
 
       });
+      print('############ ${values_publ}');
       return _rooms;
     } else {
       if (Platform.isAndroid) {
@@ -109,7 +136,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     String title = 'Lista de habitaciones';
-    bool status = false;
 
     return Scaffold(
       appBar: AppBar(
@@ -303,14 +329,20 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                       },
                                       child: const Text('Editar'),
                                     ),
-                                    CustomSwitch(
-                                      activeColor: Colors.cyan,
-                                      value: status,
-                                      onChanged: (value){
-                                          print("VALUE : $value");
-                                          setState(() {
-                                            status = value;
-                                          });
+                                    Switch(
+                                      value: values_publ[snapshot.data[index].idhabitacion],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          values_publ[snapshot.data[index].idhabitacion] = value;
+                                        });
+
+                                        var collection = FirebaseFirestore.instance.collection('habitaciones');
+                                        collection
+                                            .doc(snapshot.data[index].idhabitacion)
+                                            .update({'publicar' :
+                                              value==true? 1:0}) // <-- Updated data
+                                            .then((_) => print('#################### Success'))
+                                            .catchError((error) => print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
                                       },
                                     )
                                   ],
