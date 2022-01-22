@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/inquilino/Admobhelper.dart';
-import 'vistas/propietario/registerRoom.dart';
+
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -19,6 +19,7 @@ import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
 // VISTA PROPIETARIO
 import 'vistas/propietario/landlordView.dart';
 import 'package:ihunt/vistas/propietario/notificaciones_propietario.dart';
+import 'vistas/propietario/registerRoom.dart';
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
 
   // init the firebase system
   await Firebase.initializeApp();
+
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
