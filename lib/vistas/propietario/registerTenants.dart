@@ -297,12 +297,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.push(
+      Navigator.pop(context);
+      /*Navigator.push(
         context,
         new MaterialPageRoute(
           builder: (context) => new Landlord(),
         ),
-      );
+      );*/
     };
 
     Future submit() async {
@@ -335,9 +336,10 @@ class _RegisterTenantState extends State<RegisterTenant> {
         if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pop(context);
+          /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
-          );
+          );*/
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
