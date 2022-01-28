@@ -254,6 +254,7 @@ class _DetailTenantState extends State<DetailTenant> {
       } else {
 
         if (Platform.isAndroid) {
+          debugPrint("################## ERROR ELIMINAR INQU CORRECTAMENTE");
           //_materialAlertDialog(context, data['message'], 'Notificación');
           print(response.statusCode);
         } else if (Platform.isIOS) {
@@ -275,11 +276,11 @@ class _DetailTenantState extends State<DetailTenant> {
 
       var response = await _api.DeleteTenantPost(msg);
       var data = jsonDecode(response.body);
+      debugPrint("################## ELIMINAR INQUILINO ${response.statusCode}");
 
       if (response.statusCode == 201) {
         // CREAR UN REFRESH EN LA PAGINA
-
-
+        Navigator.pop(context);
       } else {
 
         if (Platform.isAndroid) {

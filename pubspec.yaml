@@ -17,6 +17,12 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
 
+analyzer:
+  enable-experiment:
+    - non-nullable
+
+
+# ">=2.12.0 <3.0.0" |  Sound null safety is available in Dart 2.12 and Flutter 2
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
@@ -70,6 +76,7 @@ dependencies:
   # carga de imagenes
   image_picker: 0.5.4+2 #
   flutter_multi_carousel: ^1.0.0
+  custom_switch: 0.0.1
 
   #fecha
   date_field: ^2.1.2
@@ -78,6 +85,9 @@ dependencies:
   intl: ^0.17.0
   firebase_messaging: ^11.1.0
   firebase_in_app_messaging: ^0.5.0+13
+  url_launcher: ^6.0.17
+  material_floating_search_bar: ^0.3.6
+  geocoder: ^0.2.1
 
 
 dev_dependencies:

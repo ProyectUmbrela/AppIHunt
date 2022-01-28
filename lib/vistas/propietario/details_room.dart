@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:ihunt/vistas/propietario/rooms.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'landlordView.dart';
+import 'rooms.dart';
 
 class DetailRoom extends StatefulWidget {
 
@@ -202,12 +202,16 @@ class _DetailRoomState extends State<DetailRoom> {
       if (response.statusCode == 201) {
         // CREAR UN REFRESH EN LA PAGINA
         debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE");
-        Navigator.push(context, new MaterialPageRoute(
-          builder: (context) => new Landlord())
-        );
+        Navigator.pop(context);
+        /*Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => new Landlord(),
+          ),
+        );*/
         //Navigator.of(context).pop();
       } else {
-
+        debugPrint("################## ERROR EN ELIMINAR CORRECTAMENTE");
         if (Platform.isAndroid) {
           //_materialAlertDialog(context, data['message'], 'Notificación');
           print(response.statusCode);

@@ -6,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 
-
+/*
 class Notificaciones extends StatefulWidget{
 
   PushNotificaciones createState()=> PushNotificaciones();
@@ -162,3 +162,4 @@ class PushNotificaciones extends State<Notificaciones> {
   }
 
 }
+*/

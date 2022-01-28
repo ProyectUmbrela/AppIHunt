@@ -20,13 +20,15 @@ class Invitation{
   int num_invitacion;
   String fecha_envio;
   int estatus;
+  String telefono;
 
   Invitation({
     this.idusuario,
     this.idhabitacion,
     this.num_invitacion,
     this.fecha_envio,
-    this.estatus});
+    this.estatus,
+    this.telefono});
 }
 
 class _InvitationsState extends State<Invitations> with SingleTickerProviderStateMixin {
@@ -42,21 +44,20 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
     var data = jsonDecode(response.body);
     List<Invitation> _invitations = [];
 
-    print("############################# responsecode invitaciones ${response.statusCode}");
     if (response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
-      data["invitaciones"].forEach((index, invitation) {
-        print('****************key: $index , ${invitation['idusuario']}');
+      data["invitaciones"].forEach((invitation) {
+        print(invitation['telefono']);
         _invitations.add(Invitation(
             idusuario: invitation['idusuario'],
             idhabitacion: invitation['idhabitacion'],
             num_invitacion: invitation['num_invitacion'],
             fecha_envio: invitation['fecha_envio'],
-            estatus: invitation['estatus']
+            estatus: invitation['estatus'],
+            telefono: invitation['telefono']
         ));
       });
-      print('**************** FIN ${_invitations.length}');
       return _invitations;
     } else {
       if (Platform.isAndroid) {
@@ -67,6 +68,13 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
       }
     }
   }
+
+  String status_map (int value){
+    if(value == 0) return 'Pendiente';
+    if(value == 1) return 'Rechazada';
+    if(value == 2) return 'Aceptada';
+  }
+
   void setData() async{
     var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
@@ -113,9 +121,9 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                             children: [
                               ListTile(
                                 leading: Icon(Icons.airline_seat_individual_suite),
-                                title: Text('usuario: ${snapshot.data[index].idusuario}'),
+                                title: Text('Usuario: ${snapshot.data[index].idusuario}'),
                                 subtitle: Text(
-                                  'Texto secundario',
+                                  'No. Invitacion: ${snapshot.data[index].num_invitacion}',
                                   style:
                                   TextStyle(color: Colors.black.withOpacity(0.6)),
                                 ),
@@ -161,7 +169,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                                       color: Colors.black.withOpacity(0.6),
                                                       fontWeight: FontWeight.bold)
                                                   ),
-                                                  TextSpan(text: '${snapshot.data[index].estatus}' ,
+                                                  TextSpan(text: status_map(snapshot.data[index].estatus) ,
                                                       style:
                                                       TextStyle(
                                                           color: Colors.black.withOpacity(0.6),
@@ -196,31 +204,39 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                       Column(
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Text(
-                                            snapshot.data[index].fecha_envio,
+                                          Text('${HttpDate.parse(snapshot.data[index].fecha_envio).day}/${HttpDate.parse(snapshot.data[index].fecha_envio).month}/${HttpDate.parse(snapshot.data[index].fecha_envio).year}',
                                             style: TextStyle(
                                                 color: Colors.black.withOpacity(0.6),
                                                 fontWeight: FontWeight.normal),
                                           ),
                                         ],
                                       ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 40),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text.rich(
+                                              TextSpan(
+                                                children: <TextSpan>[
+                                                  TextSpan(text: 'Telefono: ', style: TextStyle(
+                                                      color: Colors.black.withOpacity(0.6),
+                                                      fontWeight: FontWeight.bold)
+                                                  ),
+                                                  TextSpan(text: snapshot.data[index].telefono ,
+                                                      style:
+                                                      TextStyle(
+                                                          color: Colors.black.withOpacity(0.6),
+                                                          fontWeight: FontWeight.normal)
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
                                     ]),
-                              ),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  FlatButton(
-                                    textColor: const Color(0xFF6200EE),
-                                    onPressed: () {},
-                                    child: const Text('Editar'),
-                                  ),
-                                  FlatButton(
-                                    textColor: const Color(0xFF6200EE),
-                                    onPressed: () {},
-                                    child: const Text('Eliminar'),
-                                  )
-                                ],
-                              ),
+                              )
                               //Image.asset('assets/card-sample-image.jpg'),
                               //Image.asset('assets/card-sample-image-2.jpg'),
                             ],
@@ -234,20 +250,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
               child: CircularProgressIndicator(),
             );
           }
-      ),
-      floatingActionButton: new FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            new MaterialPageRoute(
-              builder: (context) => new RegisterTenant(),
-            ),
-          );
-        },
-        icon: Icon(Icons.add),
-        label: Text("Enviar invitación"),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.cyan,
       ),
     );
   }

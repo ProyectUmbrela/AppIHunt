@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ihunt/vistas/inquilino/Admobhelper.dart';
-import 'vistas/propietario/registerRoom.dart';
+
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -11,12 +11,17 @@ import 'package:ihunt/vistas/inquilino/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-import 'package:ihunt/vistas/notificaciones.dart';
+//import 'package:ihunt/vistas/notificaciones.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
+import 'package:ihunt/vistas/inquilino/inicio.dart';
+
+
 
 // VISTA PROPIETARIO
 import 'vistas/propietario/landlordView.dart';
 import 'package:ihunt/vistas/propietario/notificaciones_propietario.dart';
+import 'vistas/propietario/registerRoom.dart';
 
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
@@ -28,6 +33,7 @@ Future<void> main() async {
 
   // init the firebase system
   await Firebase.initializeApp();
+
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -104,18 +110,20 @@ class IHuntApp extends StatelessWidget {
       ],
       locale: const Locale('es'),
       routes: {
-        '/notificaciones': (context) => Notificaciones(),
+        //'/notificaciones': (context) => Notificaciones(),
         '/login': (context) => LoginPage(),
+        '/Init': (context) => Inicio(),
         '/user': (context) => UserView(),
         '/landlord': (context) => Landlord(),
         '/register': (context) => Register(),
         '/lugares': (context) => Lugares(),
         '/mapa': (context) => MyMaps(),
         '/detalles': (context) => DetallesHab(),
-        '/registerRoom': (context) => RegisterRoom(),
         '/notificationesPropietario': (context) => NotificacionesPropietario(),
         '/notificacionesInquilino': (context) => NotificacionesInquilino(),
-        '/IHunt': (context) => MainScreen()
+        '/detallesInvitacion': (context) => DetallesInvitacion(),
+        '/IHunt': (context) => MainScreen(),
+        '/registeroom': (context) => RegisterRoom()
       },
     );
   }

@@ -15,6 +15,10 @@ import 'package:ihunt/utils/validators.dart';
 import 'landlordView.dart';
 
 class RegisterTenant extends StatefulWidget {
+
+  const RegisterTenant({Key key, this.rooms}) : super(key: key);
+  final rooms;
+
   @override
   _RegisterTenantState createState() => _RegisterTenantState();
 }
@@ -53,7 +57,10 @@ class _RegisterTenantState extends State<RegisterTenant> {
   TextEditingController detailsCtrl = new TextEditingController();
 
 
-  String _iduser, _room, _contrato, _months, _startdate, _enddate, _paydate, _plazo, _details ;
+  String _iduser, _room, _contrato, _months, _plazo, _details ;
+  String _startdate = "";
+  String _enddate = "";
+  String _paydate = "";
 
   final dateFormat = DateFormat("dd-M-yyyy");
 
@@ -118,7 +125,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       }).toList(),
     );
 
-    /*final room = DropdownButtonFormField<String>(
+    final room = DropdownButtonFormField<String>(
       value: _room,
       hint: Text(
         'Seleccione la habitación',
@@ -127,13 +134,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
           setState(() => _room = value),
       validator: (value) => value == null ? 'Por favor elija una opción' : null,
       items:
-      list_rooms.map<DropdownMenuItem<String>>((String value) {
+      widget.rooms['rooms'].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
         );
       }).toList(),
-    );*/
+    );
 
     final months = TextFormField(
       autofocus: false,
@@ -160,6 +167,24 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print(value);
       },
       onSaved: (value) => _startdate = value.toString()
+    );
+
+    final payDate2 = DateTimeFormField(
+        decoration: const InputDecoration(
+          hintStyle: TextStyle(color: Colors.black45),
+          errorStyle: TextStyle(color: Colors.redAccent),
+          border: OutlineInputBorder(),
+          suffixIcon: Icon(Icons.event_note),
+          //labelText: 'Only time',
+        ),
+        dateFormat: DateFormat.yMMMMd('es'),
+        mode: DateTimeFieldPickerMode.date,
+        autovalidateMode: AutovalidateMode.always,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        onDateSelected: (DateTime value) {
+          print(value);
+        },
+        onSaved: (value) => _paydate = value.toString()
     );
 
     final endDate = DateTimeFormField(
@@ -195,7 +220,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         onDateSelected: (DateTime value) {
           print(value);
         },
-        onSaved: (value) => _startdate = value.toString()
+        onSaved: (value) => _paydate = value.toString()
     );
 
     final Plazo = TextFormField(
@@ -272,33 +297,34 @@ class _RegisterTenantState extends State<RegisterTenant> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.push(
+      Navigator.pop(context);
+      /*Navigator.push(
         context,
         new MaterialPageRoute(
-          builder: (context) => new RegisterTenant(),
+          builder: (context) => new Landlord(),
         ),
-      );
+      );*/
     };
 
     Future submit() async {
       final form = formKey.currentState;
 
       if (form.validate()) {
+        form.save();
+
         final msg = jsonEncode({
-          "idusario": iduserCtrl.text,
-          "idhabitacion": "ggg",
+          "idusuario": iduserCtrl.text,
+          "idhabitacion": _room,
           "idpropietario": id_prop,
           "contrato": _contrato=='Sí'? "1":"0",
           "meses": int.parse(monthsCtrl.text), // conversion a entero
-          "fecha_inicio": startdateCtrl.text,
-          "fecha_fin": enddateCtrl.text,
-          "fecha_pago": paydateCtrl.text,
+          "fecha_inicio": _startdate.split(" ")[0],
+          "fecha_fin": _enddate.split(" ")[0],
+          "fecha_pago": _paydate.split(" ")[0],
           "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
-        print("############################# \n ${msg}");
-
-        form.save();
+        print(msg);
         Api _api = Api();
 
         var response = await _api.RegisterTenantPost(msg);
@@ -307,12 +333,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print("################# ESTATUS CODE REGISTRO INQUILINO: ");
         print(response.statusCode);
 
-        if (response.statusCode == 201) {
+        if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pop(context);
+          /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
-          );
+          );*/
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');
@@ -354,6 +381,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
                       label("Ingrese el id del usuario"),
                       SizedBox(height: 5),
                       userId,
+                      SizedBox(
+                        height: 15,
+                      ),
+
+                      label("Seleccione la habitación"),
+                      SizedBox(height: 5),
+                      room,
                       SizedBox(
                         height: 15,
                       ),

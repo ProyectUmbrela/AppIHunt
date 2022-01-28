@@ -2,13 +2,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 // slider images
 import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:convert';
 
 // style map
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:geocoder/geocoder.dart';
+
+
 
 // to get the current location
 //import 'package:geocoding/geocoding.dart';
@@ -40,14 +42,19 @@ class infoHabitacion{
 }
 
 
+
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
+  String _coleccion = "marker_rent"; // habitaciones
 
   //google controller and markers
   GoogleMapController _controller;
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   BitmapDescriptor _mapMarker;
+  double zoomView = 14.0;
+
+
 
   void setCustomMarker() async {
     _mapMarker = await BitmapDescriptor.fromAssetImage(
@@ -56,6 +63,7 @@ class MapsPage extends State<MyMaps> {
   }
 
   void initMarker(position, specifyId, habitacion, setFotos) async{
+
 
     final MarkerId markerId = MarkerId(specifyId);
     infoHabitacion info = habitacion;
@@ -203,7 +211,7 @@ class MapsPage extends State<MyMaps> {
 
   static final CameraPosition initCameraPosition = CameraPosition(
       target: LatLng(18.9242095, -99.21812706731137),
-      zoom: 14
+      zoom: 14.0
   );
 
 
@@ -257,17 +265,87 @@ class MapsPage extends State<MyMaps> {
     setCustomMarker();
   }
 
+  final TextEditingController _controllerSearch = new TextEditingController();
+
+  Future searchPlace() async {
+    try{
+      if(_controllerSearch.text.length != 0){
+        print("#################################### ${_controllerSearch.text}");
+
+        var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
+        var first = results.first;
+        print("################################################");
+        print("${first.featureName} : ${first.coordinates}");
+        print("################################################");
+        var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+
+        _controller.animateCamera(
+            CameraUpdate.newLatLngZoom(
+                latLng,
+                zoomView
+            )
+        );
+      }
+    }
+    catch(e) {
+      print("Error occured: $e");
+    }
+  }
 
 
   @override
   Widget build(BuildContext context){
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Stack(
+          children:
+          <Widget>[
+            Container(
+              //width: ,
+              //height: ,
+              padding: EdgeInsets.symmetric(horizontal: 2),
+              color: Colors.grey[100],
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      cursorColor: Colors.black,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.go,
+                      controller: _controllerSearch,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          hintText: "Buscar..."),
+                    ),
+                  ),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: IconButton(
+                      splashColor: Colors.black,
+                      icon: Icon(Icons.search),
+                      onPressed: () => searchPlace()
+                      //Scaffold.of(context).openDrawer();
+                      /*Prediction p = await PlacesAutocomplete.show(
+                        context: context, apiKey: kGoogleApiKey);
+                      displayPrediction(p);
+                      },*/
+
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ]
+        ),
+      ) ,//FloatAppBar(_controller),
         body: SafeArea(
           child: StreamBuilder(
             stream: FirebaseFirestore
                 .instance
-                .collection("habitaciones")
+                .collection(_coleccion)
                 .where("coords", isNotEqualTo: "")
                 .snapshots(),
             builder: (context, snapshot) {
@@ -276,45 +354,36 @@ class MapsPage extends State<MyMaps> {
                   List<Widget> widgets = [];
 
                   int hasImage = snapshot.data.docs[i]['check_images'];
+                  int publicar = snapshot.data.docs[i]['publicar'];
+
                   //print("======================================> HAS IMAGE? : $hasImage");
-                  if (hasImage == 1){
-                    var rawFotos = snapshot.data.docs[i]['fotos'];
-                    rawFotos.forEach((final String key, final value) {
-                      widgets.add(Image.memory(base64Decode(value)));
-                    });
+                  // Si tiene imagenes y se quiere publicar
+                  if (hasImage == 1 && publicar == 1){
+                    //if(publicar == 1){
+                      var rawFotos = snapshot.data.docs[i]['fotos'];
+                      rawFotos.forEach((final String key, final value) {
+                        widgets.add(Image.memory(base64Decode(value)));
+                      });
 
                   }
+                  //Si no tiene imagenes
                   else{
-                    FirebaseFirestore
-                        .instance
-                        .collection("habitaciones")
-                        .doc("NotAvailable")
-                        .get()
-                        .then((docRef) => {
-                      widgets.add(Image.memory(base64Decode(docRef.get('image'))))
-                    });
-
+                    // si no tiene imagenes pero se quiere publicar usando una imagen default
+                    if (publicar == 1){
+                      FirebaseFirestore
+                          .instance
+                          .collection(_coleccion)
+                          .doc("NotAvailable")
+                          .get()
+                          .then((docRef) => {
+                        widgets.add(Image.memory(base64Decode(docRef.get('image'))))
+                      });
+                    }
+                    // si no tiene imagenes y no se quiere publicar
+                    else{
+                      continue;
+                    }
                   }
-                  /*
-                  var rawFotos = snapshot.data.docs[i]['fotos'];
-
-                  if (rawFotos.length == 0 ){
-
-                    FirebaseFirestore
-                        .instance
-                        .collection("marker_rent")
-                        .doc("NotAvailable")
-                        .get()
-                        .then((docRef) => {
-                          widgets.add(Image.memory(base64Decode(docRef.get('image'))))
-                    });
-                  }
-
-                  else{
-                    rawFotos.forEach((final String key, final value) {
-                      widgets.add(Image.memory(base64Decode(value)));
-                    });
-                  }*/
 
                   double lat = snapshot.data.docs[i]['coords'].latitude;
                   double lng = snapshot.data.docs[i]['coords'].longitude;
@@ -367,6 +436,99 @@ class MapsPage extends State<MyMaps> {
   void _onMapCreated(GoogleMapController controller){
     _controller = controller;
     controller.setMapStyle(_mapStyle);
+
   }
 
 }
+
+
+
+/*
+class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
+
+  final TextEditingController _controllerSearch = new TextEditingController();
+
+
+  FloatAppBar(GoogleMapController mapController);
+
+  Future search() async {
+
+    try{
+
+      if(_controllerSearch.text.length != 0){
+        print(
+            "######################################## ${_controllerSearch.text}");
+
+        var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
+        var first = results.first;
+        print("################################################");
+        print("${first.featureName} : ${first.coordinates}");
+        print("################################################");
+        var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+
+        /*mapController.animateCamera(
+            CameraUpdate.newLatLngZoom(
+                latLng,
+                14
+            )
+        );*/
+
+      }
+
+    }
+    catch(e) {
+      print("Error occured: $e");
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Positioned(
+          top: 30,
+          right: 15,
+          left: 15,
+          child: Container(
+            color: Colors.grey[100],
+            child: Row(
+              children: <Widget>[
+
+                Expanded(
+                  child: TextField(
+                    cursorColor: Colors.black,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.go,
+                    controller: _controllerSearch,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                        hintText: "Buscar..."),
+                  ),
+                ),
+                Material(
+                  type: MaterialType.transparency,
+                  child: IconButton(
+                    splashColor: Colors.grey,
+                    icon: Icon(Icons.search),
+                    onPressed: () => search()
+                      //Scaffold.of(context).openDrawer();
+                      /*Prediction p = await PlacesAutocomplete.show(
+                        context: context, apiKey: kGoogleApiKey);
+                      displayPrediction(p);
+                      },*/
+                    ,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}*/

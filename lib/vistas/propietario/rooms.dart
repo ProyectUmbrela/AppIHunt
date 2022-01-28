@@ -6,11 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:ihunt/providers/api.dart';
 import 'registerRoom.dart';
 import 'update_room.dart';
 import 'details_room.dart';
 import 'landlordView.dart';
+
+import 'package:custom_switch/custom_switch.dart';
 
 class Rooms extends StatefulWidget {
   @override
@@ -30,6 +35,7 @@ class Room{
   String servicios;
   int status;
   String terminos;
+  int publicar;
 
   Room({
     this.descripcion,
@@ -43,7 +49,8 @@ class Room{
     this.precio,
     this.servicios,
     this.status,
-    this.terminos});
+    this.terminos,
+    this.publicar});
 }
 
 class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
@@ -63,7 +70,25 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     setData();
   }
 
-  Future getRooms(id) async{
+  Map values_publ = {};
+  Future getSpecie(String id_room) async {
+    int check = await FirebaseFirestore.instance
+        .collection('habitaciones')
+        .doc(id_room)
+        .get()
+        .then((value) {
+      return value['publicar']; // Access your after your get the data
+    });
+
+    if (check == 1){
+      values_publ[id_room] = true;
+    }
+    if (check == 0){
+      values_publ[id_room] = false;
+    }
+  }
+
+  Future getRooms(id) async {
     Api _api = Api();
 
     final msg = jsonEncode({
@@ -74,10 +99,12 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     var data = jsonDecode(response.body);
     List<Room> _rooms = [];
 
-    if (response.statusCode == 200) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+    if (response.statusCode == 200 || response.statusCode==201) {
+      // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
 
-      data.forEach((index, room) {
+      data['habitaciones'].forEach((room) async {
+
+        getSpecie(room['idhabitacion']);
         _rooms.add(Room(
             descripcion: room['descripcion'],
             dimension: room['dimension'],
@@ -94,12 +121,12 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         ));
 
       });
-
+      print('############ ${values_publ}');
       return _rooms;
     } else {
       if (Platform.isAndroid) {
         //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
+        print('ERROR EN GET ROOMS ${response.statusCode}');
       } else if (Platform.isIOS) {
         //_cupertinoDialog(context, data['message'], 'Notificación');
       }
@@ -122,7 +149,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
             Stack(
                 children: <Widget> [ ListView.builder(
                     itemCount: snapshot.data.length,
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(10),
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
@@ -152,14 +179,17 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                           child: Material(
                             color: Colors.black12,
                             shadowColor: Colors.deepPurpleAccent,
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(30.0),
                             child: Column(
                               children: [
                                 ListTile(
                                   leading: Icon(Icons.airline_seat_individual_suite),
                                   title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                   subtitle: Text(
-                                    'Texto secundario',
+                                    'Inquilino: ${
+                                        snapshot.data[index].idusuario==null?
+                                            '':snapshot.data[index].idusuario
+                                    }',
                                     style:
                                     TextStyle(color: Colors.black.withOpacity(0.6)),
                                   ),
@@ -168,7 +198,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 2, horizontal: 10),
                                   child: Row(
-                                    //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: <Widget>[
                                         Column(
@@ -186,13 +215,13 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: [ snapshot.data[index].status==1?
                                           Text(
-                                            '  Sí',
+                                            ' Sí',
                                             style: TextStyle(
                                                 color: Colors.black.withOpacity(0.6),
                                                 fontWeight: FontWeight.normal),
                                           ):
                                           Text(
-                                            '  No',
+                                            ' No',
                                             style: TextStyle(
                                                 color: Colors.black.withOpacity(0.6),
                                                 fontWeight: FontWeight.normal),
@@ -200,17 +229,37 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           ],
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
+                                          padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.end,
                                             children: [
                                               Text.rich(
                                                 TextSpan(
                                                   children: <TextSpan>[
-                                                    TextSpan(text: 'Precio: ', style: TextStyle(
+                                                    TextSpan(text: 'Precio: \$', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)),
                                                     TextSpan(text: '${snapshot.data[index].precio}' , style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(vertical: .0005, horizontal: 5),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              Text.rich(
+                                                TextSpan(
+                                                  children: <TextSpan>[
+                                                    TextSpan(text: 'Fecha Act: ', style: TextStyle(
+                                                        color: Colors.black.withOpacity(0.6),
+                                                        fontWeight: FontWeight.bold)),
+                                                    TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechaupdate).day}/${HttpDate.parse(snapshot.data[index].fechaupdate).month}/${HttpDate.parse(snapshot.data[index].fechaupdate).year}' , style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.normal)),
                                                   ],
@@ -253,7 +302,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                       ]),
                                 ),
                                 ButtonBar(
-                                  alignment: MainAxisAlignment.spaceEvenly,
+                                  alignment: MainAxisAlignment.center,
                                   children: [
                                     FlatButton(
                                       textColor: const Color(0xFF6200EE),
@@ -279,6 +328,22 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                         );
                                       },
                                       child: const Text('Editar'),
+                                    ),
+                                    Switch(
+                                      value: values_publ[snapshot.data[index].idhabitacion],
+                                      onChanged: (value) {
+                                        setState(() {
+                                          values_publ[snapshot.data[index].idhabitacion] = value;
+                                        });
+
+                                        var collection = FirebaseFirestore.instance.collection('habitaciones');
+                                        collection
+                                            .doc(snapshot.data[index].idhabitacion)
+                                            .update({'publicar' :
+                                              value==true? 1:0}) // <-- Updated data
+                                            .then((_) => print('#################### Success'))
+                                            .catchError((error) => print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
+                                      },
                                     )
                                   ],
                                 ),

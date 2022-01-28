@@ -69,7 +69,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
     void getLocation(address) async{
       try {
         var locations = await locationFromAddress(address);
-        print("########################QQQQQQQQQQQ ${address}");
         lat = locations[0].latitude;
         lngt = locations[0].longitude;
       } catch(err){
@@ -126,6 +125,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
               'direccion': address,
               'check_images': 0,
               'habitaciones': 1,
+              'publicar': 1,
               'servicios': services,
               'titular': name
             },
@@ -273,7 +273,13 @@ class _RegisterRoomState extends State<RegisterRoom> {
     /***************************************************************************/
 
     var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/landlord');
+      Navigator.pop(context);
+      /*Navigator.push(
+        context,
+        new MaterialPageRoute(
+          builder: (context) => new Landlord(),
+        ),
+      );*/
     };
 
     Future submit() async {
@@ -295,22 +301,17 @@ class _RegisterRoomState extends State<RegisterRoom> {
         });
 
         await getLocation(adressCtrl.text);
-        print('############################');
-        print("lat ${lat}  long ${lngt}");
         addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre, roomidCtrl.text);
 
         var response = await _api.RegisterRoomPost(msg);
         Map data = jsonDecode(response.body);
 
-        print("################# ESTATUS CODE: ");
-        print(response.statusCode);
-
         if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("Data posted successfully");
-          Navigator.push(context, new MaterialPageRoute(
+          Navigator.pop(context);
+          /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
-          );
+          );*/
         } else {
           if (Platform.isAndroid) {
             _materialAlertDialog(context, data['message'], 'Notificación');

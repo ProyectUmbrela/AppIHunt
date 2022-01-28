@@ -145,10 +145,11 @@ class _DetallesHab extends State<DetallesHab> {
 
   @override
   Widget build(BuildContext context) {
-    //print("**************>>>>> ${widget.name.toString()}");
+
     return Scaffold(
         appBar: AppBar(
-            title: Text("Resumen de habitación")
+          title: Text("Resumen de habitación"),
+          automaticallyImplyLeading: false,
         ),
       body: Column(
         children: <Widget>[

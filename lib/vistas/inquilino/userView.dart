@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
+import 'package:ihunt/vistas/inquilino/Search.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -85,7 +86,8 @@ class _UserState extends State<UserView> {
         .collection(tipo_usuario.toLowerCase())
         .doc(id_usuario)
         .set({
-          'tokens': FieldValue.arrayUnion([token])},
+          'updatedOn':FieldValue.serverTimestamp(),
+          'token': token}, //FieldValue.arrayUnion([token, FieldValue.serverTimestamp()])},
           SetOptions(merge: true)
           );
   }
@@ -93,7 +95,7 @@ class _UserState extends State<UserView> {
 
   void firebaseCloudMessaging_Listeners() {
     _firebaseMessaging.getToken().then((token) async {
-      print(token);
+      //print(token);
       await saveTokenToDatabase(token);
       tokenBy = token;
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
@@ -125,7 +127,7 @@ class _UserState extends State<UserView> {
 
 
 
-  Widget getRow(String stringval, double textSize, double opacity){
+  /*Widget getRow(String stringval, double textSize, double opacity){
 
       return Opacity(
         opacity: opacity,
@@ -140,7 +142,7 @@ class _UserState extends State<UserView> {
           ),
         ),
       ) ;
-    }
+    }*/
 
 
   @override
@@ -175,11 +177,12 @@ class _UserState extends State<UserView> {
       color: Color(0xff01A0C7),
       
       child: MaterialButton(
-        
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context)=>MyMaps()));
+          /*Navigator.of(context).push(MaterialPageRoute(
+              builder: (context)=>MyApp()));*/
 
         },
         child: Text("Buscar",
@@ -192,7 +195,6 @@ class _UserState extends State<UserView> {
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
       color: Color(0xff01A0C7),
-      
       child: MaterialButton(
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
@@ -201,6 +203,8 @@ class _UserState extends State<UserView> {
           //###################################################################1
           Navigator.pushNamed(context, '/notificacionesInquilino',
           arguments: messageTitle);
+          /*Navigator.pushNamed(context, '/Init',
+              arguments: messageTitle);*/
           //###################################################################1
           //####################################################################
         },
@@ -215,6 +219,7 @@ class _UserState extends State<UserView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('$nombre'),
+        automaticallyImplyLeading: false,
         actions: <Widget>[
           Row(
             children: <Widget>[

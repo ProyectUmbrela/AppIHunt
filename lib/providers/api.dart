@@ -3,15 +3,16 @@
 //import 'dart:convert';
 //import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-//import 'package:ihunt/vistas/propietario/registerTenants.dart';
 
 class Api {
+
   //String _url = 'https://appiuserstest.herokuapp.com/ihunt';
   String _url = 'https://prdapp.herokuapp.com/ihunt';
 
   String _register = "/register";
   String _login = '/login';
   String _habitacionesRentadas = '/historialInquilino';
+  String _listarInvitaciones = '/listarInvitacionesUsuario';
 
   // urls correspondientes a propietario
   String _registerRoom = '/registerRoom';
@@ -34,19 +35,26 @@ class Api {
   }
 
   Future<dynamic> loginPost(data) async {
-    var response =
-        await http.post(Uri.parse(this._url + _login), body: data, headers: this._headers);
+    var response = await http.post(Uri.parse(this._url + _login), body: data, headers: this._headers);
 
     return response;
   }
 
   Future<dynamic> GetHabitaciones(data) async {
-    print(data.toString());
+
     var response = await http.post(Uri.parse(this._url + this._habitacionesRentadas),
         body: data, headers: this._headers);
 
     return response;
   }
+
+  Future<dynamic> GetInvitacionesRecientes(data) async {
+
+    var response = await http.post(Uri.parse(this._url + this._listarInvitaciones),
+        body: data, headers: this._headers);
+    return response;
+  }
+
 
   /*#####  api de propietario #####*/
   Future<dynamic> RegisterRoomPost(data) async {
