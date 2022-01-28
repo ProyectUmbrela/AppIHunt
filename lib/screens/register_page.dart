@@ -26,8 +26,35 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool _isProcessing = false;
 
+  /*void register() async{
+
+    print("#================================> ");
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: "barry.allen@example.com",
+          password: "SuperSecretPassword!"
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }*/
+
+
   @override
   Widget build(BuildContext context) {
+
+
+
+
+
+
     return GestureDetector(
       onTap: () {
         _focusName.unfocus();
@@ -111,9 +138,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   _isProcessing = true;
                                 });
 
-                                if (_registerFormKey.currentState!
-                                    .validate()) {
-                                  User? user = await FireAuth
+                                if (_registerFormKey.currentState.validate()) {
+
+                                  var user = await FireAuth
                                       .registerUsingEmailPassword(
                                     name: _nameTextController.text,
                                     email: _emailTextController.text,

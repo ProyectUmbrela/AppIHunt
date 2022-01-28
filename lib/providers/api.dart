@@ -3,11 +3,11 @@
 //import 'dart:convert';
 //import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-//import 'package:ihunt/vistas/propietario/registerTenants.dart';
 
 class Api {
-  String _url = 'https://appiuserstest.herokuapp.com/ihunt';
-  //String _url = 'https://prdapp.herokuapp.com/ihunt';
+
+  //String _url = 'https://appiuserstest.herokuapp.com/ihunt';
+  String _url = 'https://prdapp.herokuapp.com/ihunt';
 
   String _register = "/register";
   String _login = '/login';
@@ -54,8 +54,6 @@ class Api {
         body: data, headers: this._headers);
     return response;
   }
-
-
 
 
   /*#####  api de propietario #####*/

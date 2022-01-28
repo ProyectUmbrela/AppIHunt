@@ -177,7 +177,6 @@ class _UserState extends State<UserView> {
       color: Color(0xff01A0C7),
       
       child: MaterialButton(
-        
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
@@ -196,7 +195,6 @@ class _UserState extends State<UserView> {
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
       color: Color(0xff01A0C7),
-      
       child: MaterialButton(
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
@@ -205,6 +203,8 @@ class _UserState extends State<UserView> {
           //###################################################################1
           Navigator.pushNamed(context, '/notificacionesInquilino',
           arguments: messageTitle);
+          /*Navigator.pushNamed(context, '/Init',
+              arguments: messageTitle);*/
           //###################################################################1
           //####################################################################
         },

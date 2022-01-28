@@ -11,9 +11,11 @@ import 'package:ihunt/vistas/inquilino/userView.dart'; // principal
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-import 'package:ihunt/vistas/notificaciones.dart';
+//import 'package:ihunt/vistas/notificaciones.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
+import 'package:ihunt/vistas/inquilino/inicio.dart';
+
 
 
 // VISTA PROPIETARIO
@@ -108,8 +110,9 @@ class IHuntApp extends StatelessWidget {
       ],
       locale: const Locale('es'),
       routes: {
-        '/notificaciones': (context) => Notificaciones(),
+        //'/notificaciones': (context) => Notificaciones(),
         '/login': (context) => LoginPage(),
+        '/Init': (context) => Inicio(),
         '/user': (context) => UserView(),
         '/landlord': (context) => Landlord(),
         '/register': (context) => Register(),
