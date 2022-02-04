@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -166,7 +165,6 @@ class _LoginPageState extends State<LoginPage> {
           future: _api.loginPost(body),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-
               response = snapshot.data;
               Navigator.pop(context);
             }

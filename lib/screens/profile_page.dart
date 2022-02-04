@@ -35,6 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
+              //_currentUser.metadata
               'NAME: ${_currentUser.displayName}',
               style: Theme.of(context).textTheme.bodyText1,
             ),

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
+import 'package:ihunt/utils/fire_auth.dart';
 import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
@@ -12,8 +14,12 @@ import 'package:ihunt/vistas/register.dart';
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+
+class LoginPageTest extends StatefulWidget {
+  LoginPageTest({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -21,7 +27,49 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPageTest> {
+
+
+  /* * */
+  Future<FirebaseApp> _initializeFirebase() async {
+    FirebaseApp firebaseApp = await Firebase.initializeApp();
+
+    var user = FirebaseAuth.instance.currentUser;
+
+    print("##########################################################");
+    print("${user}");
+    print("##########################################################");
+    if (FirebaseAuth.instance.currentUser != null) {
+
+      /*var snapShot = await FirebaseFirestore.instance.collection('users')
+          .doc(user.uid)
+          .get();*/
+      var snapShot;
+      await FirebaseFirestore.instance.collection("users").doc(user.uid).snapshots().listen((event) {
+        setState(() {
+          snapShot = event.get("tipo");
+          print("*********************************************************");
+          print(snapShot);
+          print("*********************************************************");
+        });
+      });
+
+
+      /*
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ProfilePage(
+            user: user,
+          ),
+        ),
+      );*/
+
+
+    }
+
+    return firebaseApp;
+  }
+
 
   bool _saving = false;
   final myControllerEmail = TextEditingController();
@@ -119,8 +167,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
   void _showDialog(seconds, message) {
     showDialog(
       context: context,
@@ -139,8 +185,43 @@ class _LoginPageState extends State<LoginPage> {
     sharedPreferences.setBool("isLogged", true);
   }
 
+  Future _sendRequest(emailField, passwordField) async {
 
+    var user = await FireAuth
+        .signInUsingEmailPassword(
+      email: emailField.text,
+      password: passwordField.text,
+    );
 
+    if (user != null) {
+      print("=================> ${user.uid} <==============");
+      print("=================> ${user} <==============");
+
+      if (user.emailVerified){
+        var snapShoot = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (snapShoot != null){
+          if (snapShoot['tipo'] == 'propietario'){
+            print("USUARIO: ######## ${snapShoot['tipo']}");
+            //Navigator.pushReplacementNamed(context, '/landlord');
+          }
+
+          else if (snapShoot['tipo'] == 'usuario'){
+            print("USUARIO: ######## ${snapShoot['tipo']}");
+            //Navigator.pushReplacementNamed(context, '/user');
+          }
+        }
+      }else{
+        print("*** Usuario no verificado ***");
+      }
+    }
+  }
+
+  /*
   Future _sendRequest(emailField, passwordField) async {
 
     Api _api = Api();
@@ -162,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
       barrierDismissible: false,
       builder: (context) => Center(
         child: FutureBuilder(
-          future: _api.loginPost(body),
+          future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               response = snapshot.data;
@@ -208,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
       _showDialog(2, "El usuario o contraseña son incorrectos");
     }
 
-  }
+  }*/
 
 
   @override

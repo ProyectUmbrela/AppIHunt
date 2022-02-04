@@ -1,13 +1,14 @@
+/*
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoder/services/base.dart';
 import 'package:ihunt/utils/widgets.dart';
-
+*/
 
 //void main() => runApp(new MyApp());
-
+/*
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
@@ -247,3 +248,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+*/

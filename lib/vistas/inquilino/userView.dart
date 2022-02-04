@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
-import 'package:ihunt/vistas/inquilino/Search.dart';
+//import 'package:ihunt/vistas/inquilino/Search.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 
 // AdMob
@@ -87,7 +85,8 @@ class _UserState extends State<UserView> {
         .doc(id_usuario)
         .set({
           'updatedOn':FieldValue.serverTimestamp(),
-          'token': token}, //FieldValue.arrayUnion([token, FieldValue.serverTimestamp()])},
+          'token': token},
+          //FieldValue.arrayUnion([token, FieldValue.serverTimestamp()])},
           SetOptions(merge: true)
           );
   }
@@ -148,8 +147,6 @@ class _UserState extends State<UserView> {
   @override
   Widget build(BuildContext context) {
 
-
-
     final lugaresbutton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
@@ -181,8 +178,6 @@ class _UserState extends State<UserView> {
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context)=>MyMaps()));
-          /*Navigator.of(context).push(MaterialPageRoute(
-              builder: (context)=>MyApp()));*/
 
         },
         child: Text("Buscar",
@@ -201,10 +196,11 @@ class _UserState extends State<UserView> {
         onPressed: (){
           //####################################################################
           //###################################################################1
-          Navigator.pushNamed(context, '/notificacionesInquilino',
-          arguments: messageTitle);
-          /*Navigator.pushNamed(context, '/Init',
-              arguments: messageTitle);*/
+          /*Navigator.pushNamed(context, '/notificacionesInquilino',
+          arguments: messageTitle);*/
+
+          Navigator.pushNamed(context, '/Init',
+              arguments: messageTitle);
           //###################################################################1
           //####################################################################
         },

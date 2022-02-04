@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/screens/profile_page.dart';
 
 import 'package:ihunt/utils/fire_auth.dart';
@@ -19,10 +19,14 @@ class _RegisterPageState extends State<RegisterPage> {
   final _nameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  final _tipoTextController = TextEditingController();
+
+
 
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
+  final _focusTipo = FocusNode();
 
   bool _isProcessing = false;
 
@@ -60,6 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _focusName.unfocus();
         _focusEmail.unfocus();
         _focusPassword.unfocus();
+        _focusTipo.unfocus;
       },
       child: Scaffold(
         appBar: AppBar(
@@ -75,6 +80,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   key: _registerFormKey,
                   child: Column(
                     children: <Widget>[
+                      TextFormField(
+                        controller: _tipoTextController,
+                        focusNode: _focusTipo,
+                        validator: (value) => Validator.validateName(
+                          name: value,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: "Typo",
+                          errorBorder: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
                       TextFormField(
                         controller: _nameTextController,
                         focusNode: _focusName,
@@ -142,10 +164,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                   var user = await FireAuth
                                       .registerUsingEmailPassword(
+                                    tipo: _tipoTextController.text,
                                     name: _nameTextController.text,
                                     email: _emailTextController.text,
-                                    password:
-                                    _passwordTextController.text,
+                                    password: _passwordTextController.text,
                                   );
 
                                   setState(() {

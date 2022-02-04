@@ -27,7 +27,9 @@ class _LoginPageState extends State<LoginPage> {
 
     var user = FirebaseAuth.instance.currentUser;
 
-
+    print("##########################################################");
+    print("${user}");
+    print("##########################################################");
     if (FirebaseAuth.instance.currentUser != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -127,8 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                                       var user = await FireAuth
                                           .signInUsingEmailPassword(
                                         email: _emailTextController.text,
-                                        password:
-                                        _passwordTextController.text,
+                                        password: _passwordTextController.text,
                                       );
 
                                       setState(() {
