@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
 //import 'package:ihunt/vistas/inquilino/Search.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
+import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,8 +21,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class UserView extends StatefulWidget {
 
   final User user;
+  final String idUsuario;
 
-  const UserView({this.user});
+  const UserView({this.user, this.idUsuario});
 
   @override
   _UserState createState() => _UserState();
@@ -31,40 +33,20 @@ class UserView extends StatefulWidget {
 class _UserState extends State<UserView> {
 
   User _currentUser;
-
-  /*
-  @override
-  void initState() {
-    _currentUser = widget.user;
-    super.initState();
-  }*/
-
-  String id_usuario;
-  String nombre;
-  String tipo_usuario;
-
-
-  //############################################################################
-  //###########################################################################1
-
+  String _idUsuer;
+  String _nombre;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String messageTitle = "Empty!";
   //String notificationAlert = "Alert";
   var tokenBy = '';
 
-  //###########################################################################1
-  //############################################################################
-
-
   @override
   void initState() {
+
     setData();
     AdmobHelper.initialization();
-    _currentUser = widget.user;
-    //##########################################################################
-    //#########################################################################1
-
+    print("ID USUARIO DEFINIDO: ${_idUsuer}");
 
     super.initState();
     firebaseCloudMessaging_Listeners();
@@ -82,17 +64,21 @@ class _UserState extends State<UserView> {
         //notificationAlert = "Application opened from Notification";
       });
     });
+  }
 
-    //#########################################################################1
-    //##########################################################################
+  void setData() async{
+    var sharedPreferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      _nombre = widget.user.displayName;
+      _currentUser = widget.user;
+      _idUsuer = widget.idUsuario.toString();
+
+    });
 
   }
 
 
-
-
-  //############################################################################
-  //###########################################################################1
 
   Future<void> saveTokenToDatabase(String token) async {
 
@@ -108,10 +94,8 @@ class _UserState extends State<UserView> {
           );
   }
 
-
   void firebaseCloudMessaging_Listeners() {
     _firebaseMessaging.getToken().then((token) async {
-      //print(token);
       await saveTokenToDatabase(token);
       tokenBy = token;
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
@@ -119,50 +103,13 @@ class _UserState extends State<UserView> {
     });
   }
 
-  //###########################################################################1
-  //############################################################################
-
-
-  void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
-
-    setState(() {
-
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
-      tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
-    });
-
-  }
-
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", false);
-
     Navigator.of(context).pushReplacementNamed('/login');
 
   }
-
-
-
-  /*Widget getRow(String stringval, double textSize, double opacity){
-
-      return Opacity(
-        opacity: opacity,
-        child:  Container(
-          margin: const EdgeInsets.only(top: 20.0),
-          child : Text(stringval ?? 'Error',
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-        ),
-      ) ;
-    }*/
-
 
   @override
   Widget build(BuildContext context) {
@@ -174,14 +121,31 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         minWidth: (MediaQuery.of(context).size.width/3.3),
          onPressed: () {
-            Navigator.push(
+
+           Navigator.of(context).push(MaterialPageRoute(
+             builder: (_) => new Lugares(
+               user: _currentUser,
+               idUsuario: _idUsuer,
+             ),
+           ));
+
+            /*Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => Lugares(),
                   settings: RouteSettings(
-                    arguments: id_usuario
-              )));
+                    arguments: _idUsuer
 
+              )));*/
+
+           /*Navigator.of(context).pushReplacement(
+             MaterialPageRoute(
+               builder: (context) => Lugares(
+                   user: _currentUser,
+                   idUsuario: _idUsuer
+               ),
+             ),
+           );*/
         },
         child: Text("Mis lugares",
             textAlign: TextAlign.center)
@@ -215,15 +179,18 @@ class _UserState extends State<UserView> {
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
-          //####################################################################
-          //###################################################################1
           /*Navigator.pushNamed(context, '/notificacionesInquilino',
           arguments: messageTitle);*/
 
-          Navigator.pushNamed(context, '/Init',
-              arguments: messageTitle);
-          //###################################################################1
-          //####################################################################
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => NotificacionesInquilino(
+                  user: _currentUser,
+                  idUsuario: _idUsuer
+              ),
+            ),
+          );
+
         },
         child: Text("Invitaciones",
             textAlign: TextAlign.center
@@ -232,10 +199,9 @@ class _UserState extends State<UserView> {
     );
 
 
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('$nombre'),
+        title: Text('$_nombre'),
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Row(

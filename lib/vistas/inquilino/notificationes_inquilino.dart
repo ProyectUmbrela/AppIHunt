@@ -1,11 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-
+import 'package:flutter/widgets.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
 
 class NotificacionesInquilino extends StatefulWidget{
+
+  final User user;
+  final String idUsuario;
+
+  const NotificacionesInquilino({this.user, this.idUsuario});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -67,9 +76,9 @@ class Invitacion {
 
 }
 
-
-
 class NotificationesInquilinoState extends State<NotificacionesInquilino>{
+  String idUsuario;
+
 
 
   Future getInvitacionesRecientes(idUsuario) async {
@@ -132,14 +141,22 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   }
 
   Future getInvitaciones() async {
-    String idUsuario;
+    idUsuario = widget.idUsuario.toString();
     //String nombre;
     //String tipo_usuario;
     var sharedPreferences = await SharedPreferences.getInstance();
 
-    idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
+
+    //ORIGINAL
+    //idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
     //nombre = sharedPreferences.getString("nombre") ?? "Error";
     //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
+
+    print("#******************************************************#");
+    print("#******************************************************#");
+    print("usuario: ${idUsuario}");
+    print("#******************************************************#");
+    print("#******************************************************#");
 
     var result = await getInvitacionesRecientes(idUsuario);
     return result;

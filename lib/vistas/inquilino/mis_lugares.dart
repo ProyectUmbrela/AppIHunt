@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -15,25 +16,37 @@ import 'package:ihunt/providers/api.dart';
 import 'dart:async';
 
 /// This is the main application widget.
-class Lugares extends StatelessWidget {
+class Lugares extends StatefulWidget {
+
+  final User user;
+  final String idUsuario;
+
+  const Lugares({this.user, this.idUsuario});
+
+
   static const String _title = 'Mis lugares';
 
+  @override
+  _MisLugares createState()=>  _MisLugares();
+  /*
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: _title,
       home: MyStatefulWidget(),
     );
-  }
+  }*/
 }
 
 
-class MyStatefulWidget extends StatefulWidget {
+/*
+class _MisLugares extends StatefulWidget {
   const MyStatefulWidget() : super();
- 
+
+
   @override
   createState() => _MyStatefulWidgetState();
-}
+}*/
 
 class Habitacion {
 
@@ -170,8 +183,17 @@ Future getHabitaciones(idUsuario) async {
 
 
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+class _MisLugares extends State<Lugares> {
 
+  User _currentUser;
+  String idUsuario;
+
+  @override
+  void initState() {
+    _currentUser = widget.user;
+    idUsuario = widget.idUsuario;
+    super.initState();
+  }
 
   Widget habitacionDetalles(habitacion) {
 
@@ -218,14 +240,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 
   Future getProjectDetails() async {
-    String idUsuario;
+    //String idUsuario;
     //String nombre;
     //String tipo_usuario;
     var sharedPreferences = await SharedPreferences.getInstance();
 
-    idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
+    //idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
     //nombre = sharedPreferences.getString("nombre") ?? "Error";
     //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
+    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    print("${idUsuario}");
+    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
     var result = await getHabitaciones(idUsuario);
     return result;

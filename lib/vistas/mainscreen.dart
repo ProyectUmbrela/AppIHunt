@@ -35,7 +35,6 @@ class _MainScreenState extends State<MainScreen> {
                     Navigator.push(
                       context,
                       //MaterialPageRoute(builder: (context) => Register()),
-
                       MaterialPageRoute(builder: (context) => RegisterPage()),
                     );
                   },

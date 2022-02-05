@@ -30,8 +30,7 @@ class LoginPageTest extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPageTest> {
 
-
-  /* * */
+  /*
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
@@ -46,12 +45,16 @@ class _LoginPageState extends State<LoginPageTest> {
           .doc(user.uid)
           .get();*/
       var snapShot;
-      await FirebaseFirestore.instance.collection("users").doc(user.uid).snapshots().listen((event) {
-        setState(() {
-          snapShot = event.get("tipo");
-          print("*********************************************************");
-          print(snapShot);
-          print("*********************************************************");
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .snapshots()
+          .listen((event) {
+            setState(() {
+            snapShot = event.get("tipo");
+            print("*********************************************************");
+            print(snapShot);
+            print("*********************************************************");
         });
       });
 
@@ -69,7 +72,7 @@ class _LoginPageState extends State<LoginPageTest> {
     }
 
     return firebaseApp;
-  }
+  }*/
 
 
   bool _saving = false;
@@ -109,7 +112,6 @@ class _LoginPageState extends State<LoginPageTest> {
       ),
     );
   }
-
 
   Widget recuperarPass(){
     return InkWell(
@@ -168,6 +170,7 @@ class _LoginPageState extends State<LoginPageTest> {
     );
   }
 
+  /*
   void _showDialog(seconds, message) {
     showDialog(
       context: context,
@@ -179,9 +182,11 @@ class _LoginPageState extends State<LoginPageTest> {
         );
       },
     );
-  }
+  }*/
 
   onSuccess() async{
+
+
     var sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", true);
   }
@@ -193,10 +198,10 @@ class _LoginPageState extends State<LoginPageTest> {
       email: emailField.text,
       password: passwordField.text,
     );
-
+    print("=================> ${user} <==============");
     if (user != null) {
       print("=================> ${user.uid} <==============");
-      print("=================> ${user} <==============");
+
 
       if (user.emailVerified){
         var snapShoot = await FirebaseFirestore
@@ -208,19 +213,21 @@ class _LoginPageState extends State<LoginPageTest> {
         if (snapShoot != null){
           /*final idToken = await user.getIdToken();
           print("###: ${idToken}");*/
-
-          if (snapShoot['tipo'] == 'propietario'){
+          var tipoUsuario = snapShoot['tipo'];
+          var idUsuario = snapShoot['usuario'];
+          if (tipoUsuario == 'propietario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
             //Navigator.pushReplacementNamed(context, '/landlord');
           }
 
-          else if (snapShoot['tipo'] == 'usuario'){
+          else if (tipoUsuario == 'usuario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
             //Navigator.pushReplacementNamed(context, '/user');
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => UserView(
                   user: user,
+                  idUsuario: idUsuario
                 ),
               ),
             );
