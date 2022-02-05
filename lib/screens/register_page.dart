@@ -16,17 +16,19 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _registerFormKey = GlobalKey<FormState>();
 
+  final _usuarioTextController = TextEditingController();
+  final _tipoTextController = TextEditingController();
   final _nameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
-  final _tipoTextController = TextEditingController();
 
 
-
+  final _focusUsuario = FocusNode();
+  final _focusTipo = FocusNode();
   final _focusName = FocusNode();
   final _focusEmail = FocusNode();
   final _focusPassword = FocusNode();
-  final _focusTipo = FocusNode();
+
 
   bool _isProcessing = false;
 
@@ -61,10 +63,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return GestureDetector(
       onTap: () {
+
+        _focusUsuario.unfocus();
+        _focusTipo.unfocus();
         _focusName.unfocus();
         _focusEmail.unfocus();
         _focusPassword.unfocus();
-        _focusTipo.unfocus;
+
       },
       child: Scaffold(
         appBar: AppBar(
@@ -80,6 +85,22 @@ class _RegisterPageState extends State<RegisterPage> {
                   key: _registerFormKey,
                   child: Column(
                     children: <Widget>[
+                      TextFormField(
+                        controller: _usuarioTextController,
+                        focusNode: _focusUsuario,
+                        validator: (value) => Validator.validateName(
+                          name: value,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: "Usuario",
+                          errorBorder: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ),
                       TextFormField(
                         controller: _tipoTextController,
                         focusNode: _focusTipo,
@@ -164,6 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                   var user = await FireAuth
                                       .registerUsingEmailPassword(
+                                    usuario: _usuarioTextController.text,
                                     tipo: _tipoTextController.text,
                                     name: _nameTextController.text,
                                     email: _emailTextController.text,

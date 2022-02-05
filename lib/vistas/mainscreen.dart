@@ -1,8 +1,13 @@
 
 import 'package:ihunt/vistas/register.dart';
 import 'package:ihunt/vistas/login.dart';
-import 'package:ihunt/vistas/loginTest.dart';
 import 'package:flutter/material.dart';
+
+
+
+//TESTING
+import 'package:ihunt/vistas/loginTest.dart';
+import 'package:ihunt/screens/register_page.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -29,7 +34,9 @@ class _MainScreenState extends State<MainScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Register()),
+                      //MaterialPageRoute(builder: (context) => Register()),
+
+                      MaterialPageRoute(builder: (context) => RegisterPage()),
                     );
                   },
                   color: Colors.lightBlue,

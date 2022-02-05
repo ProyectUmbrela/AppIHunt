@@ -9,6 +9,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/vistas/register.dart';
+import 'package:ihunt/vistas/inquilino/userView.dart';
 
 
 //IMPORTAR FUNCIONES DE CARPETA utils
@@ -205,6 +206,9 @@ class _LoginPageState extends State<LoginPageTest> {
             .get();
 
         if (snapShoot != null){
+          /*final idToken = await user.getIdToken();
+          print("###: ${idToken}");*/
+
           if (snapShoot['tipo'] == 'propietario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
             //Navigator.pushReplacementNamed(context, '/landlord');
@@ -213,12 +217,41 @@ class _LoginPageState extends State<LoginPageTest> {
           else if (snapShoot['tipo'] == 'usuario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
             //Navigator.pushReplacementNamed(context, '/user');
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => UserView(
+                  user: user,
+                ),
+              ),
+            );
+
+
           }
         }
       }else{
         print("*** Usuario no verificado ***");
       }
     }
+
+    /*
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: FutureBuilder(
+          future: _initializeFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              response = snapshot.data;
+              Navigator.pop(context);
+            }
+            return CircularProgressIndicator();
+          },
+        ),
+      ),
+    );*/
+
+
   }
 
   /*

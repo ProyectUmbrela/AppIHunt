@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FireAuth {
   // For registering a new user
   static Future<User> registerUsingEmailPassword({
+    String usuario,
     String tipo,
     String name,
     String email,
@@ -25,6 +26,7 @@ class FireAuth {
 
       await FirebaseFirestore.instance.collection('users')
           .doc(user.uid).set({
+        'usuario': usuario,
         'firstName': name,
         'tipo': tipo
       });

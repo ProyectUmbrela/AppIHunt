@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -11,10 +12,16 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 
+
+
 // AdMob
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class UserView extends StatefulWidget {
+
+  final User user;
+
+  const UserView({this.user});
 
   @override
   _UserState createState() => _UserState();
@@ -23,6 +30,14 @@ class UserView extends StatefulWidget {
 
 class _UserState extends State<UserView> {
 
+  User _currentUser;
+
+  /*
+  @override
+  void initState() {
+    _currentUser = widget.user;
+    super.initState();
+  }*/
 
   String id_usuario;
   String nombre;
@@ -46,8 +61,10 @@ class _UserState extends State<UserView> {
   void initState() {
     setData();
     AdmobHelper.initialization();
+    _currentUser = widget.user;
     //##########################################################################
     //#########################################################################1
+
 
     super.initState();
     firebaseCloudMessaging_Listeners();
@@ -81,8 +98,8 @@ class _UserState extends State<UserView> {
 
     // upsert, insert if not exists or add anew one if already exists
     await FirebaseFirestore.instance
-        .collection(tipo_usuario.toLowerCase())
-        .doc(id_usuario)
+        .collection('users')
+        .doc(_currentUser.uid)
         .set({
           'updatedOn':FieldValue.serverTimestamp(),
           'token': token},
@@ -119,9 +136,12 @@ class _UserState extends State<UserView> {
   }
 
   Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
     final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", false);
+
     Navigator.of(context).pushReplacementNamed('/login');
+
   }
 
 
@@ -161,6 +181,7 @@ class _UserState extends State<UserView> {
                   settings: RouteSettings(
                     arguments: id_usuario
               )));
+
         },
         child: Text("Mis lugares",
             textAlign: TextAlign.center)
