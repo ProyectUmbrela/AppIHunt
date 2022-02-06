@@ -20,9 +20,7 @@ class NotificacionesInquilino extends StatefulWidget{
     // TODO: implement createState
     return NotificationesInquilinoState();
   }
-  
 }
-
 
 
 class Invitacion {
@@ -77,14 +75,22 @@ class Invitacion {
 }
 
 class NotificationesInquilinoState extends State<NotificacionesInquilino>{
-  String idUsuario;
+
+  User _currentUser;
+  String _idUsuario;
 
 
+  @override
+  void initState() {
+    _currentUser = widget.user;
+    _idUsuario = widget.idUsuario;
+    super.initState();
+  }
 
-  Future getInvitacionesRecientes(idUsuario) async {
+  Future getInvitacionesRecientes() async {
     Api _api = Api();
     final body = jsonEncode({
-      'usuario': idUsuario
+      'usuario': _idUsuario
     });
     //print("################## usuario : ${idUsuario}");
     var response = await _api.GetInvitacionesRecientes(body);
@@ -131,38 +137,24 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
           ));
         }
       }
-
       return invitaciones;
-
     }
-
-
-
   }
 
   Future getInvitaciones() async {
-    idUsuario = widget.idUsuario.toString();
-    //String nombre;
-    //String tipo_usuario;
+
     var sharedPreferences = await SharedPreferences.getInstance();
 
-
-    //ORIGINAL
-    //idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
-    //nombre = sharedPreferences.getString("nombre") ?? "Error";
-    //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
-
     print("#******************************************************#");
     print("#******************************************************#");
-    print("usuario: ${idUsuario}");
+    print("usuario: ${_idUsuario}");
     print("#******************************************************#");
     print("#******************************************************#");
 
-    var result = await getInvitacionesRecientes(idUsuario);
+    var result = await getInvitacionesRecientes();
     return result;
 
   }
-
 
   Widget invitacionDetalles(invitacion) {
 
@@ -206,7 +198,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
       ),
     );
   }
-
 
   Widget projectWidget() {
 
@@ -259,8 +250,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -272,47 +261,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
       body: projectWidget(),
     );
   }
-    /*
-    final todo = ModalRoute.of(context).settings.arguments;
-
-    var message;
-    if (todo == "Empty!"){
-      message = "No tienes nuevas invitaciones";
-    }
-    else{
-      message = todo;
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Invitaciones"),
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "${message}",
-              style: Theme.of(context).textTheme.headline4,
-              textAlign: TextAlign.center,
-            ),
-            RaisedButton(
-              onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context)=>DetallesInvitacion()));
-              },
-              child: Text('Detalles'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }*/
-
-
 }
-
 
 _DetallesInivitacion(invitacion, context) {
 

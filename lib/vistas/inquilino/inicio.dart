@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ihunt/screens/login_page.dart';
 
+/*
 class Inicio extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -42,4 +43,4 @@ class InicioState extends State<Inicio>{
     );
   }
   
-}
+}*/

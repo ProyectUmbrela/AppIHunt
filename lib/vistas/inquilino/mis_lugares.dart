@@ -27,7 +27,7 @@ class Lugares extends StatefulWidget {
   static const String _title = 'Mis lugares';
 
   @override
-  _MisLugares createState()=>  _MisLugares();
+  _MisLugares createState ()=> _MisLugares();
   /*
   @override
   Widget build(BuildContext context) {
@@ -186,12 +186,12 @@ Future getHabitaciones(idUsuario) async {
 class _MisLugares extends State<Lugares> {
 
   User _currentUser;
-  String idUsuario;
+  String _idUsuario;
 
   @override
   void initState() {
     _currentUser = widget.user;
-    idUsuario = widget.idUsuario;
+    _idUsuario = widget.idUsuario;
     super.initState();
   }
 
@@ -240,21 +240,19 @@ class _MisLugares extends State<Lugares> {
 
 
   Future getProjectDetails() async {
-    //String idUsuario;
-    //String nombre;
-    //String tipo_usuario;
+
     var sharedPreferences = await SharedPreferences.getInstance();
 
-    //idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
-    //nombre = sharedPreferences.getString("nombre") ?? "Error";
-    //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("${idUsuario}");
+    print("${_idUsuario}");
+
+    final idToken = await _currentUser.getIdToken();
+    ////////////////////////////////////////////////////////////print("${idToken}");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-    var result = await getHabitaciones(idUsuario);
+    var result = await getHabitaciones(_idUsuario);
     return result;
 
   }

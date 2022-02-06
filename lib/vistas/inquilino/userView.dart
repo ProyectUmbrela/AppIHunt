@@ -73,9 +73,7 @@ class _UserState extends State<UserView> {
       _nombre = widget.user.displayName;
       _currentUser = widget.user;
       _idUsuer = widget.idUsuario.toString();
-
     });
-
   }
 
 
@@ -91,7 +89,8 @@ class _UserState extends State<UserView> {
           'token': token},
           //FieldValue.arrayUnion([token, FieldValue.serverTimestamp()])},
           SetOptions(merge: true)
-          );
+        );
+    // api updatetoken(usario, token)
   }
 
   void firebaseCloudMessaging_Listeners() {
@@ -179,17 +178,23 @@ class _UserState extends State<UserView> {
         
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => new NotificacionesInquilino(
+              user: _currentUser,
+              idUsuario: _idUsuer,
+            ),
+          ));
           /*Navigator.pushNamed(context, '/notificacionesInquilino',
           arguments: messageTitle);*/
 
-          Navigator.of(context).pushReplacement(
+          /*Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => NotificacionesInquilino(
                   user: _currentUser,
                   idUsuario: _idUsuer
               ),
             ),
-          );
+          );*/
 
         },
         child: Text("Invitaciones",

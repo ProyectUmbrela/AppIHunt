@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:convert';
+//import 'dart:convert';
 import 'package:ihunt/utils/fire_auth.dart';
 import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:ihunt/providers/api.dart';
+//import 'package:ihunt/providers/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/vistas/register.dart';
 import 'package:ihunt/vistas/inquilino/userView.dart';
@@ -15,8 +15,8 @@ import 'package:ihunt/vistas/inquilino/userView.dart';
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_core/firebase_core.dart';
 
 
 class LoginPageTest extends StatefulWidget {
@@ -186,7 +186,6 @@ class _LoginPageState extends State<LoginPageTest> {
 
   onSuccess() async{
 
-
     var sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", true);
   }
@@ -204,6 +203,8 @@ class _LoginPageState extends State<LoginPageTest> {
 
 
       if (user.emailVerified){
+        // API (email) => usuario, nombre, telefono
+
         var snapShoot = await FirebaseFirestore
             .instance
             .collection('users')
