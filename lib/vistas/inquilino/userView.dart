@@ -8,7 +8,7 @@ import 'package:ihunt/vistas/inquilino/google_maps.dart';
 //import 'package:ihunt/vistas/inquilino/Search.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
@@ -46,7 +46,7 @@ class _UserState extends State<UserView> {
 
     setData();
     AdmobHelper.initialization();
-    print("ID USUARIO DEFINIDO: ${_idUsuer}");
+
 
     super.initState();
     firebaseCloudMessaging_Listeners();
@@ -67,10 +67,15 @@ class _UserState extends State<UserView> {
   }
 
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
+    //var sharedPreferences = await SharedPreferences.getInstance();
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(widget.user.uid)
+        .get();
 
     setState(() {
-      _nombre = widget.user.displayName;
+      _nombre = snapShoot['firstName']; //widget.user.displayName;
       _currentUser = widget.user;
       _idUsuer = widget.idUsuario.toString();
     });
@@ -104,8 +109,8 @@ class _UserState extends State<UserView> {
 
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
-    final sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setBool("isLogged", false);
+    //final sharedPreferences = await SharedPreferences.getInstance();
+    //sharedPreferences.setBool("isLogged", false);
     Navigator.of(context).pushReplacementNamed('/login');
 
   }

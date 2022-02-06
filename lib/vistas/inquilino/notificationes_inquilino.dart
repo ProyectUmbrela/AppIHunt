@@ -143,7 +143,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
   Future getInvitaciones() async {
 
-    var sharedPreferences = await SharedPreferences.getInstance();
+    //var sharedPreferences = await SharedPreferences.getInstance();
 
     print("#******************************************************#");
     print("#******************************************************#");
@@ -163,7 +163,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
       child: Card(
         color: Colors.grey[800],
         child: InkWell(
-          onTap: ()=>_DetallesInivitacion(invitacion, context),
+          onTap: ()=> _DetallesInivitacion(invitacion, context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

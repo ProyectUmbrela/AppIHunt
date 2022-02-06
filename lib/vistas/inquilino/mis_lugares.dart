@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 //permissions
 //import 'package:permission_handler/permission_handler.dart';
@@ -28,25 +28,8 @@ class Lugares extends StatefulWidget {
 
   @override
   _MisLugares createState ()=> _MisLugares();
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
-    );
-  }*/
+
 }
-
-
-/*
-class _MisLugares extends StatefulWidget {
-  const MyStatefulWidget() : super();
-
-
-  @override
-  createState() => _MyStatefulWidgetState();
-}*/
 
 class Habitacion {
 
@@ -81,7 +64,6 @@ class Habitacion {
 
 
 }
-
 
 Future getHabitaciones(idUsuario) async {
 
@@ -181,8 +163,6 @@ Future getHabitaciones(idUsuario) async {
 
 }
 
-
-
 class _MisLugares extends State<Lugares> {
 
   User _currentUser;
@@ -241,13 +221,13 @@ class _MisLugares extends State<Lugares> {
 
   Future getProjectDetails() async {
 
-    var sharedPreferences = await SharedPreferences.getInstance();
+    //var sharedPreferences = await SharedPreferences.getInstance();
 
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print("${_idUsuario}");
 
-    final idToken = await _currentUser.getIdToken();
+    /////////////////////////////final idToken = await _currentUser.getIdToken();
     ////////////////////////////////////////////////////////////print("${idToken}");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");

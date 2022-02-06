@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-
 class DetallesInvitacion extends StatefulWidget {
   String contrato;
   String descripcion;
@@ -96,14 +94,11 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         rechazarRentaButton
       ],
     );
-
     // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
-
         return alert;
-
       },
     );
   }

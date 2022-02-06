@@ -30,51 +30,6 @@ class LoginPageTest extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPageTest> {
 
-  /*
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    var user = FirebaseAuth.instance.currentUser;
-
-    print("##########################################################");
-    print("${user}");
-    print("##########################################################");
-    if (FirebaseAuth.instance.currentUser != null) {
-
-      /*var snapShot = await FirebaseFirestore.instance.collection('users')
-          .doc(user.uid)
-          .get();*/
-      var snapShot;
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(user.uid)
-          .snapshots()
-          .listen((event) {
-            setState(() {
-            snapShot = event.get("tipo");
-            print("*********************************************************");
-            print(snapShot);
-            print("*********************************************************");
-        });
-      });
-
-
-      /*
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            user: user,
-          ),
-        ),
-      );*/
-
-
-    }
-
-    return firebaseApp;
-  }*/
-
-
   bool _saving = false;
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
@@ -184,11 +139,12 @@ class _LoginPageState extends State<LoginPageTest> {
     );
   }*/
 
+  /*
   onSuccess() async{
 
     var sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", true);
-  }
+  }*/
 
   Future _sendRequest(emailField, passwordField) async {
 
@@ -197,9 +153,10 @@ class _LoginPageState extends State<LoginPageTest> {
       email: emailField.text,
       password: passwordField.text,
     );
-    print("=================> ${user} <==============");
+
+    print("1 =================> ${user} <==============");
     if (user != null) {
-      print("=================> ${user.uid} <==============");
+      print("2 =================> ${user.uid} <==============");
 
 
       if (user.emailVerified){
@@ -239,7 +196,10 @@ class _LoginPageState extends State<LoginPageTest> {
       }else{
         print("*** Usuario no verificado ***");
       }
+    }else{
+      print("================> ${user}");
     }
+
 
     /*
     await showDialog(

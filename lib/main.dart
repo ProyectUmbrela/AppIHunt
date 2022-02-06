@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 //import 'dart:async';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -42,118 +41,8 @@ Future<void> main() async {
   // init the firebase system
   await Firebase.initializeApp();
 
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  //bool isLogged = (prefs.getBool('isLogged') ?? false);
-  //var tipoUser = (prefs.getString('tipoUsuario') ?? 'error');
-  //var idUsuario;
-  //var user;
-  var homeView;
-  //print("Loggeado???? => $isLogged");
-  //print("Loggeado???? => $tipoUsuario");
-
-  /*
-  FirebaseAuth.instance
-      .authStateChanges()
-      .listen((User user) {
-    if (user == null) {
-      print('User is currently signed out!');
-    } else {
-      print('User is signed in!');
-    }
-  });*/
-  
-  /*
-  FirebaseAuth.instance
-      .authStateChanges()
-      .listen((User _user) async{
-        if (_user == null) {
-          print('User is currently signed out!');
-
-        } else {
-          print('User is currently log in: ${_usuario}');
-          var snapShoot = await FirebaseFirestore
-              .instance
-              .collection('users')
-              .doc(_user.uid)
-              .get();
-          if (snapShoot != null){
-            tipoUser = snapShoot['tipo'];
-            //var _idUsuario = snapShoot['usuario'];
-
-            if (tipoUser == 'propietario'){
-              print("1 USUARIO: ######## ${snapShoot['tipo']}");
-            }
-            else if(tipoUser == 'usuario'){
-              print("2 USUARIO: ######## ${snapShoot['tipo']}");
-            }
-            else{
-              print("Tipo de usuario no conocido");
-            }
-          }
-          else{
-            print("Usuario no encontrado...");
-          }
-        }
-      });
-    */
-  /*
-      print('User is signed in!');
-      var snapShoot = await FirebaseFirestore
-          .instance
-          .collection('users')
-          .doc(_user.uid)
-          .get();
-      print("########################");
-      if (snapShoot != null){
-        var tipoUsuario = snapShoot['tipo'];
-
-        if (tipoUsuario == 'propietario'){
-          print("USUARIO: ######## ${snapShoot['tipo']}");
-          //Navigator.pushReplacementNamed(context, '/landlord');
-
-        }
-        else if (tipoUsuario == 'usuario'){
-          print("USUARIO: ######## ${snapShoot['tipo']}");
-          print("${_user}");
-
-          //Navigator.pushReplacementNamed(context, '/user');
-          /*Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => UserView(
-                  user: user,
-                  idUsuario: idUsuario
-              ),
-            ),
-          );*/
-        }
-      }else{
-        print("No encontrado...");
-
-      }
-    }
-  });*/
-
-  /*
-  print("##################### 0");
-  if ((isLogged) && (tipoUser == 'Usuario')) {
-
-    print("##################### 1");
-    //homeView = UserView();
-    print("============> ${_usuario}");
-    homeView = UserView(user:_usuario, idUsuario: 'fredy2018');
-    print("LOGEADO COMO USUARIO");
-
-  } else if ((isLogged) && (tipoUser == 'Propietario')) {
-    print("##################### 2");
-    //print("LOGEADO COMO PROPIETARIO");
-    homeView = Landlord();
-  } else {
-    print("##################### 3");
-    homeView = MainScreen();
-  }*/
-
-  runApp(IHuntApp(homeView));
+  runApp(IHuntApp());
 }
 
 
@@ -170,9 +59,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  //var user;
-
-
   @override
   void initState() {
     super.initState();
@@ -187,33 +73,11 @@ class _MyHomePageState extends State<MyHomePage> {
         )
     );
   }
-
 }
 
 class IHuntApp extends StatelessWidget {
 
-
-
-  IHuntApp(this.homeView);
-  var homeView;
-    // This widget is the root of your application.
-  /*
-  Future<void> getDetalles() async{
-    final result = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .get().then((value) {
-          if(value['tipo'] == 'usuario'){
-            print(value);
-          }
-        }
-    );
-
-  }*/
-
-
-  Future getDetalles()async{
+  Future getUsuario()async{
 
     var dataUser = await FirebaseFirestore
         .instance
@@ -224,10 +88,10 @@ class IHuntApp extends StatelessWidget {
     return dataUser;
   }
 
-  Widget projectWidget() {
+  Widget getViewWidget() {
 
     return FutureBuilder(
-        future: getDetalles(),
+        future: getUsuario(),
         builder: (context, snapshot) {
           if(!snapshot.hasData){
             // Esperando la respuesta de la API
@@ -247,29 +111,29 @@ class IHuntApp extends StatelessWidget {
             print("#######################################################");
             print("#######################################################");
             print("${snapshot.data['tipo']}");
+            print("${snapshot.data['usuario']}");
             print("#######################################################");
             print("#######################################################");
-            return UserView(
-              user: FirebaseAuth.instance.currentUser,
-              idUsuario: 'fredy2018',);
-            //return Center();
+
+            if (snapshot.data['tipo'] == 'usuario'){
+              return UserView(
+                user: FirebaseAuth.instance.currentUser,
+                idUsuario: snapshot.data['usuario'],);
+            }else{
+              return Landlord();
+            }
           }
           else{
-
-            return UserView(
-              user: FirebaseAuth.instance.currentUser,
-              idUsuario: 'fredy2018',);
+            return MainScreen();
           }
         }
     );
-
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'IHunt',
-      //home: homeView,
+      title: 'Renti',
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, userSnapshot){
@@ -280,20 +144,12 @@ class IHuntApp extends StatelessWidget {
           }
           final user = userSnapshot.data;
           if (user != null && FirebaseAuth.instance.currentUser.emailVerified == true){
-            /*var dataUser = FirebaseFirestore
-                .instance
-                .collection('users')
-                .doc(FirebaseAuth.instance.currentUser.uid)
-                .get();*/
-            return projectWidget();
-            /*return UserView(
-              user: FirebaseAuth.instance.currentUser,
-              idUsuario: 'fredy2018',);*/
+            return getViewWidget();
           }
           else {
             print("user is not logged in");
             return MainScreen();
-        }
+          }
         },
       ),
       localizationsDelegates: [

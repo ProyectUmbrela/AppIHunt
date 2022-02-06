@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:flutter/material.dart';
+
 
 class FireAuth {
+
   // For registering a new user
   static Future<User> registerUsingEmailPassword({
     String usuario,
@@ -32,25 +35,6 @@ class FireAuth {
       });
 
 
-      /*
-      if (tipo == 'usuario'){
-        await FirebaseFirestore.instance.collection('usuario')
-            .doc(user.uid).set({
-          'firstName': name,
-          'tipo': tipo
-        });
-      }
-
-      else if (tipo == 'propietario'){
-        await FirebaseFirestore.instance.collection('propietario')
-            .doc(user.uid).set({
-          'firstName': name,
-          'tipo': tipo
-        });
-      }*/
-
-
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -63,6 +47,7 @@ class FireAuth {
 
     return user;
   }
+
 
   // For signing in an user (have already registered)
   static Future<User> signInUsingEmailPassword({
@@ -78,14 +63,15 @@ class FireAuth {
         password: password,
       );
       user = userCredential.user;
+
     } on FirebaseAuthException catch (e) {
+      print("============> ${e.code}");
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided.');
       }
     }
-
     return user;
   }
 
@@ -94,7 +80,7 @@ class FireAuth {
 
     await user.reload();
     var refreshedUser = auth.currentUser;
-
     return refreshedUser;
+
   }
 }
