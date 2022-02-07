@@ -27,12 +27,14 @@ class FireAuth {
       await user.reload();
       user = auth.currentUser;
 
-      await FirebaseFirestore.instance.collection('users')
-          .doc(user.uid).set({
-        'usuario': usuario,
-        'firstName': name,
-        'tipo': tipo
-      });
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({
+            'usuario': usuario,
+            'firstName': name,
+            'tipo': tipo
+          });
 
 
     } on FirebaseAuthException catch (e) {
