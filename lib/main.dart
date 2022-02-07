@@ -142,8 +142,9 @@ class IHuntApp extends StatelessWidget {
                 child: CircularProgressIndicator()
             );
           }
-          final user = userSnapshot.data;
-          if (user != null && FirebaseAuth.instance.currentUser.emailVerified == true){
+          //final user = userSnapshot.data;
+          //bool isVerified = FirebaseAuth.instance.currentUser.emailVerified;
+          if (userSnapshot.data != null && FirebaseAuth.instance.currentUser.emailVerified){
             return getViewWidget();
           }
           else {

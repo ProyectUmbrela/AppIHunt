@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/google_maps.dart';
-//import 'package:ihunt/vistas/inquilino/Search.dart';
 import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
@@ -44,11 +43,10 @@ class _UserState extends State<UserView> {
   @override
   void initState() {
 
-    setData();
     AdmobHelper.initialization();
-
-
     super.initState();
+    setData();
+
     firebaseCloudMessaging_Listeners();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
@@ -67,7 +65,7 @@ class _UserState extends State<UserView> {
   }
 
   void setData() async{
-    //var sharedPreferences = await SharedPreferences.getInstance();
+
     var snapShoot = await FirebaseFirestore
         .instance
         .collection('users')
@@ -86,9 +84,12 @@ class _UserState extends State<UserView> {
   Future<void> saveTokenToDatabase(String token) async {
 
     // upsert, insert if not exists or add anew one if already exists
+
+    var _current = await FirebaseAuth.instance.currentUser.uid;
+    print("CALLING: ${_current}");
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(_currentUser.uid)
+        .doc(_current)
         .set({
           'updatedOn':FieldValue.serverTimestamp(),
           'token': token},
@@ -109,10 +110,7 @@ class _UserState extends State<UserView> {
 
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
-    //final sharedPreferences = await SharedPreferences.getInstance();
-    //sharedPreferences.setBool("isLogged", false);
     Navigator.of(context).pushReplacementNamed('/login');
-
   }
 
   @override
@@ -132,24 +130,6 @@ class _UserState extends State<UserView> {
                idUsuario: _idUsuer,
              ),
            ));
-
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Lugares(),
-                  settings: RouteSettings(
-                    arguments: _idUsuer
-
-              )));*/
-
-           /*Navigator.of(context).pushReplacement(
-             MaterialPageRoute(
-               builder: (context) => Lugares(
-                   user: _currentUser,
-                   idUsuario: _idUsuer
-               ),
-             ),
-           );*/
         },
         child: Text("Mis lugares",
             textAlign: TextAlign.center)
@@ -189,18 +169,6 @@ class _UserState extends State<UserView> {
               idUsuario: _idUsuer,
             ),
           ));
-          /*Navigator.pushNamed(context, '/notificacionesInquilino',
-          arguments: messageTitle);*/
-
-          /*Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => NotificacionesInquilino(
-                  user: _currentUser,
-                  idUsuario: _idUsuer
-              ),
-            ),
-          );*/
-
         },
         child: Text("Invitaciones",
             textAlign: TextAlign.center
@@ -294,6 +262,5 @@ class _UserState extends State<UserView> {
       )
     );
   }
-
 }
 

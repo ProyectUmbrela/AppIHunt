@@ -1,9 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 
 
 class FireAuth {
+
+  //static bool wrongEmail;
+  //static bool wrongPassword;
+
 
   // For registering a new user
   static Future<User> registerUsingEmailPassword({
@@ -56,6 +61,7 @@ class FireAuth {
     String email,
     String password,
   }) async {
+
     FirebaseAuth auth = FirebaseAuth.instance;
     var user;
 
@@ -67,11 +73,14 @@ class FireAuth {
       user = userCredential.user;
 
     } on FirebaseAuthException catch (e) {
-      print("============> ${e.code}");
-      if (e.code == 'user-not-found') {
+      print("0 ============> ${e.code}");
+      if (e.code == 'user-not-fund') {
         print('No user found for that email.');
+        //wrongEmail = true;
+
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided.');
+        //wrongPassword = true;
       }
     }
     return user;

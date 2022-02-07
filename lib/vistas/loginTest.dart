@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
-//import 'dart:convert';
 import 'package:ihunt/utils/fire_auth.dart';
+import 'package:ihunt/vistas/mainscreen.dart';
 import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 //import 'package:ihunt/providers/api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/vistas/register.dart';
 import 'package:ihunt/vistas/inquilino/userView.dart';
 
+import 'package:ihunt/vistas/propietario/landlordView.dart';
 
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPageTest> {
     );
   }
 
-  /*
+
   void _showDialog(seconds, message) {
     showDialog(
       context: context,
@@ -137,18 +137,18 @@ class _LoginPageState extends State<LoginPageTest> {
         );
       },
     );
-  }*/
+  }
 
   /*
   onSuccess() async{
-
     var sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setBool("isLogged", true);
   }*/
 
   Future _sendRequest(emailField, passwordField) async {
 
-    var user = await FireAuth
+
+   var user = await FireAuth
         .signInUsingEmailPassword(
       email: emailField.text,
       password: passwordField.text,
@@ -157,7 +157,6 @@ class _LoginPageState extends State<LoginPageTest> {
     print("1 =================> ${user} <==============");
     if (user != null) {
       print("2 =================> ${user.uid} <==============");
-
 
       if (user.emailVerified){
         // API (email) => usuario, nombre, telefono
@@ -169,18 +168,21 @@ class _LoginPageState extends State<LoginPageTest> {
             .get();
 
         if (snapShoot != null){
-          /*final idToken = await user.getIdToken();
-          print("###: ${idToken}");*/
-          var tipoUsuario = snapShoot['tipo'];
+          /*final idToken = await user.getIdToken();*/
+
           var idUsuario = snapShoot['usuario'];
-          if (tipoUsuario == 'propietario'){
+
+          if (snapShoot['tipo'] == 'propietario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
             //Navigator.pushReplacementNamed(context, '/landlord');
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => Landlord(),
+              ),
+            );
           }
-
-          else if (tipoUsuario == 'usuario'){
+          else if (snapShoot['tipo'] == 'usuario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
-            //Navigator.pushReplacementNamed(context, '/user');
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => UserView(
@@ -189,37 +191,25 @@ class _LoginPageState extends State<LoginPageTest> {
                 ),
               ),
             );
-
-
+          }
+          else{
+            //print("usuario desconocido");
+            setState(() => _saving = false);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => MainScreen(),
+              ),
+            );
           }
         }
       }else{
-        print("*** Usuario no verificado ***");
+        _showDialog(2, "Tu cuenta aún no ha sido verificada. Revisa tu correo para confirmar");
+        setState(() => _saving = false);
       }
     }else{
-      print("================> ${user}");
+      _showDialog(2, "Usuario o contraseña incorrectos");
+      setState(() => _saving = false);
     }
-
-
-    /*
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: FutureBuilder(
-          future: _initializeFirebase(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              response = snapshot.data;
-              Navigator.pop(context);
-            }
-            return CircularProgressIndicator();
-          },
-        ),
-      ),
-    );*/
-
-
   }
 
   /*
@@ -314,10 +304,10 @@ class _LoginPageState extends State<LoginPageTest> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        //onPressed: () => _sendRequest(myControllerEmail, myControllerPassword),
-        onPressed: (){
+        onPressed: () {
+          setState(() => _saving = true);
           _sendRequest(myControllerEmail, myControllerPassword);
-          //setState(() => _loading = true);
+          //
         },
         child: Text("Ingresar",
             textAlign: TextAlign.center,
@@ -390,6 +380,5 @@ class _LoginPageState extends State<LoginPageTest> {
           inAsyncCall: _saving
       ),
     );
-
   }
 }
