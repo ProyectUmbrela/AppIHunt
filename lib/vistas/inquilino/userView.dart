@@ -86,7 +86,7 @@ class _UserState extends State<UserView> {
     // upsert, insert if not exists or add anew one if already exists
 
     var _current = await FirebaseAuth.instance.currentUser.uid;
-    print("CALLING: ${_current}");
+
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_current)

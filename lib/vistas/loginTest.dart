@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPageTest> {
               width: 10,
             ),
             Text(
-              'Registarme',
+              'Registrarme',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,

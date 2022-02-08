@@ -61,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget recuperarPass(){
     return InkWell(
       onTap: ()=> {},
@@ -107,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 10,
             ),
             Text(
-              'Registarme',
+              'Registrarme',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
@@ -118,8 +117,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 
   void _showDialog(seconds, message) {
     showDialog(

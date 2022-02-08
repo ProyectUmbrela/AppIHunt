@@ -4,6 +4,7 @@
 //import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
 class Api {
 
   String _url = 'https://appiuserstest.herokuapp.com/ihunt';
@@ -25,7 +26,9 @@ class Api {
 
   String _invitations = '/listarInvitacionesPropietario';
 
-  Map<String, String> _headers = {"Content-type": "application/json"};
+  Map<String, String> _headers = {
+    "Content-type": "application/json"
+  };
 
   Future<dynamic> registerPost(data) async {
     var response = await http.post(Uri.parse(this._url + _register),
@@ -40,7 +43,8 @@ class Api {
     return response;
   }
 
-  Future<dynamic> GetHabitaciones(data) async {
+  Future<dynamic> GetHabitaciones(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
 
     var response = await http.post(Uri.parse(this._url + this._habitacionesRentadas),
         body: data, headers: this._headers);
@@ -48,8 +52,8 @@ class Api {
     return response;
   }
 
-  Future<dynamic> GetInvitacionesRecientes(data) async {
-
+  Future<dynamic> GetInvitacionesUsuarioView(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._listarInvitaciones),
         body: data, headers: this._headers);
     return response;

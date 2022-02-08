@@ -85,11 +85,13 @@ Future getHabitaciones(idUsuario) async {
     'usuario': idUsuario
   });
 
-  var response = await _api.GetHabitaciones(body);
+  String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
+  var response = await _api.GetHabitaciones(body, tokenAuth);
+
   List<Habitacion> habitaciones = [];
   int statusCode = response.statusCode;
   var resp = json.decode(response.body);
-
+  print("######################################################: ${statusCode}");
   if (statusCode == 201) {
     //print("###################################");
     List actual = resp['habitacion_rentada'];

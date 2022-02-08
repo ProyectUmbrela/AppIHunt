@@ -92,16 +92,18 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     final body = jsonEncode({
       'usuario': _idUsuario
     });
-    //print("################## usuario : ${idUsuario}");
-    var response = await _api.GetInvitacionesRecientes(body);
+
+
+    String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
+
+    var response = await _api.GetInvitacionesUsuarioView(body, tokenAuth);
 
     List<Invitacion> invitaciones = [];
     int statusCode = response.statusCode;
     var resp = json.decode(response.body);
 
-    //print("==================> ${statusCode}");
-    if (statusCode == 201) {
 
+    if (statusCode == 201) {
       List invitacion = resp['invitaciones'];
       //print("2 ==================> ${invitacion.length}");
       if (invitacion.length > 0){
