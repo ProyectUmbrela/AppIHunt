@@ -1,4 +1,4 @@
-# ihunt
+# RentiApp
 
 A new Flutter project.
 
