@@ -19,10 +19,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class UserView extends StatefulWidget {
 
-  final User user;
+  /*final User user;
   final String idUsuario;
-
-  const UserView({this.user, this.idUsuario});
+  const UserView({this.user, this.idUsuario});*/
 
   @override
   _UserState createState() => _UserState();
@@ -32,12 +31,12 @@ class UserView extends StatefulWidget {
 class _UserState extends State<UserView> {
 
   User _currentUser;
-  String _idUsuer;
+  String _idUsuario;
   String _nombre;
+
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String messageTitle = "Empty!";
-  //String notificationAlert = "Alert";
   var tokenBy = '';
 
   @override
@@ -66,26 +65,24 @@ class _UserState extends State<UserView> {
 
   void setData() async{
 
+    _currentUser = FirebaseAuth.instance.currentUser;
+
     var snapShoot = await FirebaseFirestore
         .instance
         .collection('users')
-        .doc(widget.user.uid)
+        .doc(_currentUser.uid)
         .get();
 
     setState(() {
-      _nombre = snapShoot['firstName']; //widget.user.displayName;
-      _currentUser = widget.user;
-      _idUsuer = widget.idUsuario.toString();
+      _nombre = snapShoot['firstName'];
+      _idUsuario = snapShoot['usuario'];
     });
   }
-
-
 
   Future<void> saveTokenToDatabase(String token) async {
 
     // upsert, insert if not exists or add anew one if already exists
-
-    var _current = await FirebaseAuth.instance.currentUser.uid;
+    var _current = await _currentUser.uid;
 
     await FirebaseFirestore.instance
         .collection('users')
@@ -93,7 +90,6 @@ class _UserState extends State<UserView> {
         .set({
           'updatedOn':FieldValue.serverTimestamp(),
           'token': token},
-          //FieldValue.arrayUnion([token, FieldValue.serverTimestamp()])},
           SetOptions(merge: true)
         );
     // api updatetoken(usario, token)
@@ -104,7 +100,6 @@ class _UserState extends State<UserView> {
       await saveTokenToDatabase(token);
       tokenBy = token;
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
-
     });
   }
 
@@ -123,13 +118,9 @@ class _UserState extends State<UserView> {
       child: MaterialButton(
         minWidth: (MediaQuery.of(context).size.width/3.3),
          onPressed: () {
-
            Navigator.of(context).push(MaterialPageRoute(
-             builder: (_) => new Lugares(
-               user: _currentUser,
-               idUsuario: _idUsuer,
-             ),
-           ));
+             builder: (_) => new Lugares()));
+
         },
         child: Text("Mis lugares",
             textAlign: TextAlign.center)
@@ -164,11 +155,7 @@ class _UserState extends State<UserView> {
         minWidth: (MediaQuery.of(context).size.width/3.3),
         onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => new NotificacionesInquilino(
-              user: _currentUser,
-              idUsuario: _idUsuer,
-            ),
-          ));
+            builder: (_) => new NotificacionesInquilino()));
         },
         child: Text("Invitaciones",
             textAlign: TextAlign.center

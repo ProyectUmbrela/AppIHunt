@@ -125,7 +125,6 @@ class _LoginPageState extends State<LoginPageTest> {
     );
   }
 
-
   void _showDialog(seconds, message) {
     showDialog(
       context: context,
@@ -183,14 +182,17 @@ class _LoginPageState extends State<LoginPageTest> {
           }
           else if (snapShoot['tipo'] == 'usuario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
-            Navigator.of(context).pushReplacement(
+            /*Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => UserView(
                   user: user,
                   idUsuario: idUsuario
                 ),
               ),
-            );
+            );*/
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => UserView(),),);
           }
           else{
             //print("usuario desconocido");

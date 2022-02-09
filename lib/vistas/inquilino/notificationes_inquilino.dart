@@ -1,19 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
 
 class NotificacionesInquilino extends StatefulWidget{
-
-  final User user;
-  final String idUsuario;
-
-  const NotificacionesInquilino({this.user, this.idUsuario});
 
   @override
   State<StatefulWidget> createState() {
@@ -82,10 +75,25 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
   @override
   void initState() {
-    _currentUser = widget.user;
-    _idUsuario = widget.idUsuario;
+    setData();
     super.initState();
   }
+
+  void setData() async{
+
+    _currentUser = FirebaseAuth.instance.currentUser;
+
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
+
+    setState(() {
+      _idUsuario = snapShoot['usuario'];
+    });
+  }
+
 
   Future getInvitacionesRecientes() async {
     Api _api = Api();
@@ -94,7 +102,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     });
 
 
-    String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
+    String tokenAuth = await _currentUser.getIdToken();
 
     var response = await _api.GetInvitacionesUsuarioView(body, tokenAuth);
 
@@ -110,10 +118,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
         //print("2 ==================> ${invitacion.length}");
         for (int i=0; i < invitacion.length; i++){
           var current = invitacion[i];
-
-          //print("################################################");
-          //print(current);
-          //print("################################################");
 
           invitaciones.add(Invitacion(
               contrato: current['contrato'].toString(),
@@ -144,8 +148,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   }
 
   Future getInvitaciones() async {
-
-    //var sharedPreferences = await SharedPreferences.getInstance();
 
     print("#******************************************************#");
     print("#******************************************************#");

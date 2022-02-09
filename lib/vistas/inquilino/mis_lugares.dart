@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
 import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
 
 //permissions
 //import 'package:permission_handler/permission_handler.dart';
@@ -17,12 +16,6 @@ import 'dart:async';
 
 /// This is the main application widget.
 class Lugares extends StatefulWidget {
-
-  final User user;
-  final String idUsuario;
-
-  const Lugares({this.user, this.idUsuario});
-
 
   static const String _title = 'Mis lugares';
 
@@ -65,7 +58,7 @@ class Habitacion {
 
 }
 
-Future getHabitaciones(idUsuario) async {
+Future getListaHabitaciones(idUsuario, tokenAuth) async {
 
   Map<int, String> meses = {
                             1:"Enero",
@@ -85,7 +78,7 @@ Future getHabitaciones(idUsuario) async {
     'usuario': idUsuario
   });
 
-  String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
+
   var response = await _api.GetHabitaciones(body, tokenAuth);
 
   List<Habitacion> habitaciones = [];
@@ -161,8 +154,9 @@ Future getHabitaciones(idUsuario) async {
     }
     return habitaciones;
   }
-
-
+  else{
+    return habitaciones;
+  }
 }
 
 class _MisLugares extends State<Lugares> {
@@ -172,9 +166,24 @@ class _MisLugares extends State<Lugares> {
 
   @override
   void initState() {
-    _currentUser = widget.user;
-    _idUsuario = widget.idUsuario;
     super.initState();
+    setData();
+  }
+
+  void setData() async{
+
+    _currentUser = FirebaseAuth.instance.currentUser;
+    /*
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
+
+    setState(() {
+      _idUsuario = snapShoot['usuario'];
+    });*/
+
   }
 
   Widget habitacionDetalles(habitacion) {
@@ -223,18 +232,24 @@ class _MisLugares extends State<Lugares> {
 
   Future getProjectDetails() async {
 
-    //var sharedPreferences = await SharedPreferences.getInstance();
-
-    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("${_idUsuario}");
-
-    /////////////////////////////final idToken = await _currentUser.getIdToken();
-    ////////////////////////////////////////////////////////////print("${idToken}");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-    var result = await getHabitaciones(_idUsuario);
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
+
+    var _idUsuarioLive = snapShoot['usuario'];
+    print("${_idUsuarioLive}");
+
+    String tokenAuth = await _currentUser.getIdToken();
+
+    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+    var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
     return result;
 
   }

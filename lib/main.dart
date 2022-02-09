@@ -15,7 +15,7 @@ import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
 //import 'package:ihunt/vistas/notificaciones.dart';
 import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
 import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
-//import 'package:ihunt/vistas/inquilino/inicio.dart';
+
 
 //import 'package:flutter/material.dart';
 
@@ -116,9 +116,10 @@ class IHuntApp extends StatelessWidget {
             print("#######################################################");
 
             if (snapshot.data['tipo'] == 'usuario'){
-              return UserView(
+              /*return UserView(
                 user: FirebaseAuth.instance.currentUser,
-                idUsuario: snapshot.data['usuario'],);
+                idUsuario: snapshot.data['usuario'],);*/
+              return UserView();
             }else{
               return Landlord();
             }
