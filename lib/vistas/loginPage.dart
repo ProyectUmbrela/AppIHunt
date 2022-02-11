@@ -19,8 +19,8 @@ import 'package:ihunt/utils/widgets.dart';
 //import 'package:firebase_core/firebase_core.dart';
 
 
-class LoginPageTest extends StatefulWidget {
-  LoginPageTest({Key key, this.title}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -28,7 +28,7 @@ class LoginPageTest extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPageTest> {
+class _LoginPageState extends State<LoginPage> {
 
   bool _saving = false;
   final myControllerEmail = TextEditingController();
@@ -167,35 +167,25 @@ class _LoginPageState extends State<LoginPageTest> {
             .get();
 
         if (snapShoot != null){
-          /*final idToken = await user.getIdToken();*/
 
-          var idUsuario = snapShoot['usuario'];
-
-          if (snapShoot['tipo'] == 'propietario'){
+          if (snapShoot['tipo'] == 'Propietario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
-            //Navigator.pushReplacementNamed(context, '/landlord');
+
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => Landlord(),
               ),
             );
           }
-          else if (snapShoot['tipo'] == 'usuario'){
+          else if (snapShoot['tipo'] == 'Usuario'){
             print("USUARIO: ######## ${snapShoot['tipo']}");
-            /*Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => UserView(
-                  user: user,
-                  idUsuario: idUsuario
-                ),
-              ),
-            );*/
+
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => UserView(),),);
+                builder: (context) => UserView()));
           }
           else{
-            //print("usuario desconocido");
+
             setState(() => _saving = false);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -213,76 +203,6 @@ class _LoginPageState extends State<LoginPageTest> {
       setState(() => _saving = false);
     }
   }
-
-  /*
-  Future _sendRequest(emailField, passwordField) async {
-
-    Api _api = Api();
-
-    /*print("====================");
-    print(emailField.text);
-    print(passwordField.text);
-    print("====================");*/
-
-    final body = jsonEncode({
-          'usuario': emailField.text,
-          'contrasena': passwordField.text
-        });
-
-    var response;
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: FutureBuilder(
-          future: _initializeFirebase(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              response = snapshot.data;
-              Navigator.pop(context);
-            }
-            return CircularProgressIndicator();
-            /*return Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    //Text('Cargando...'),
-                  ]
-              ),
-            );*/
-          },
-        ),
-      ),
-    );
-
-    int statusCode = response.statusCode;
-    var resp = json.decode(response.body);
-    var sharedPreferences = await SharedPreferences.getInstance();
-
-    if (statusCode == 201) {
-      _saving = true;
-      sharedPreferences.setBool("isLogged", true);
-      sharedPreferences.setString("nombre", resp['nombre']);
-      sharedPreferences.setString("idusuario", resp['idusuario']);
-      sharedPreferences.setString("Tipo", resp['Tipo']);
-
-      if (resp['Tipo'] == 'Propietario') {
-        Navigator.pushReplacementNamed(context, '/landlord');
-      }
-      if (resp['Tipo'] == 'Usuario') {
-        Navigator.pushReplacementNamed(context, '/user');
-      }
-
-    } else {
-      _saving = false;
-      sharedPreferences.setBool("isLogged", false);
-      _showDialog(2, "El usuario o contraseña son incorrectos");
-    }
-
-  }*/
 
 
   @override

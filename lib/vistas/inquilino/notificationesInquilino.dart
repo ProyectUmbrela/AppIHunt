@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/api.dart';
-import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
+import 'package:ihunt/vistas/inquilino/notificaciones.dart';
 
 class NotificacionesInquilino extends StatefulWidget{
 
