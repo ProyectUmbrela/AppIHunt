@@ -10,7 +10,7 @@ class Api {
   String _url = 'https://appiuserstest.herokuapp.com/ihunt';
   //String _url = 'https://prdapp.herokuapp.com/ihunt';
 
-  String _register = "/register";
+  String _register = '/register';
   String _login = '/login';
   String _habitacionesRentadas = '/historialInquilino';
   String _listarInvitaciones = '/listarInvitacionesUsuario';
@@ -38,7 +38,8 @@ class Api {
   }
 
   Future<dynamic> loginPost(data) async {
-    var response = await http.post(Uri.parse(this._url + _login), body: data, headers: this._headers);
+    var response = await http.post(Uri.parse(this._url + _login), body: data,
+        headers: this._headers);
 
     return response;
   }

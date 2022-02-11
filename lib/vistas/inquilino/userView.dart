@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:ihunt/vistas/inquilino/google_maps.dart';
-import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
-import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+import 'package:ihunt/vistas/inquilino/googleMaps.dart';
+import 'package:ihunt/vistas/inquilino/misLugares.dart';
+import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
 
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -74,7 +74,7 @@ class _UserState extends State<UserView> {
         .get();
 
     setState(() {
-      _nombre = snapShoot['firstName'];
+      _nombre = snapShoot['nombre'];
       _idUsuario = snapShoot['usuario'];
     });
   }

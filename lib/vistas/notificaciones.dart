@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
+//import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
 
 /*
 class Notificaciones extends StatefulWidget{

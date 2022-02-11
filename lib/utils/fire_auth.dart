@@ -36,8 +36,8 @@ class FireAuth {
           .collection('users')
           .doc(user.uid)
           .set({
-            'usuario': usuario,
-            'firstName': name,
+            'correo': usuario,
+            'nombre': name,
             'tipo': tipo
           });
 

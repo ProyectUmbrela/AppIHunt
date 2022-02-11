@@ -2,22 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
-//import 'package:shared_preferences/shared_preferences.dart';
-//import 'dart:async';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 // Vistas de inquilino
 import 'package:ihunt/vistas/inquilino/userView.dart'; // principal usuario
-import 'package:ihunt/vistas/inquilino/mis_lugares.dart';
-import 'package:ihunt/vistas/inquilino/google_maps.dart';
-import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-//import 'package:ihunt/vistas/notificaciones.dart';
-import 'package:ihunt/vistas/inquilino/notificationes_inquilino.dart';
-import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
-
-
-//import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/inquilino/misLugares.dart';
+import 'package:ihunt/vistas/inquilino/googleMaps.dart';
+import 'package:ihunt/vistas/inquilino/detallesHabitaciones.dart';
+import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
+import 'package:ihunt/vistas/inquilino/notificaciones.dart';
 
 
 // VISTA PROPIETARIO
@@ -28,11 +21,10 @@ import 'vistas/propietario/registerRoom.dart';
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
 import 'vistas/register.dart';
-//import 'vistas/login.dart';
 
 
 
-import 'package:ihunt/vistas/loginTest.dart';
+import 'package:ihunt/vistas/loginPage.dart';
 
 
 Future<void> main() async {
@@ -84,7 +76,7 @@ class IHuntApp extends StatelessWidget {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get();
-
+    //print("==============> ${FirebaseAuth.instance.currentUser.uid}");
     return dataUser;
   }
 
@@ -107,18 +99,17 @@ class IHuntApp extends StatelessWidget {
             );
           }
           else if(snapshot.hasData) {
+
             print("ELSE CONDITIION");
             print("#######################################################");
             print("#######################################################");
+
             print("${snapshot.data['tipo']}");
             print("${snapshot.data['usuario']}");
             print("#######################################################");
             print("#######################################################");
 
-            if (snapshot.data['tipo'] == 'usuario'){
-              /*return UserView(
-                user: FirebaseAuth.instance.currentUser,
-                idUsuario: snapshot.data['usuario'],);*/
+            if (snapshot.data['tipo'] == 'Usuario'){
               return UserView();
             }else{
               return Landlord();
@@ -143,8 +134,7 @@ class IHuntApp extends StatelessWidget {
                 child: CircularProgressIndicator()
             );
           }
-          //final user = userSnapshot.data;
-          //bool isVerified = FirebaseAuth.instance.currentUser.emailVerified;
+
           if (userSnapshot.data != null && FirebaseAuth.instance.currentUser.emailVerified){
             return getViewWidget();
           }
@@ -173,8 +163,7 @@ class IHuntApp extends StatelessWidget {
       ],
       locale: const Locale('es'),
       routes: {
-        //'/notificaciones': (context) => Notificaciones(),
-        '/login': (context) => LoginPageTest(),//LoginPage(),
+        '/login': (context) => LoginPage(),
         //'/Init': (context) => Inicio(),
         '/user': (context) => UserView(),
         '/landlord': (context) => Landlord(),

@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
+import 'package:ihunt/vistas/inquilino/detallesHabitaciones.dart';
 
 //permissions
 //import 'package:permission_handler/permission_handler.dart';

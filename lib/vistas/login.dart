@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,9 @@ import 'package:ihunt/vistas/register.dart';
 //IMPORTAR FUNCIONES DE CARPETA utils
 import 'package:ihunt/utils/widgets.dart';
 
+ */
+
+/*
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
 
@@ -308,3 +312,4 @@ class _LoginPageState extends State<LoginPage> {
 
   }
 }
+*/
