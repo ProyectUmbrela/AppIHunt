@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ihunt/providers/api.dart';
 import 'registerTenants.dart';
@@ -35,20 +36,27 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
 
   Future getInvitations(id) async{
     Api _api = Api();
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    var _id = snapShoot['usuario'];
+    String tokenAuth = await currentUser.getIdToken();
 
     final msg = jsonEncode({
-      "usuario": id
+      "usuario": _id
     });
 
-    var response = await _api.GetInvitations(msg);
+    var response = await _api.GetInvitations(msg, tokenAuth);
     var data = jsonDecode(response.body);
+    print(data);
     List<Invitation> _invitations = [];
 
     if (response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data["invitaciones"].forEach((invitation) {
-        print(invitation['telefono']);
         _invitations.add(Invitation(
             idusuario: invitation['idusuario'],
             idhabitacion: invitation['idhabitacion'],
@@ -76,14 +84,12 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
   }
 
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id = sharedPreferences.getString("idusuario") ?? "Error";
+      currentUser = FirebaseAuth.instance.currentUser;
     });
   }
-
   // VARIABLES DE SESION
+  User currentUser;
   String id;
   String nombre;
 

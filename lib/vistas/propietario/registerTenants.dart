@@ -8,7 +8,8 @@ import 'package:ihunt/utils/widgets.dart';
 import 'package:date_field/date_field.dart';
 import 'package:intl/intl.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ihunt/utils/validators.dart';
 
@@ -26,16 +27,14 @@ class RegisterTenant extends StatefulWidget {
 
 class _RegisterTenantState extends State<RegisterTenant> {
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
-
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id_prop = sharedPreferences.getString("idusuario") ?? "Error";
+      currentUser = FirebaseAuth.instance.currentUser;
       //list_rooms = getRooms(id_prop) as List<String>;
     });
   }
 
   // VARIABLES DE SESION
+  User currentUser;
   String id_prop;
   String nombre;
   List<String> list_rooms = [''];
@@ -67,11 +66,19 @@ class _RegisterTenantState extends State<RegisterTenant> {
   Future getRooms(id) async{
     Api _api = Api();
 
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    var _id = snapShoot['usuario'];
+    String tokenAuth = await currentUser.getIdToken();
+
     final msg = jsonEncode({
-      "usuario": id
+      "usuario": _id
     });
 
-    var response = await _api.GetRooms(msg);
+    var response = await _api.GetRooms(msg, tokenAuth);
     var data = jsonDecode(response.body);
     List<String> _rooms = [];
 
@@ -312,10 +319,18 @@ class _RegisterTenantState extends State<RegisterTenant> {
       if (form.validate()) {
         form.save();
 
+        var snapShoot = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        var _id = snapShoot['usuario'];
+        String tokenAuth = await currentUser.getIdToken();
+
         final msg = jsonEncode({
           "idusuario": iduserCtrl.text,
           "idhabitacion": _room,
-          "idpropietario": id_prop,
+          "idpropietario": _id,
           "contrato": _contrato=='Sí'? "1":"0",
           "meses": int.parse(monthsCtrl.text), // conversion a entero
           "fecha_inicio": _startdate.split(" ")[0],
@@ -327,7 +342,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print(msg);
         Api _api = Api();
 
-        var response = await _api.RegisterTenantPost(msg);
+        var response = await _api.RegisterTenantPost(msg, tokenAuth);
         Map data = jsonDecode(response.body);
 
         print("################# ESTATUS CODE REGISTRO INQUILINO: ");

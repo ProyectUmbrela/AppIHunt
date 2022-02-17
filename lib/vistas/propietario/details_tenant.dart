@@ -232,38 +232,6 @@ class _DetailTenantState extends State<DetailTenant> {
       Navigator.pushReplacementNamed(context, '/landlord');
     };
 
-    Future deleteRoom(id, idhabitacion) async{
-
-      Api _api = Api();
-
-      final msg = jsonEncode({
-        "usuario": id,
-        "idhabitacion": idhabitacion
-      });
-
-      var response = await _api.DeleteRoomPost(msg);
-      var data = jsonDecode(response.body);
-
-      if (response.statusCode == 201) {
-        // CREAR UN REFRESH EN LA PAGINA
-        debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE");
-        Navigator.push(context, new MaterialPageRoute(
-            builder: (context) => new Landlord())
-        );
-        //Navigator.of(context).pop();
-      } else {
-
-        if (Platform.isAndroid) {
-          debugPrint("################## ERROR ELIMINAR INQU CORRECTAMENTE");
-          //_materialAlertDialog(context, data['message'], 'Notificación');
-          print(response.statusCode);
-        } else if (Platform.isIOS) {
-          //_cupertinoDialog(context, data['message'], 'Notificación');
-        }
-
-      }
-    }
-
     Future deleteTenant(id, idhabitacion, idinquilino) async{
 
       Api _api = Api();
