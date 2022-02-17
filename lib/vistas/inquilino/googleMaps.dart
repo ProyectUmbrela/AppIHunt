@@ -14,7 +14,7 @@ import 'package:geocoder/geocoder.dart';
 
 // to get the current location
 //import 'package:geocoding/geocoding.dart';
-//import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class MyMaps extends StatefulWidget {
@@ -42,7 +42,6 @@ class infoHabitacion{
 }
 
 
-
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
@@ -62,6 +61,18 @@ class MapsPage extends State<MyMaps> {
         'assets/marker_1.png');
   }
 
+
+  /*
+  void _getCurrentLocation() async {
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      position = position;
+      //_child = _mapWidget();
+    });
+  }*/
+
+
   void initMarker(position, specifyId, habitacion, setFotos) async{
 
 
@@ -74,7 +85,7 @@ class MapsPage extends State<MyMaps> {
       markerId: markerId,
       position: position,
       icon: _mapMarker,
-      onTap: ()=> {},
+      //onTap: ()=> {},
       infoWindow: InfoWindow(
         snippet: "Ver más detalles",
         title: "Habitación en Renta",
@@ -208,15 +219,20 @@ class MapsPage extends State<MyMaps> {
   }
 
 
+  LatLng initCameraPosition;
 
+  CameraPosition _currentPosition;
+
+
+  /*
   static final CameraPosition initCameraPosition = CameraPosition(
+
       target: LatLng(18.9242095, -99.21812706731137),
       zoom: 14.0
-  );
+  );*/
 
 
   //GET THE CURRENT POSITION
-  /*
   Future<Position> _getGeoLocationPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -246,10 +262,21 @@ class MapsPage extends State<MyMaps> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
+
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition();
-  }*/
+    Position position = await Geolocator.getCurrentPosition(
+                                            desiredAccuracy: LocationAccuracy.high,
+                                            timeLimit: const Duration (seconds: 1));
+
+    //print("POSITION ################: ${position} ###############################");
+
+    setState(() {
+        initCameraPosition = LatLng(position.latitude ?? 0, position.longitude ?? 0);
+
+    });
+
+  }
 
 
   void setStyleMap() async{
@@ -257,12 +284,14 @@ class MapsPage extends State<MyMaps> {
       _mapStyle = string;
     });
   }
-
+  bool loading;
 
   void initState(){
     super.initState();
     setStyleMap();
     setCustomMarker();
+    _getGeoLocationPosition();
+
   }
 
   final TextEditingController _controllerSearch = new TextEditingController();
@@ -292,6 +321,16 @@ class MapsPage extends State<MyMaps> {
     }
   }
 
+  //######################################################################
+  //######################################################################
+  //######################################################################
+
+  // https://coderedirect.com/questions/412857/cant-load-current-location-in-flutter-application
+
+  //######################################################################
+  //######################################################################
+  //######################################################################
+
 
   @override
   Widget build(BuildContext context){
@@ -303,8 +342,6 @@ class MapsPage extends State<MyMaps> {
           children:
           <Widget>[
             Container(
-              //width: ,
-              //height: ,
               padding: EdgeInsets.symmetric(horizontal: 2),
               color: Colors.grey[100],
               child: Row(
@@ -327,12 +364,6 @@ class MapsPage extends State<MyMaps> {
                       splashColor: Colors.black,
                       icon: Icon(Icons.search),
                       onPressed: () => searchPlace()
-                      //Scaffold.of(context).openDrawer();
-                      /*Prediction p = await PlacesAutocomplete.show(
-                        context: context, apiKey: kGoogleApiKey);
-                      displayPrediction(p);
-                      },*/
-
                     ),
                   ),
                 ],
@@ -419,7 +450,11 @@ class MapsPage extends State<MyMaps> {
                 return GoogleMap(
                   myLocationButtonEnabled: true,
                   mapType: MapType.normal,
-                  initialCameraPosition: initCameraPosition,
+                  myLocationEnabled: true,
+                  compassEnabled: true,
+                  initialCameraPosition: CameraPosition(
+                      target: initCameraPosition,
+                      zoom: 14.0),
                   markers: Set<Marker>.of(_markers.values),
                   onMapCreated: _onMapCreated,
                 );
@@ -440,95 +475,3 @@ class MapsPage extends State<MyMaps> {
   }
 
 }
-
-
-
-/*
-class FloatAppBar extends StatelessWidget with PreferredSizeWidget {
-
-  final TextEditingController _controllerSearch = new TextEditingController();
-
-
-  FloatAppBar(GoogleMapController mapController);
-
-  Future search() async {
-
-    try{
-
-      if(_controllerSearch.text.length != 0){
-        print(
-            "######################################## ${_controllerSearch.text}");
-
-        var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
-        var first = results.first;
-        print("################################################");
-        print("${first.featureName} : ${first.coordinates}");
-        print("################################################");
-        var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
-
-        /*mapController.animateCamera(
-            CameraUpdate.newLatLngZoom(
-                latLng,
-                14
-            )
-        );*/
-
-      }
-
-    }
-    catch(e) {
-      print("Error occured: $e");
-    }
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          top: 30,
-          right: 15,
-          left: 15,
-          child: Container(
-            color: Colors.grey[100],
-            child: Row(
-              children: <Widget>[
-
-                Expanded(
-                  child: TextField(
-                    cursorColor: Colors.black,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.go,
-                    controller: _controllerSearch,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                        hintText: "Buscar..."),
-                  ),
-                ),
-                Material(
-                  type: MaterialType.transparency,
-                  child: IconButton(
-                    splashColor: Colors.grey,
-                    icon: Icon(Icons.search),
-                    onPressed: () => search()
-                      //Scaffold.of(context).openDrawer();
-                      /*Prediction p = await PlacesAutocomplete.show(
-                        context: context, apiKey: kGoogleApiKey);
-                      displayPrediction(p);
-                      },*/
-                    ,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
-}*/
