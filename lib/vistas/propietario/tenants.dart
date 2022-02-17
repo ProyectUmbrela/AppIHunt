@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ihunt/providers/api.dart';
 import 'details_tenant.dart';
@@ -42,11 +43,19 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
   Future getTenants(id) async{
     Api _api = Api();
 
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    var _id = snapShoot['usuario'];
+    String tokenAuth = await currentUser.getIdToken();
+
     final msg = jsonEncode({
-      "usuario": id
+      "usuario": _id
     });
 
-    var response = await _api.GetTenants(msg);
+    var response = await _api.GetTenants(msg, tokenAuth);
     var data = jsonDecode(response.body);
     List<Tenant> _tenants = [];
     print(data);
@@ -79,16 +88,15 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     }
   }
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id = sharedPreferences.getString("idusuario") ?? "Error";
+      currentUser = FirebaseAuth.instance.currentUser;
       getRooms();
       print(rooms);
     });
   }
 
   // VARIABLES DE SESION
+  User currentUser;
   String id;
   String nombre;
   List<String> rooms = [];
@@ -101,11 +109,19 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
   Future getRooms() async{
     Api _api = Api();
 
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    var _id = snapShoot['usuario'];
+    String tokenAuth = await currentUser.getIdToken();
+
     final msg = jsonEncode({
-      "usuario": id
+      "usuario": _id
     });
 
-    var response = await _api.GetRooms(msg);
+    var response = await _api.GetRooms(msg, tokenAuth);
     var data = jsonDecode(response.body);
     List<String> _rooms = [];
 

@@ -11,9 +11,9 @@ import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:intl/intl.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 /////////////////////////////////////////import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'landlordView.dart';
 
@@ -25,15 +25,13 @@ class RegisterRoom extends StatefulWidget {
 
 class _RegisterRoomState extends State<RegisterRoom> {
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
-
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+      currentUser = FirebaseAuth.instance.currentUser;
     });
   }
 
   // VARIABLES DE SESION
+  User currentUser;
   String id_usuario;
   String nombre;
 
@@ -289,9 +287,18 @@ class _RegisterRoomState extends State<RegisterRoom> {
         form.save();
         Api _api = Api();
 
+        var snapShoot = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        var _id = snapShoot['usuario'];
+        var _name = snapShoot['nombre'];
+        String tokenAuth = await currentUser.getIdToken();
+
         final msg = jsonEncode({
           "idhabitacion": roomidCtrl.text,
-          "idpropietario": id_usuario,
+          "idpropietario": _id,
           "direccion": adressCtrl.text,
           "dimension": dimensionsCtrl.text,
           "servicios": servicesCtrl.text,
@@ -301,9 +308,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
         });
 
         await getLocation(adressCtrl.text);
-        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre, roomidCtrl.text);
+        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, _name, roomidCtrl.text);
 
-        var response = await _api.RegisterRoomPost(msg);
+        var response = await _api.RegisterRoomPost(msg, tokenAuth);
         Map data = jsonDecode(response.body);
 
         if (response.statusCode == 201) {

@@ -62,24 +62,28 @@ class Api {
 
 
   /*#####  api de propietario #####*/
-  Future<dynamic> RegisterRoomPost(data) async {
+  Future<dynamic> RegisterRoomPost(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._registerRoom),
         body: data, headers: this._headers);
 
     return response;
   }
-  Future<dynamic> DeleteRoomPost(data) async {
+  Future<dynamic> DeleteRoomPost(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._deleteRoom),
         body: data, headers: this._headers);
     return response;
   }
-  Future<dynamic> GetRooms(data) async {
+  Future<dynamic> GetRooms(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._rooms),
         body: data, headers: this._headers);
     return response;
   }
 
-  Future<dynamic> RegisterTenantPost(data) async {
+  Future<dynamic> RegisterTenantPost(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._registerTenant),
         body: data, headers: this._headers);
     return response;
@@ -89,13 +93,15 @@ class Api {
         body: data, headers: this._headers);
     return response;
   }
-  Future<dynamic> GetTenants(data) async {
+  Future<dynamic> GetTenants(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._tenants),
         body: data, headers: this._headers);
     return response;
   }
 
-  Future<dynamic> GetInvitations(data) async {
+  Future<dynamic> GetInvitations(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     print(data.toString());
     var response = await http.post(Uri.parse(this._url + this._invitations),
         body: data, headers: this._headers);
