@@ -124,6 +124,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
               'check_images': 0,
               'habitaciones': 1,
               'publicar': 1,
+              'disponibilidad': 0,
               'servicios': services,
               'titular': name
             },
@@ -137,6 +138,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
           'direccion': address,
           'check_images': 1,
           'fotos': {},
+          'publicar': 1,
+          'disponibilidad': 0,
           'habitaciones': 1,
           'servicios': services,
           'titular': name
