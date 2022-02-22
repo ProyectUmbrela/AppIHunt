@@ -302,10 +302,10 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
         await getLocation(adressCtrl.text);
 
-        print("body ${msg}");
+        print("body actualizar habitacion ${msg}");
         //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
 
-        var response = await _api.RegisterRoomPost(msg, tokenAuth);
+        var response = await _api.UpdateRoom(msg, tokenAuth);
         Map data = jsonDecode(response.body);
 
         if (response.statusCode == 201) {

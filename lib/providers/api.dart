@@ -18,6 +18,7 @@ class Api {
   // urls correspondientes a propietario
   String _registerRoom = '/registerRoom';
   String _deleteRoom = '/eliminarHabitacion';
+  String _updateRoom = '/actualizarHabitacion';
   String _rooms = '/listarHabitacionesPropietario';
 
   String _registerTenant = '/registroInquilino';
@@ -72,6 +73,12 @@ class Api {
   Future<dynamic> DeleteRoomPost(data, tokenAuth) async {
     this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._deleteRoom),
+        body: data, headers: this._headers);
+    return response;
+  }
+  Future<dynamic> UpdateRoom(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
+    var response = await http.post(Uri.parse(this._url + this._updateRoom),
         body: data, headers: this._headers);
     return response;
   }
