@@ -387,10 +387,8 @@ class MapsPage extends State<MyMaps> {
                   int hasImage = snapshot.data.docs[i]['check_images'];
                   int publicar = snapshot.data.docs[i]['publicar'];
 
-                  //print("======================================> HAS IMAGE? : $hasImage");
                   // Si tiene imagenes y se quiere publicar
                   if (hasImage == 1 && publicar == 1){
-                    //if(publicar == 1){
                       var rawFotos = snapshot.data.docs[i]['fotos'];
                       rawFotos.forEach((final String key, final value) {
                         widgets.add(Image.memory(base64Decode(value)));

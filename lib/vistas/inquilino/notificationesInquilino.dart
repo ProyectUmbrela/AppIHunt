@@ -113,9 +113,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
     if (statusCode == 201) {
       List invitacion = resp['invitaciones'];
-      //print("2 ==================> ${invitacion.length}");
       if (invitacion.length > 0){
-        //print("2 ==================> ${invitacion.length}");
         for (int i=0; i < invitacion.length; i++){
           var current = invitacion[i];
 
@@ -148,12 +146,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   }
 
   Future getInvitaciones() async {
-
-    print("#******************************************************#");
-    print("#******************************************************#");
-    print("usuario: ${_idUsuario}");
-    print("#******************************************************#");
-    print("#******************************************************#");
 
     var result = await getInvitacionesRecientes();
     return result;
@@ -228,7 +220,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones.",
+                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones",
                   style: Theme.of(context).textTheme.headline4,
                   textAlign: TextAlign.center,
                 ),

@@ -19,9 +19,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class UserView extends StatefulWidget {
 
-  /*final User user;
-  final String idUsuario;
-  const UserView({this.user, this.idUsuario});*/
 
   @override
   _UserState createState() => _UserState();

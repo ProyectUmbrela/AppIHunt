@@ -84,7 +84,7 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
   List<Habitacion> habitaciones = [];
   int statusCode = response.statusCode;
   var resp = json.decode(response.body);
-  print("######################################################: ${statusCode}");
+  //print("######################################################: ${statusCode}");
   if (statusCode == 201) {
     //print("###################################");
     List actual = resp['habitacion_rentada'];
@@ -173,16 +173,6 @@ class _MisLugares extends State<Lugares> {
   void setData() async{
 
     _currentUser = FirebaseAuth.instance.currentUser;
-    /*
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(_currentUser.uid)
-        .get();
-
-    setState(() {
-      _idUsuario = snapShoot['usuario'];
-    });*/
 
   }
 
@@ -232,9 +222,6 @@ class _MisLugares extends State<Lugares> {
 
   Future getProjectDetails() async {
 
-    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
     var snapShoot = await FirebaseFirestore
         .instance
         .collection('users')
@@ -245,9 +232,6 @@ class _MisLugares extends State<Lugares> {
     print("${_idUsuarioLive}");
 
     String tokenAuth = await _currentUser.getIdToken();
-
-    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    print("#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
     var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
     return result;

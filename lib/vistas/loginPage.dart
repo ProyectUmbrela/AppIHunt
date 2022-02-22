@@ -1,22 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ihunt/utils/fire_auth.dart';
-import 'package:ihunt/vistas/mainscreen.dart';
-import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-//import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/register.dart';
 import 'package:ihunt/vistas/inquilino/userView.dart';
-
 import 'package:ihunt/vistas/propietario/landlordView.dart';
-
-//IMPORTAR FUNCIONES DE CARPETA utils
+import 'package:ihunt/utils/fire_auth.dart';
+import 'package:ihunt/vistas/mainscreen.dart';
 import 'package:ihunt/utils/widgets.dart';
-
-//import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:firebase_core/firebase_core.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -138,12 +132,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  /*
-  onSuccess() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setBool("isLogged", true);
-  }*/
-
   Future _sendRequest(emailField, passwordField) async {
 
 
@@ -153,12 +141,11 @@ class _LoginPageState extends State<LoginPage> {
       password: passwordField.text,
     );
 
-    print("1 =================> ${user} <==============");
+    //print("1 =================> ${user} <==============");
     if (user != null) {
-      print("2 =================> ${user.uid} <==============");
+      //print("2 =================> ${user.uid} <==============");
 
       if (user.emailVerified){
-        // API (email) => usuario, nombre, telefono
 
         var snapShoot = await FirebaseFirestore
             .instance
@@ -169,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
         if (snapShoot != null){
 
           if (snapShoot['tipo'] == 'Propietario'){
-            print("USUARIO: ######## ${snapShoot['tipo']}");
+            //print("USUARIO: ######## ${snapShoot['tipo']}");
 
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -178,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
           else if (snapShoot['tipo'] == 'Usuario'){
-            print("USUARIO: ######## ${snapShoot['tipo']}");
+            //print("USUARIO: ######## ${snapShoot['tipo']}");
 
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
