@@ -62,8 +62,6 @@ class _DetallesHab extends State<DetallesHab> {
           ],
         ),)
       ),
-
-
     );
   }
 

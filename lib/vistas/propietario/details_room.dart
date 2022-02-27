@@ -10,8 +10,8 @@ import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:intl/intl.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'landlordView.dart';
 import 'rooms.dart';
@@ -28,15 +28,13 @@ class DetailRoom extends StatefulWidget {
 
 class _DetailRoomState extends State<DetailRoom> {
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
-
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id = sharedPreferences.getString("idusuario") ?? "Error";
+      currentUser = FirebaseAuth.instance.currentUser;
     });
   }
 
   // VARIABLES DE SESION
+  User currentUser;
   String id;
   String nombre;
 
@@ -191,12 +189,20 @@ class _DetailRoomState extends State<DetailRoom> {
 
       Api _api = Api();
 
+      var snapShoot = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+      var _id = snapShoot['usuario'];
+      String tokenAuth = await currentUser.getIdToken();
+
       final msg = jsonEncode({
-        "usuario": id,
+        "usuario": _id,
         "idhabitacion": idhabitacion
       });
 
-      var response = await _api.DeleteRoomPost(msg);
+      var response = await _api.DeleteRoomPost(msg, tokenAuth);
       var data = jsonDecode(response.body);
 
       if (response.statusCode == 201) {

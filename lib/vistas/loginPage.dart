@@ -2,16 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:convert';
-import 'dart:async';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:ihunt/providers/api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ihunt/vistas/register.dart';
-
-
-//IMPORTAR FUNCIONES DE CARPETA utils
+import 'package:ihunt/vistas/inquilino/userView.dart';
+import 'package:ihunt/vistas/propietario/landlordView.dart';
+import 'package:ihunt/utils/fire_auth.dart';
+import 'package:ihunt/vistas/mainscreen.dart';
 import 'package:ihunt/utils/widgets.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -62,7 +62,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget recuperarPass(){
     return InkWell(
       onTap: ()=> {},
@@ -108,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 10,
             ),
             Text(
-              'Registarme',
+              'Registrarme',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
@@ -119,8 +118,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 
   void _showDialog(seconds, message) {
     showDialog(
@@ -135,81 +132,63 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  onSuccess() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setBool("isLogged", true);
-  }
-
-
-
   Future _sendRequest(emailField, passwordField) async {
 
-    Api _api = Api();
 
-    /*print("====================");
-    print(emailField.text);
-    print(passwordField.text);
-    print("====================");*/
-
-    final body = jsonEncode({
-          'usuario': emailField.text,
-          'contrasena': passwordField.text
-        });
-
-    var response;
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: FutureBuilder(
-          future: _api.loginPost(body),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-
-              response = snapshot.data;
-              Navigator.pop(context);
-            }
-            return CircularProgressIndicator();
-            /*return Center(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    //Text('Cargando...'),
-                  ]
-              ),
-            );*/
-          },
-        ),
-      ),
+   var user = await FireAuth
+        .signInUsingEmailPassword(
+      email: emailField.text,
+      password: passwordField.text,
     );
 
-    int statusCode = response.statusCode;
-    var resp = json.decode(response.body);
-    var sharedPreferences = await SharedPreferences.getInstance();
+    //print("1 =================> ${user} <==============");
+    if (user != null) {
+      //print("2 =================> ${user.uid} <==============");
 
-    if (statusCode == 201) {
-      _saving = true;
-      sharedPreferences.setBool("isLogged", true);
-      sharedPreferences.setString("nombre", resp['nombre']);
-      sharedPreferences.setString("idusuario", resp['idusuario']);
-      sharedPreferences.setString("Tipo", resp['Tipo']);
+      if (user.emailVerified){
 
-      if (resp['Tipo'] == 'Propietario') {
-        Navigator.pushReplacementNamed(context, '/landlord');
+        var snapShoot = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (snapShoot != null){
+
+          if (snapShoot['tipo'] == 'Propietario'){
+            //print("USUARIO: ######## ${snapShoot['tipo']}");
+
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => Landlord(),
+              ),
+            );
+          }
+          else if (snapShoot['tipo'] == 'Usuario'){
+            //print("USUARIO: ######## ${snapShoot['tipo']}");
+
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => UserView()));
+          }
+          else{
+
+            setState(() => _saving = false);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => MainScreen(),
+              ),
+            );
+          }
+        }
+      }else{
+        _showDialog(2, "Tu cuenta aún no ha sido verificada. Revisa tu correo para confirmar");
+        setState(() => _saving = false);
       }
-      if (resp['Tipo'] == 'Usuario') {
-        Navigator.pushReplacementNamed(context, '/user');
-      }
-
-    } else {
-      _saving = false;
-      sharedPreferences.setBool("isLogged", false);
-      _showDialog(2, "El usuario o contraseña son incorrectos");
+    }else{
+      _showDialog(2, "Usuario o contraseña incorrectos");
+      setState(() => _saving = false);
     }
-
   }
 
 
@@ -234,10 +213,10 @@ class _LoginPageState extends State<LoginPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        //onPressed: () => _sendRequest(myControllerEmail, myControllerPassword),
-        onPressed: (){
+        onPressed: () {
+          setState(() => _saving = true);
           _sendRequest(myControllerEmail, myControllerPassword);
-          //setState(() => _loading = true);
+          //
         },
         child: Text("Ingresar",
             textAlign: TextAlign.center,
@@ -310,6 +289,5 @@ class _LoginPageState extends State<LoginPage> {
           inAsyncCall: _saving
       ),
     );
-
   }
 }

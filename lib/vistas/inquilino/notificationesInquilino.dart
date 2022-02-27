@@ -1,19 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/api.dart';
-import 'package:ihunt/vistas/inquilino/detalles_invitacion.dart';
+import 'package:ihunt/vistas/inquilino/notificaciones.dart';
 
 class NotificacionesInquilino extends StatefulWidget{
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return NotificationesInquilinoState();
   }
-  
 }
-
 
 
 class Invitacion {
@@ -67,36 +67,55 @@ class Invitacion {
 
 }
 
-
-
 class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
+  User _currentUser;
+  String _idUsuario;
 
-  Future getInvitacionesRecientes(idUsuario) async {
+
+  @override
+  void initState() {
+    setData();
+    super.initState();
+  }
+
+  void setData() async{
+
+    _currentUser = FirebaseAuth.instance.currentUser;
+
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
+
+    setState(() {
+      _idUsuario = snapShoot['usuario'];
+    });
+  }
+
+
+  Future getInvitacionesRecientes() async {
     Api _api = Api();
     final body = jsonEncode({
-      'usuario': idUsuario
+      'usuario': _idUsuario
     });
-    //print("################## usuario : ${idUsuario}");
-    var response = await _api.GetInvitacionesRecientes(body);
+
+
+    String tokenAuth = await _currentUser.getIdToken();
+
+    var response = await _api.GetInvitacionesUsuarioView(body, tokenAuth);
 
     List<Invitacion> invitaciones = [];
     int statusCode = response.statusCode;
     var resp = json.decode(response.body);
 
-    //print("==================> ${statusCode}");
-    if (statusCode == 201) {
 
+    if (statusCode == 201) {
       List invitacion = resp['invitaciones'];
-      //print("2 ==================> ${invitacion.length}");
       if (invitacion.length > 0){
-        //print("2 ==================> ${invitacion.length}");
         for (int i=0; i < invitacion.length; i++){
           var current = invitacion[i];
-
-          //print("################################################");
-          //print(current);
-          //print("################################################");
 
           invitaciones.add(Invitacion(
               contrato: current['contrato'].toString(),
@@ -122,30 +141,16 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
           ));
         }
       }
-
       return invitaciones;
-
     }
-
-
-
   }
 
   Future getInvitaciones() async {
-    String idUsuario;
-    //String nombre;
-    //String tipo_usuario;
-    var sharedPreferences = await SharedPreferences.getInstance();
 
-    idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
-    //nombre = sharedPreferences.getString("nombre") ?? "Error";
-    //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
-
-    var result = await getInvitacionesRecientes(idUsuario);
+    var result = await getInvitacionesRecientes();
     return result;
 
   }
-
 
   Widget invitacionDetalles(invitacion) {
 
@@ -154,7 +159,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
       child: Card(
         color: Colors.grey[800],
         child: InkWell(
-          onTap: ()=>_DetallesInivitacion(invitacion, context),
+          onTap: ()=> _DetallesInivitacion(invitacion, context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -190,7 +195,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     );
   }
 
-
   Widget projectWidget() {
 
     return FutureBuilder(
@@ -216,7 +220,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones.",
+                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones",
                   style: Theme.of(context).textTheme.headline4,
                   textAlign: TextAlign.center,
                 ),
@@ -242,8 +246,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -255,47 +257,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
       body: projectWidget(),
     );
   }
-    /*
-    final todo = ModalRoute.of(context).settings.arguments;
-
-    var message;
-    if (todo == "Empty!"){
-      message = "No tienes nuevas invitaciones";
-    }
-    else{
-      message = todo;
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Invitaciones"),
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "${message}",
-              style: Theme.of(context).textTheme.headline4,
-              textAlign: TextAlign.center,
-            ),
-            RaisedButton(
-              onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context)=>DetallesInvitacion()));
-              },
-              child: Text('Detalles'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }*/
-
-
 }
-
 
 _DetallesInivitacion(invitacion, context) {
 

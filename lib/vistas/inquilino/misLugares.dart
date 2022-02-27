@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:ihunt/vistas/inquilino/detalles_hab.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ihunt/vistas/inquilino/detallesHabitaciones.dart';
 
 //permissions
 //import 'package:permission_handler/permission_handler.dart';
@@ -15,24 +15,13 @@ import 'package:ihunt/providers/api.dart';
 import 'dart:async';
 
 /// This is the main application widget.
-class Lugares extends StatelessWidget {
+class Lugares extends StatefulWidget {
+
   static const String _title = 'Mis lugares';
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: MyStatefulWidget(),
-    );
-  }
-}
+  _MisLugares createState ()=> _MisLugares();
 
-
-class MyStatefulWidget extends StatefulWidget {
-  const MyStatefulWidget() : super();
- 
-  @override
-  createState() => _MyStatefulWidgetState();
 }
 
 class Habitacion {
@@ -69,8 +58,7 @@ class Habitacion {
 
 }
 
-
-Future getHabitaciones(idUsuario) async {
+Future getListaHabitaciones(idUsuario, tokenAuth) async {
 
   Map<int, String> meses = {
                             1:"Enero",
@@ -90,11 +78,13 @@ Future getHabitaciones(idUsuario) async {
     'usuario': idUsuario
   });
 
-  var response = await _api.GetHabitaciones(body);
+
+  var response = await _api.GetHabitaciones(body, tokenAuth);
+
   List<Habitacion> habitaciones = [];
   int statusCode = response.statusCode;
   var resp = json.decode(response.body);
-
+  //print("######################################################: ${statusCode}");
   if (statusCode == 201) {
     //print("###################################");
     List actual = resp['habitacion_rentada'];
@@ -164,14 +154,27 @@ Future getHabitaciones(idUsuario) async {
     }
     return habitaciones;
   }
-
-
+  else{
+    return habitaciones;
+  }
 }
 
+class _MisLugares extends State<Lugares> {
 
+  User _currentUser;
+  String _idUsuario;
 
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  @override
+  void initState() {
+    super.initState();
+    setData();
+  }
 
+  void setData() async{
+
+    _currentUser = FirebaseAuth.instance.currentUser;
+
+  }
 
   Widget habitacionDetalles(habitacion) {
 
@@ -218,16 +221,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 
   Future getProjectDetails() async {
-    String idUsuario;
-    //String nombre;
-    //String tipo_usuario;
-    var sharedPreferences = await SharedPreferences.getInstance();
 
-    idUsuario = sharedPreferences.getString("idusuario") ?? "Error";
-    //nombre = sharedPreferences.getString("nombre") ?? "Error";
-    //tipo_usuario = sharedPreferences.getString("Tipo") ?? "Error";
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
 
-    var result = await getHabitaciones(idUsuario);
+    var _idUsuarioLive = snapShoot['usuario'];
+    print("${_idUsuarioLive}");
+
+    String tokenAuth = await _currentUser.getIdToken();
+
+    var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
     return result;
 
   }
@@ -315,5 +321,4 @@ _DetallesHabitacion(habitacion, context) {
           fechaPago: habitacion.fechaPago,
       ),
   ));
-
 }

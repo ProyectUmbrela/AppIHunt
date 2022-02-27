@@ -2,8 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
-
 class DetallesInvitacion extends StatefulWidget {
   String contrato;
   String descripcion;
@@ -70,12 +68,9 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         borderRadius: BorderRadius.circular(5),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          //minWidth: (MediaQuery.of(context).size.width/3),
             onPressed:() {
               Navigator.of(context).pop();
               _launchURL(widget.enlace_rechazar.toString());
-              /*Navigator.of(context).push(MaterialPageRoute(
-            builder: (context)=>NotificacionesInquilino()));*/
             },
             child: Text(
               "Aceptar",
@@ -96,14 +91,11 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         rechazarRentaButton
       ],
     );
-
     // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
-
         return alert;
-
       },
     );
   }
@@ -118,8 +110,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         onPressed:() {
           Navigator.of(context).pop();
           _launchURL(widget.enlace_aceptar.toString());
-          /*Navigator.of(context).push(MaterialPageRoute(
-            builder: (context)=>NotificacionesInquilino()));*/
         },
         child: Text(
           "Aceptar",
@@ -228,7 +218,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                 children: <Widget>[
                                   Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
-                                      //crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Padding(
                                           padding: EdgeInsets.only(left: 100.0),
@@ -475,5 +464,4 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
       ),
     );
   }
-
 }

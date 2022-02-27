@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ihunt/providers/api.dart';
 import 'registerRoom.dart';
@@ -58,11 +59,14 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   void setData() async{
     var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
+      currentUser = FirebaseAuth.instance.currentUser;
       nombre = sharedPreferences.getString("nombre") ?? "Error";
       id = sharedPreferences.getString("idusuario") ?? "Error";
     });
   }
+
   // VARIABLES DE SESION
+  User currentUser;
   String id;
   String nombre;
   @override
@@ -91,11 +95,20 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   Future getRooms(id) async {
     Api _api = Api();
 
-    final msg = jsonEncode({
-      "usuario": id
-    });
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    var _id = snapShoot['usuario'];
+    String tokenAuth = await currentUser.getIdToken();
 
-    var response = await _api.GetRooms(msg);
+    final msg = jsonEncode({
+      "usuario": _id
+    });
+    print('---------${msg}');
+
+    var response = await _api.GetRooms(msg, tokenAuth);
     var data = jsonDecode(response.body);
     List<Room> _rooms = [];
 

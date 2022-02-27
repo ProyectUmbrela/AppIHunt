@@ -1,15 +1,14 @@
 
 // Paquetes para consumir api
-//import 'dart:convert';
-//import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 
 class Api {
 
   //String _url = 'https://appiuserstest.herokuapp.com/ihunt';
   String _url = 'https://prdapp.herokuapp.com/ihunt';
 
-  String _register = "/register";
+  String _register = '/register';
   String _login = '/login';
   String _habitacionesRentadas = '/historialInquilino';
   String _listarInvitaciones = '/listarInvitacionesUsuario';
@@ -17,6 +16,7 @@ class Api {
   // urls correspondientes a propietario
   String _registerRoom = '/registerRoom';
   String _deleteRoom = '/eliminarHabitacion';
+  String _updateRoom = '/actualizarHabitacion';
   String _rooms = '/listarHabitacionesPropietario';
 
   String _registerTenant = '/registroInquilino';
@@ -25,7 +25,9 @@ class Api {
 
   String _invitations = '/listarInvitacionesPropietario';
 
-  Map<String, String> _headers = {"Content-type": "application/json"};
+  Map<String, String> _headers = {
+    "Content-type": "application/json"
+  };
 
   Future<dynamic> registerPost(data) async {
     var response = await http.post(Uri.parse(this._url + _register),
@@ -35,12 +37,14 @@ class Api {
   }
 
   Future<dynamic> loginPost(data) async {
-    var response = await http.post(Uri.parse(this._url + _login), body: data, headers: this._headers);
+    var response = await http.post(Uri.parse(this._url + _login), body: data,
+        headers: this._headers);
 
     return response;
   }
 
-  Future<dynamic> GetHabitaciones(data) async {
+  Future<dynamic> GetHabitaciones(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
 
     var response = await http.post(Uri.parse(this._url + this._habitacionesRentadas),
         body: data, headers: this._headers);
@@ -48,8 +52,8 @@ class Api {
     return response;
   }
 
-  Future<dynamic> GetInvitacionesRecientes(data) async {
-
+  Future<dynamic> GetInvitacionesUsuarioView(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._listarInvitaciones),
         body: data, headers: this._headers);
     return response;
@@ -57,24 +61,34 @@ class Api {
 
 
   /*#####  api de propietario #####*/
-  Future<dynamic> RegisterRoomPost(data) async {
+  Future<dynamic> RegisterRoomPost(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._registerRoom),
         body: data, headers: this._headers);
 
     return response;
   }
-  Future<dynamic> DeleteRoomPost(data) async {
+  Future<dynamic> DeleteRoomPost(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._deleteRoom),
         body: data, headers: this._headers);
     return response;
   }
-  Future<dynamic> GetRooms(data) async {
+  Future<dynamic> UpdateRoom(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
+    var response = await http.post(Uri.parse(this._url + this._updateRoom),
+        body: data, headers: this._headers);
+    return response;
+  }
+  Future<dynamic> GetRooms(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._rooms),
         body: data, headers: this._headers);
     return response;
   }
 
-  Future<dynamic> RegisterTenantPost(data) async {
+  Future<dynamic> RegisterTenantPost(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._registerTenant),
         body: data, headers: this._headers);
     return response;
@@ -84,14 +98,16 @@ class Api {
         body: data, headers: this._headers);
     return response;
   }
-  Future<dynamic> GetTenants(data) async {
+  Future<dynamic> GetTenants(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._tenants),
         body: data, headers: this._headers);
     return response;
   }
 
-  Future<dynamic> GetInvitations(data) async {
-    print(data.toString());
+  Future<dynamic> GetInvitations(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
+
     var response = await http.post(Uri.parse(this._url + this._invitations),
         body: data, headers: this._headers);
     return response;

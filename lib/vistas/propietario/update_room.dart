@@ -11,8 +11,8 @@ import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:intl/intl.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'landlordView.dart';
 
@@ -28,11 +28,9 @@ class UpdateRoom extends StatefulWidget {
 
 class _UpdateRoomState extends State<UpdateRoom> {
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
 
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+      currentUser = FirebaseAuth.instance.currentUser;
       roomidCtrl = new TextEditingController(text: widget.room['idhabitacion']);
       adressCtrl = new TextEditingController(text: widget.room['direccion']);
       dimensionsCtrl = new TextEditingController(text: widget.room['dimension']);
@@ -44,6 +42,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   }
 
   // VARIABLES DE SESION
+  User currentUser;
   String id_usuario;
   String nombre;
   TextEditingController roomidCtrl;
@@ -280,10 +279,19 @@ class _UpdateRoomState extends State<UpdateRoom> {
         form.save();
         Api _api = Api();
 
+        var snapShoot = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        var _id = snapShoot['usuario'];
+        var name = snapShoot['nombre'];
+        String tokenAuth = await currentUser.getIdToken();
+
         final msg = jsonEncode({
           "idhabitacion_anterior": widget.room['idhabitacion'],
           "idhabitacion": roomidCtrl.text,
-          "idpropietario": id_usuario,
+          "idpropietario": _id,
           "direccion": adressCtrl.text,
           "dimension": dimensionsCtrl.text,
           "servicios": servicesCtrl.text,
@@ -293,19 +301,16 @@ class _UpdateRoomState extends State<UpdateRoom> {
         });
 
         await getLocation(adressCtrl.text);
-        print('############################ ACTUALIZAR HABITACION');
-        print("body ${msg}");
-        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, nombre);
 
-        var response = await _api.RegisterRoomPost(msg);
+        print("body actualizar habitacion ${msg}");
+        //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
+
+        var response = await _api.UpdateRoom(msg, tokenAuth);
         Map data = jsonDecode(response.body);
-
-        print("################# ESTATUS CODE: ");
-        print(response.statusCode);
 
         if (response.statusCode == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("Data posted successfully");
+          debugPrint("ACTUALIZACION HABITACION EXITOSA!");
           Navigator.pop(context);
           /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
