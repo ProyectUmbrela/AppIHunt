@@ -321,5 +321,4 @@ _DetallesHabitacion(habitacion, context) {
           fechaPago: habitacion.fechaPago,
       ),
   ));
-
 }

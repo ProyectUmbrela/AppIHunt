@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FireAuth {
 
+  /*
   // For registering a new user
   static Future<User> registerUsingEmailPassword({
     String usuario,
@@ -46,7 +47,7 @@ class FireAuth {
     }
 
     return user;
-  }
+  }*/
 
 
   // For signing in an user (have already registered)
@@ -67,10 +68,10 @@ class FireAuth {
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-fund') {
-        print('No user found for that email.');
+        print('No se encontró un usuario con el correo.');
 
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided.');
+        print('Contraseña incorrecta.');
       }
     }
     return user;
@@ -84,4 +85,5 @@ class FireAuth {
     return refreshedUser;
 
   }
+
 }

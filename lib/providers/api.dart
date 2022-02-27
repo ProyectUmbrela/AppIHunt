@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class Api {
 
-  String _url = 'https://appiuserstest.herokuapp.com/ihunt';
-  //String _url = 'https://prdapp.herokuapp.com/ihunt';
+  //String _url = 'https://appiuserstest.herokuapp.com/ihunt';
+  String _url = 'https://prdapp.herokuapp.com/ihunt';
 
   String _register = '/register';
   String _login = '/login';
@@ -107,7 +107,7 @@ class Api {
 
   Future<dynamic> GetInvitations(data, tokenAuth) async {
     this._headers['Authorization'] = tokenAuth;
-    print(data.toString());
+
     var response = await http.post(Uri.parse(this._url + this._invitations),
         body: data, headers: this._headers);
     return response;
