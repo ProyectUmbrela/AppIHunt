@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class Api {
 
-  //String _url = 'https://appiuserstest.herokuapp.com/ihunt';
-  String _url = 'https://prdapp.herokuapp.com/ihunt';
+  String _url = 'https://appiuserstest.herokuapp.com/ihunt';
+  //String _url = 'https://prdapp.herokuapp.com/ihunt';
 
   String _register = '/register';
   String _login = '/login';

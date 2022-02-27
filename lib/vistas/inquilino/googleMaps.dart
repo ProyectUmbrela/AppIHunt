@@ -10,10 +10,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:geocoder/geocoder.dart';
 
-
-
 // to get the current location
-//import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 
@@ -42,6 +39,7 @@ class infoHabitacion{
 }
 
 
+
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
@@ -60,18 +58,6 @@ class MapsPage extends State<MyMaps> {
         ImageConfiguration(),
         'assets/marker_1.png');
   }
-
-
-  /*
-  void _getCurrentLocation() async {
-
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      position = position;
-      //_child = _mapWidget();
-    });
-  }*/
-
 
   void initMarker(position, specifyId, habitacion, setFotos) async{
 
@@ -213,16 +199,16 @@ class MapsPage extends State<MyMaps> {
           );
         })
     );
-
     _markers[markerId] = marker;
-
   }
 
-
   LatLng initCameraPosition;
-
   CameraPosition _currentPosition;
 
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+        () => 'Data Loaded',
+  );
 
   /*
   static final CameraPosition initCameraPosition = CameraPosition(
@@ -254,6 +240,11 @@ class MapsPage extends State<MyMaps> {
 
         return Future.error('Location permissions are denied');
       }
+      else if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        //lat=6.9271;long=79.8612;
+        initCameraPosition = LatLng(7.4219983, -122.084);
+      }
     }
 
     if (permission == LocationPermission.deniedForever) {
@@ -262,20 +253,20 @@ class MapsPage extends State<MyMaps> {
           'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     Position position = await Geolocator.getCurrentPosition(
                                             desiredAccuracy: LocationAccuracy.high,
                                             timeLimit: const Duration (seconds: 1));
 
-    //print("POSITION ################: ${position} ###############################");
+    //initCameraPosition = LatLng(position.latitude, position.longitude);
+    // Latitude: 37.4219983, Longitude: -122.084
+    /*setState(() {
+      initCameraPosition = LatLng(position.latitude ?? 37.4219983, position.longitude ?? -122.084 );
 
-    setState(() {
-        initCameraPosition = LatLng(position.latitude ?? 0, position.longitude ?? 0);
+    });*/
 
-    });
-
+    return position;
   }
 
 
@@ -284,13 +275,13 @@ class MapsPage extends State<MyMaps> {
       _mapStyle = string;
     });
   }
-  bool loading;
+
 
   void initState(){
     super.initState();
     setStyleMap();
     setCustomMarker();
-    _getGeoLocationPosition();
+    //_getGeoLocationPosition();
 
   }
 
@@ -299,13 +290,10 @@ class MapsPage extends State<MyMaps> {
   Future searchPlace() async {
     try{
       if(_controllerSearch.text.length != 0){
-        print("#################################### ${_controllerSearch.text}");
+        //print("#################################### ${_controllerSearch.text}");
 
         var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
         var first = results.first;
-        print("################################################");
-        print("${first.featureName} : ${first.coordinates}");
-        print("################################################");
         var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
 
         _controller.animateCamera(
@@ -321,15 +309,41 @@ class MapsPage extends State<MyMaps> {
     }
   }
 
-  //######################################################################
-  //######################################################################
-  //######################################################################
+  Widget getViewWidget(_markers) {
 
-  // https://coderedirect.com/questions/412857/cant-load-current-location-in-flutter-application
+    return FutureBuilder(
+        future: _getGeoLocationPosition(),
+        builder: (context, snapshot) {
+          //print("B =======================================> ${snapshot}");
+          if (snapshot.connectionState == ConnectionState.done) {
+            print("ELSE CONDITIION");
+            print("#######################################################");
+            print("#######################################################");
 
-  //######################################################################
-  //######################################################################
-  //######################################################################
+            print("************** LATITUDE: ${snapshot.data.latitude}");
+            print("************** LATITUDE: ${snapshot.data.longitude}");
+            print("#######################################################");
+            print("#######################################################");
+            return GoogleMap(
+              myLocationButtonEnabled: true,
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              compassEnabled: true,
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(snapshot.data.latitude, snapshot.data.longitude),
+                  zoom: 14.0),
+              markers: Set<Marker>.of(_markers.values),
+              onMapCreated: _onMapCreated,
+            );
+          }
+          else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+    );
+  }
 
 
   @override
@@ -445,6 +459,8 @@ class MapsPage extends State<MyMaps> {
                       widgets);
 
                 }
+                return getViewWidget(_markers);
+                /*
                 return GoogleMap(
                   myLocationButtonEnabled: true,
                   mapType: MapType.normal,
@@ -455,7 +471,7 @@ class MapsPage extends State<MyMaps> {
                       zoom: 14.0),
                   markers: Set<Marker>.of(_markers.values),
                   onMapCreated: _onMapCreated,
-                );
+                );*/
               }
               return Center(
                 child: CircularProgressIndicator(),
