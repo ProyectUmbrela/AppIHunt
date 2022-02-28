@@ -205,11 +205,6 @@ class MapsPage extends State<MyMaps> {
   LatLng initCameraPosition;
   CameraPosition _currentPosition;
 
-  final Future<String> _calculation = Future<String>.delayed(
-    const Duration(seconds: 2),
-        () => 'Data Loaded',
-  );
-
   /*
   static final CameraPosition initCameraPosition = CameraPosition(
 
@@ -222,49 +217,62 @@ class MapsPage extends State<MyMaps> {
   Future<Position> _getGeoLocationPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
-
+    print("######################################################### A");
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      print("######################################################### B");
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
       await Geolocator.openLocationSettings();
+      print("######################################################### C");
       return Future.error('Location services are disabled.');
     }
-
+    print("######################################################### D");
     permission = await Geolocator.checkPermission();
+    print("######################################################### E");
     if (permission == LocationPermission.denied) {
+      print("######################################################### F");
       permission = await Geolocator.requestPermission();
+      print("######################################################### G");
       if (permission == LocationPermission.denied) {
-
+        print("######################################################### H");
         return Future.error('Location permissions are denied');
       }
+
       else if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
+        print("######################################################### I");
         //lat=6.9271;long=79.8612;
         initCameraPosition = LatLng(7.4219983, -122.084);
+        print("######################################################### J");
+      }
+      else{
+        print(" AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ");
       }
     }
-
+    print("######################################################### K");
     if (permission == LocationPermission.deniedForever) {
+      print("######################################################### L");
       // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
+    print("######################################################### M");
+
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     Position position = await Geolocator.getCurrentPosition(
                                             desiredAccuracy: LocationAccuracy.high,
                                             timeLimit: const Duration (seconds: 1));
+    print("######################################################### N");
 
-    //initCameraPosition = LatLng(position.latitude, position.longitude);
     // Latitude: 37.4219983, Longitude: -122.084
-    /*setState(() {
-      initCameraPosition = LatLng(position.latitude ?? 37.4219983, position.longitude ?? -122.084 );
 
-    });*/
+
+    print("#=======================> ${position} <==============================");
 
     return position;
   }
@@ -316,21 +324,31 @@ class MapsPage extends State<MyMaps> {
         builder: (context, snapshot) {
           //print("B =======================================> ${snapshot}");
           if (snapshot.connectionState == ConnectionState.done) {
+            LatLng Currentposition;
             print("ELSE CONDITIION");
             print("#######################################################");
             print("#######################################################");
 
-            print("************** LATITUDE: ${snapshot.data.latitude}");
-            print("************** LATITUDE: ${snapshot.data.longitude}");
+            print("************** LATITUDE: ${snapshot.data}");
+
             print("#######################################################");
             print("#######################################################");
+            // Latitude: 37.4219983
+            // Longitude: -122.084
+            if (!snapshot.hasData){
+              Currentposition  =  LatLng(37.4219983 , -122.084);
+            }
+            else{
+              Currentposition  =  LatLng(snapshot.data.latitude , snapshot.data.longitude);
+            }
+
             return GoogleMap(
               myLocationButtonEnabled: true,
               mapType: MapType.normal,
               myLocationEnabled: true,
               compassEnabled: true,
               initialCameraPosition: CameraPosition(
-                  target: LatLng(snapshot.data.latitude, snapshot.data.longitude),
+                  target: Currentposition, //LatLng(37.4219983 , -122.084),
                   zoom: 14.0),
               markers: Set<Marker>.of(_markers.values),
               onMapCreated: _onMapCreated,

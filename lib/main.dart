@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // Vistas de inquilino
 import 'package:ihunt/vistas/inquilino/userView.dart'; // principal usuario
@@ -21,15 +22,22 @@ import 'vistas/propietario/registerRoom.dart';
 // IMPORTAR VISTAS
 import 'vistas/mainscreen.dart';
 import 'vistas/register.dart';
-
-
-
 import 'package:ihunt/vistas/loginPage.dart';
 
+String version;
+List<String> testDeviceIds = ['D69AD2F70B99972211345214A355C240'];
+// RFOyB5Ch5eNoksIxLdMclbttklw1
 
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  MobileAds.instance.initialize();
+  RequestConfiguration configuration = RequestConfiguration(testDeviceIds: testDeviceIds);
+  MobileAds.instance.updateRequestConfiguration(configuration);
+
+
+
   // init the firebase system
   await Firebase.initializeApp();
 
