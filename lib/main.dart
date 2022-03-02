@@ -26,7 +26,7 @@ import 'package:ihunt/vistas/loginPage.dart';
 
 String version;
 List<String> testDeviceIds = ['D69AD2F70B99972211345214A355C240'];
-// RFOyB5Ch5eNoksIxLdMclbttklw1
+
 
 Future<void> main() async {
 

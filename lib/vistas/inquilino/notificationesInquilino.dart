@@ -82,7 +82,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   void setData() async{
 
     _currentUser = FirebaseAuth.instance.currentUser;
-
+    /*
     var snapShoot = await FirebaseFirestore
         .instance
         .collection('users')
@@ -91,18 +91,18 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
     setState(() {
       _idUsuario = snapShoot['usuario'];
-    });
+    });*/
   }
 
 
-  Future getInvitacionesRecientes() async {
+  Future getInvitacionesRecientes(_idUsuarioLive, tokenAuth)async {
+
     Api _api = Api();
     final body = jsonEncode({
-      'usuario': _idUsuario
+      'usuario': _idUsuarioLive
     });
 
-
-    String tokenAuth = await _currentUser.getIdToken();
+    //String tokenAuth = await _currentUser.getIdToken();
 
     var response = await _api.GetInvitacionesUsuarioView(body, tokenAuth);
 
@@ -110,12 +110,12 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     int statusCode = response.statusCode;
     var resp = json.decode(response.body);
     print("#####################################################################");
-    print("#####################################################################");
+    print("A ####################################################################");
 
     print("${tokenAuth}");
     print("${resp}");
 
-    print("#####################################################################");
+    print("A ####################################################################");
     print("#####################################################################");
 
     if (statusCode == 201) {
@@ -152,12 +152,22 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     }
   }
 
+
   Future getInvitaciones() async {
 
-    var result = await getInvitacionesRecientes();
-    return result;
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
 
+    var _idUsuarioLive = snapShoot['usuario'];
+    String tokenAuth = await _currentUser.getIdToken();
+
+    var result = await getInvitacionesRecientes(_idUsuarioLive, tokenAuth);
+    return result;
   }
+
 
   Widget invitacionDetalles(invitacion) {
 
@@ -205,7 +215,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   Widget projectWidget() {
 
     return FutureBuilder(
-      future: getInvitaciones(),
+      future: getInvitaciones(),//getInvitaciones(),
       builder: (context, snapshot) {
         if(!snapshot.hasData){
           // Esperando la respuesta de la API

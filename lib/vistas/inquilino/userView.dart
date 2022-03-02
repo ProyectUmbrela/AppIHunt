@@ -85,7 +85,7 @@ class _UserState extends State<UserView> {
         .collection('users')
         .doc(_current)
         .set({
-          'updatedOn':FieldValue.serverTimestamp(),
+          'updatedOn': FieldValue.serverTimestamp(),
           'token': token},
           SetOptions(merge: true)
         );

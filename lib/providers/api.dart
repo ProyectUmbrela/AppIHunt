@@ -32,14 +32,12 @@ class Api {
   Future<dynamic> registerPost(data) async {
     var response = await http.post(Uri.parse(this._url + _register),
         body: data, headers: this._headers);
-
     return response;
   }
 
   Future<dynamic> loginPost(data) async {
     var response = await http.post(Uri.parse(this._url + _login), body: data,
         headers: this._headers);
-
     return response;
   }
 

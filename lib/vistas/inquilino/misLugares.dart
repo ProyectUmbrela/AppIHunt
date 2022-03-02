@@ -80,11 +80,11 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
 
 
   var response = await _api.GetHabitaciones(body, tokenAuth);
-
+  print("${tokenAuth}");
   List<Habitacion> habitaciones = [];
   int statusCode = response.statusCode;
   var resp = json.decode(response.body);
-  //print("######################################################: ${statusCode}");
+  print("########## LUGARES ######################################################: ${resp}");
   if (statusCode == 201) {
     //print("###################################");
     List actual = resp['habitacion_rentada'];
@@ -129,9 +129,7 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
 
           var timeInit =  HttpDate.parse(habitacion['fechacontratoinit']);
           var timeFin =  HttpDate.parse(habitacion['fechacontratofin']);
-
           var diasPago =  HttpDate.parse(habitacion['fechacontratoinit']);
-
           final periodo = "${meses[timeInit.month]} ${timeInit.year} - ${meses[timeFin.month]} ${timeFin.year}";
 
           habitaciones.add(
@@ -162,7 +160,7 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
 class _MisLugares extends State<Lugares> {
 
   User _currentUser;
-  String _idUsuario;
+  //String _idUsuario;
 
   @override
   void initState() {
@@ -173,6 +171,7 @@ class _MisLugares extends State<Lugares> {
   void setData() async{
 
     _currentUser = FirebaseAuth.instance.currentUser;
+    print("****************************************** ${_currentUser.uid}");
 
   }
 
@@ -229,8 +228,6 @@ class _MisLugares extends State<Lugares> {
         .get();
 
     var _idUsuarioLive = snapShoot['usuario'];
-    print("${_idUsuarioLive}");
-
     String tokenAuth = await _currentUser.getIdToken();
 
     var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
