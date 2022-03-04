@@ -36,6 +36,7 @@ class _UserState extends State<UserView> {
   String messageTitle = "Empty!";
   var tokenBy = '';
 
+  /*
   @override
   void initState() {
 
@@ -58,8 +59,9 @@ class _UserState extends State<UserView> {
         //notificationAlert = "Application opened from Notification";
       });
     });
-  }
+  }*/
 
+  /*
   void setData() async{
 
     _currentUser = FirebaseAuth.instance.currentUser;
@@ -75,7 +77,9 @@ class _UserState extends State<UserView> {
       _idUsuario = snapShoot['usuario'];
     });
   }
+  */
 
+  /*
   Future<void> saveTokenToDatabase(String token) async {
 
     // upsert, insert if not exists or add anew one if already exists
@@ -92,6 +96,10 @@ class _UserState extends State<UserView> {
     // api updatetoken(usario, token)
   }
 
+  */
+
+
+  /*
   void firebaseCloudMessaging_Listeners() {
     _firebaseMessaging.getToken().then((token) async {
       await saveTokenToDatabase(token);
@@ -99,15 +107,21 @@ class _UserState extends State<UserView> {
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
     });
   }
+  */
 
+
+  /*
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
   }
+  */
+
 
   @override
   Widget build(BuildContext context) {
 
+    /*
     final lugaresbutton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
@@ -123,7 +137,9 @@ class _UserState extends State<UserView> {
             textAlign: TextAlign.center)
       ),
     );
+    */
 
+    /*
     final buscarbutton = Material(
       
       elevation: 5.0,
@@ -142,7 +158,10 @@ class _UserState extends State<UserView> {
       )
       ),
     );
+    */
 
+
+    /*
     final invitacionesbutton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(5),
@@ -159,8 +178,9 @@ class _UserState extends State<UserView> {
         )
       ),
     );
+    */
 
-
+    /*
     return Scaffold(
       appBar: AppBar(
         title: Text('$_nombre'),
@@ -244,6 +264,47 @@ class _UserState extends State<UserView> {
           )),
         ],
       )
+    );*/
+
+
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.home)),
+                Tab(icon: Icon(Icons.airline_seat_individual_suite)),
+                Tab(icon: Icon(Icons.search_sharp)),
+                Tab(icon: Icon(Icons.notifications))
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text("Salir"),
+                  new IconButton(
+                    icon: Icon(
+                        Icons.exit_to_app,
+                        color: Colors.white),
+                    //onPressed: _logout,
+                  )
+                ],
+              )
+            ],
+            title: Text('Hola Fredy'),
+          ),
+          body: TabBarView(
+            children: [
+              Icon(Icons.home),
+              Lugares(),
+              MyMaps(),
+              NotificacionesInquilino()
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

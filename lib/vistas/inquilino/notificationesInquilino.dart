@@ -267,10 +267,10 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text('Invitaciones'),
         automaticallyImplyLeading: false,
-      ),
+      ),*/
       body: projectWidget(),
     );
   }
