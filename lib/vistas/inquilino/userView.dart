@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +37,7 @@ class _UserState extends State<UserView> {
   String messageTitle = "Empty!";
   var tokenBy = '';
 
-  /*
+
   @override
   void initState() {
 
@@ -59,9 +60,9 @@ class _UserState extends State<UserView> {
         //notificationAlert = "Application opened from Notification";
       });
     });
-  }*/
+  }
 
-  /*
+
   void setData() async{
 
     _currentUser = FirebaseAuth.instance.currentUser;
@@ -77,9 +78,8 @@ class _UserState extends State<UserView> {
       _idUsuario = snapShoot['usuario'];
     });
   }
-  */
 
-  /*
+
   Future<void> saveTokenToDatabase(String token) async {
 
     // upsert, insert if not exists or add anew one if already exists
@@ -93,13 +93,10 @@ class _UserState extends State<UserView> {
           'token': token},
           SetOptions(merge: true)
         );
-    // api updatetoken(usario, token)
   }
 
-  */
 
 
-  /*
   void firebaseCloudMessaging_Listeners() {
     _firebaseMessaging.getToken().then((token) async {
       await saveTokenToDatabase(token);
@@ -107,98 +104,19 @@ class _UserState extends State<UserView> {
       _firebaseMessaging.onTokenRefresh.listen(saveTokenToDatabase);
     });
   }
-  */
 
 
-  /*
+
+
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
   }
-  */
 
 
-  @override
-  Widget build(BuildContext context) {
+  Widget projectWidget() {
 
-    /*
-    final lugaresbutton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(5),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        minWidth: (MediaQuery.of(context).size.width/3.3),
-         onPressed: () {
-           Navigator.of(context).push(MaterialPageRoute(
-             builder: (_) => new Lugares()));
-
-        },
-        child: Text("Mis lugares",
-            textAlign: TextAlign.center)
-      ),
-    );
-    */
-
-    /*
-    final buscarbutton = Material(
-      
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(5),
-      color: Color(0xff01A0C7),
-      
-      child: MaterialButton(
-        minWidth: (MediaQuery.of(context).size.width/3.3),
-        onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context)=>MyMaps()));
-
-        },
-        child: Text("Buscar",
-            textAlign: TextAlign.center
-      )
-      ),
-    );
-    */
-
-
-    /*
-    final invitacionesbutton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(5),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        
-        minWidth: (MediaQuery.of(context).size.width/3.3),
-        onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => new NotificacionesInquilino()));
-        },
-        child: Text("Invitaciones",
-            textAlign: TextAlign.center
-        )
-      ),
-    );
-    */
-
-    /*
     return Scaffold(
-      appBar: AppBar(
-        title: Text('$_nombre'),
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-              Text("Salir"),
-              new IconButton(
-                icon: Icon(
-                    Icons.exit_to_app,
-                    color: Colors.white),
-                onPressed: _logout,
-              )
-            ],
-          )
-        ],
-      ),
       body: Container(
         margin: const EdgeInsets.all(0.5),
         padding: const EdgeInsets.all(0.5),
@@ -212,16 +130,15 @@ class _UserState extends State<UserView> {
             borderRadius: BorderRadius.circular(10.0)),
         alignment: FractionalOffset.center,
         child: Column(
-            children: <Widget>[
+          children: <Widget>[
             Align(
                 alignment: FractionalOffset.topCenter,
                 child: Padding(
                     padding: EdgeInsets.only(top: 2.0),
                     child: Container(
-                      child: AdWidget(
-                        ad: AdmobHelper.getBannerAd()..load(),
-                        key: UniqueKey(),
-                      ),
+                        child: AdWidget(
+                          ad: AdmobHelper.getBannerAd()..load(),
+                          key: UniqueKey(),),
                         height: AdmobHelper.getBannerAd().size.height.toDouble(),
                         width: AdmobHelper.getBannerAd().size.width.toDouble()
                     )
@@ -238,41 +155,23 @@ class _UserState extends State<UserView> {
               messageTitle,
               style: Theme.of(context).textTheme.headline4,
             ),*/
-          ],
-        ),
-      ),
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left:30),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: lugaresbutton,//Icon(Icons.camera_alt),),
-            ),
+            ],
           ),
-          Padding(
-              padding: EdgeInsets.only(left:30),
-              child:Align(
-                alignment: Alignment.bottomCenter,
-                child: buscarbutton,
-          )),
-          Padding(
-              padding: EdgeInsets.only(left:30),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: invitacionesbutton,
-          )),
-        ],
-      )
-    );*/
+        ),
+    );
+  }
 
+
+
+  @override
+  Widget build(BuildContext context) {
 
     return MaterialApp(
       home: DefaultTabController(
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            bottom: TabBar(
+            bottom: const TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.home)),
                 Tab(icon: Icon(Icons.airline_seat_individual_suite)),
@@ -288,16 +187,17 @@ class _UserState extends State<UserView> {
                     icon: Icon(
                         Icons.exit_to_app,
                         color: Colors.white),
-                    //onPressed: _logout,
+                    onPressed: _logout,
                   )
                 ],
               )
             ],
-            title: Text('Hola Fredy'),
+            title: Text('Hola ${_nombre}'),
           ),
           body: TabBarView(
+            physics: const  NeverScrollableScrollPhysics(),
             children: [
-              Icon(Icons.home),
+              projectWidget(),
               Lugares(),
               MyMaps(),
               NotificacionesInquilino()
@@ -307,5 +207,6 @@ class _UserState extends State<UserView> {
       ),
     );
   }
+
 }
 

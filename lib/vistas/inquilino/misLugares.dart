@@ -78,11 +78,14 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
     'usuario': idUsuario
   });
 
-
-  var response = await _api.GetHabitaciones(body, tokenAuth);
+  print("################################### A");
   print("${tokenAuth}");
+  var response = await _api.GetHabitaciones(body, tokenAuth);
+
+
   List<Habitacion> habitaciones = [];
   int statusCode = response.statusCode;
+  print("################################### ${statusCode}");
   var resp = json.decode(response.body);
   print("########## LUGARES ######################################################: ${resp}");
   if (statusCode == 201) {
@@ -228,6 +231,7 @@ class _MisLugares extends State<Lugares> {
         .get();
 
     var _idUsuarioLive = snapShoot['usuario'];
+    print("############################### ${_idUsuarioLive} ##############################");
     String tokenAuth = await _currentUser.getIdToken();
 
     var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
