@@ -20,25 +20,28 @@ class AdmobHelper extends ChangeNotifier {
   }
 
   static BannerAd getBannerAd(){
-    BannerAd bAd = new BannerAd(
+    BannerAd bAd = BannerAd(
         size: AdSize.largeBanner,
         adUnitId: 'ca-app-pub-7955489602208233/5868040865',
         listener: BannerAdListener(
             onAdClosed: (Ad ad){
-              //print("Ad Closed");
+              print("*********************************************************** Ad Closed");
               },
-            onAdFailedToLoad: (Ad ad,LoadAdError error){
+            onAdFailedToLoad: (Ad ad, LoadAdError error){
+              print('*********************************************************** ERROR ********');
               ad.dispose();
               },
             onAdLoaded: (Ad ad){
-              //print('Ad Loaded');
+              print('*********************************************************** Ad Loaded');
             },
             onAdOpened: (Ad ad){
-              //print('Ad opened');
+              print('*********************************************************** Ad opened');
             }
             ),
         request: AdRequest());
 
+    var content = bAd?.load();
+    print("*********************************************************** ${content}");
     return bAd;
   }
 

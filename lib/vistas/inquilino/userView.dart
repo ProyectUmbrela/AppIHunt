@@ -1,7 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
+//import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -40,7 +40,6 @@ class _UserState extends State<UserView> {
 
   @override
   void initState() {
-
     AdmobHelper.initialization();
     super.initState();
     setData();
@@ -54,7 +53,7 @@ class _UserState extends State<UserView> {
       });
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage  event) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
       setState(() {
         messageTitle = event.notification.title;
         //notificationAlert = "Application opened from Notification";
@@ -63,8 +62,7 @@ class _UserState extends State<UserView> {
   }
 
 
-  void setData() async{
-
+  void setData() async {
     _currentUser = FirebaseAuth.instance.currentUser;
 
     var snapShoot = await FirebaseFirestore
@@ -81,7 +79,6 @@ class _UserState extends State<UserView> {
 
 
   Future<void> saveTokenToDatabase(String token) async {
-
     // upsert, insert if not exists or add anew one if already exists
     var _current = await _currentUser.uid;
 
@@ -89,12 +86,11 @@ class _UserState extends State<UserView> {
         .collection('users')
         .doc(_current)
         .set({
-          'updatedOn': FieldValue.serverTimestamp(),
-          'token': token},
-          SetOptions(merge: true)
-        );
+      'updatedOn': FieldValue.serverTimestamp(),
+      'token': token},
+        SetOptions(merge: true)
+    );
   }
-
 
 
   void firebaseCloudMessaging_Listeners() {
@@ -106,15 +102,50 @@ class _UserState extends State<UserView> {
   }
 
 
-
-
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
   }
 
+  /*
+  *
+  * Container(
+                        child: AdWidget(
+                          ad: AdmobHelper.getBannerAd()..load(),
+                          key: UniqueKey(),),
+                        height: AdmobHelper.getBannerAd().size.height.toDouble(),
+                        width: AdmobHelper.getBannerAd().size.width.toDouble()
+                    )
+  * */
 
-  Widget projectWidget() {
+  Widget projectWidgetAd(){
+    return FutureBuilder(
+      future: AdmobHelper.getBannerAd().load(),
+      builder: (_, snapshot){
+        if(!snapshot.hasData){
+          return Container(
+            height: 90,
+            width: MediaQuery.of(context).size.width,
+            child: snapshot.data,
+          );
+        }
+        else{
+
+          return Container(
+              child: AdWidget(
+                ad: snapshot.data,
+                key: UniqueKey(),),
+              height: AdmobHelper.getBannerAd().size.height.toDouble(),
+              width: AdmobHelper.getBannerAd().size.width.toDouble()
+          );
+        }
+      },
+    );
+  }
+
+
+
+  Widget widgetHome() {
 
     return Scaffold(
       body: Container(
@@ -135,13 +166,14 @@ class _UserState extends State<UserView> {
                 alignment: FractionalOffset.topCenter,
                 child: Padding(
                     padding: EdgeInsets.only(top: 2.0),
-                    child: Container(
+                    child: projectWidgetAd(),
+                    /*child: Container(
                         child: AdWidget(
                           ad: AdmobHelper.getBannerAd()..load(),
                           key: UniqueKey(),),
                         height: AdmobHelper.getBannerAd().size.height.toDouble(),
                         width: AdmobHelper.getBannerAd().size.width.toDouble()
-                    )
+                    )*/
                 )
             ),/*
              Container(
@@ -161,7 +193,44 @@ class _UserState extends State<UserView> {
     );
   }
 
+  Widget customAppBar(){
 
+    return Scaffold(
+      appBar: AppBar(
+        bottom: const TabBar(
+          tabs: [
+            Tab(icon: Icon(Icons.home)),
+            Tab(icon: Icon(Icons.airline_seat_individual_suite)),
+            Tab(icon: Icon(Icons.search_sharp)),
+            Tab(icon: Icon(Icons.notifications))
+          ],
+        ),
+        actions: <Widget>[
+          Row(
+            children: <Widget>[
+              Text("Salir"),
+              new IconButton(
+                icon: Icon(
+                    Icons.exit_to_app,
+                    color: Colors.white),
+                onPressed: _logout,
+              )
+            ],
+          )
+        ],
+        title: Text('Hola ${_nombre}'),
+      ),
+      body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          widgetHome(),
+          Lugares(),
+          MyMaps(),
+          NotificacionesInquilino()
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,41 +238,7 @@ class _UserState extends State<UserView> {
     return MaterialApp(
       home: DefaultTabController(
         length: 4,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.home)),
-                Tab(icon: Icon(Icons.airline_seat_individual_suite)),
-                Tab(icon: Icon(Icons.search_sharp)),
-                Tab(icon: Icon(Icons.notifications))
-              ],
-            ),
-            actions: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text("Salir"),
-                  new IconButton(
-                    icon: Icon(
-                        Icons.exit_to_app,
-                        color: Colors.white),
-                    onPressed: _logout,
-                  )
-                ],
-              )
-            ],
-            title: Text('Hola ${_nombre}'),
-          ),
-          body: TabBarView(
-            physics: const  NeverScrollableScrollPhysics(),
-            children: [
-              projectWidget(),
-              Lugares(),
-              MyMaps(),
-              NotificacionesInquilino()
-            ],
-          ),
-        ),
+        child: customAppBar(),
       ),
     );
   }
