@@ -219,25 +219,26 @@ class _UserState extends State<UserView> {
             fontSize: 20,
           ),
         ),
-        backgroundColor: colorScheme.primary,
+        //backgroundColor: colorScheme.primary,
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: colorScheme.primary,
-        selectedItemColor: Colors.black87,//colorScheme.onSurface,
+        selectedItemColor: Colors.amber,//colorScheme.onSurface,
         //unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
-        selectedLabelStyle: textTheme.caption,
-        unselectedLabelStyle: textTheme.caption,
+        //selectedLabelStyle: textTheme.caption,
+        //unselectedLabelStyle: textTheme.caption,
         onTap: (value) {
-          // Respond to item press.
-          setState(() => _currentIndex = value);
+          // Si el index es distinto a la vista actual
+          if(_currentIndex != value){
+            setState(() => _currentIndex = value);
+          }
         },
         items: [
-
           BottomNavigationBarItem(
             title: Text(
-              'Favoritos',
+              'Principal',
               style: TextStyle(
                 color: Colors.white,),),
             icon: Icon(Icons.home,
