@@ -374,9 +374,10 @@ class MapsPage extends State<MyMaps> {
           children:
           <Widget>[
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 2),
               color: Colors.grey[100],
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                 children: <Widget>[
                   Expanded(
                     child: TextField(
@@ -387,15 +388,17 @@ class MapsPage extends State<MyMaps> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                          hintText: "Buscar..."),
+                          hintText: "Buscar"),
                     ),
                   ),
                   Material(
                     type: MaterialType.transparency,
                     child: IconButton(
-                      splashColor: Colors.black,
-                      icon: Icon(Icons.search),
-                      onPressed: () => searchPlace()
+                        splashColor: Colors.black,
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.black54,),
+                        onPressed: () => searchPlace()
                     ),
                   ),
                 ],

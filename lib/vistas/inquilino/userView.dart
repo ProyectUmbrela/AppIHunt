@@ -196,21 +196,38 @@ class _UserState extends State<UserView> {
       body: _getView(_currentIndex),
       appBar: AppBar(
         actions: <Widget>[
-          Row(
+          /*Row(
             children: <Widget>[
-              Text(
-                'Salir',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                ),
-              ),
               new IconButton(
-                icon: Icon(Icons.exit_to_app, color: Colors.white),
+                icon: Icon(Icons.menu, color: Colors.white),
                 onPressed: _logout,
               )
             ],
-          )
+          )*/
+          PopupMenuButton(
+            // add icon, by default "3 dot" icon
+              icon: Icon(Icons.menu),
+              itemBuilder: (context){
+                return [
+                  PopupMenuItem<int>(
+                    value: 0,
+                    child: Text("Mi cuenta"),
+                  ),
+                  PopupMenuItem<int>(
+                    value: 1,
+                    child: Text("Salir"),
+                  ),
+                ];
+              },
+              onSelected:(value){
+                if(value == 0){
+                  print("My account menu is selected.");
+                }else if(value == 1){
+                  _logout();
+                  print("Settings menu is selected.");
+                }
+              }
+          ),
         ],
         title: Text(
           'Hola ${_nombre}',
