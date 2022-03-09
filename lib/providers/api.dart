@@ -10,6 +10,7 @@ class Api {
 
   String _register = '/register';
   String _login = '/login';
+  String _resetContrasena = '/resetPassword';
   String _habitacionesRentadas = '/historialInquilino';
   String _listarInvitaciones = '/listarInvitacionesUsuario';
 
@@ -37,6 +38,12 @@ class Api {
 
   Future<dynamic> loginPost(data) async {
     var response = await http.post(Uri.parse(this._url + _login), body: data,
+        headers: this._headers);
+    return response;
+  }
+
+  Future<dynamic> resetPasswordPost(data) async {
+    var response = await http.post(Uri.parse(this._url + _resetContrasena), body: data,
         headers: this._headers);
     return response;
   }

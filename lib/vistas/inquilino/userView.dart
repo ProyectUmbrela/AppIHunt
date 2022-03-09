@@ -23,7 +23,7 @@ class UserView extends StatefulWidget {
 
 class _UserState extends State<UserView> {
   User _currentUser;
-  String _idUsuario;
+  //String _idUsuario;
   String _nombre;
   int _currentIndex = 0;
 
@@ -64,7 +64,7 @@ class _UserState extends State<UserView> {
 
     setState(() {
       _nombre = snapShoot['nombre'];
-      _idUsuario = snapShoot['usuario'];
+      //_idUsuario = snapShoot['usuario'];
     });
   }
 
@@ -89,42 +89,6 @@ class _UserState extends State<UserView> {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
   }
-
-  /*
-  Widget projectWidgetAd() {
-
-    return FutureBuilder(
-      future: AdmobHelper.getBannerAd().load(),
-      builder: (_, snapshot) {
-        if (!snapshot.hasData) {
-          return Container(
-            height: 90,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            child: snapshot.data,
-          );
-        } else {
-          return Container(
-              child: AdWidget(
-                ad: snapshot.data,
-                key: UniqueKey(),
-              ),
-              height: AdmobHelper
-                  .getBannerAd()
-                  .size
-                  .height
-                  .toDouble(),
-              width: AdmobHelper
-                  .getBannerAd()
-                  .size
-                  .width
-                  .toDouble());
-        }
-      },
-    );
-  }*/
 
   Widget widgetHome() {
     return Scaffold(
@@ -154,7 +118,8 @@ class _UserState extends State<UserView> {
                         height: AdmobHelper.getBannerAd().size.height.toDouble(),
                         width: AdmobHelper.getBannerAd().size.width.toDouble()
                     )
-                )), /*
+                )),
+            /*
              Container(
                child: Icon(Icons.person ,
                  color: Colors.white,
@@ -196,14 +161,6 @@ class _UserState extends State<UserView> {
       body: _getView(_currentIndex),
       appBar: AppBar(
         actions: <Widget>[
-          /*Row(
-            children: <Widget>[
-              new IconButton(
-                icon: Icon(Icons.menu, color: Colors.white),
-                onPressed: _logout,
-              )
-            ],
-          )*/
           PopupMenuButton(
             // add icon, by default "3 dot" icon
               icon: Icon(Icons.menu),
@@ -290,116 +247,3 @@ class _UserState extends State<UserView> {
   }
 }
 
-/*
-  ThemeData _buildShrineTheme() {
-    final ThemeData base = ThemeData.light();
-    return base.copyWith(
-      colorScheme: _shrineColorScheme,
-      textTheme: _buildShrineTextTheme(base.textTheme),
-    );
-  }*/
-/*
-  TextTheme _buildShrineTextTheme(TextTheme base) {
-    return base
-        .copyWith(
-      caption: base.caption.copyWith(
-        fontWeight: FontWeight.w400,
-        fontSize: 14,
-        letterSpacing: defaultLetterSpacing,
-      ),
-      button: base.button.copyWith(
-        fontWeight: FontWeight.w500,
-        fontSize: 14,
-        letterSpacing: defaultLetterSpacing,
-      ),
-    )
-        .apply(
-      fontFamily: 'Rubik',
-      displayColor: shrineBrown900,
-      bodyColor: shrineBrown900,
-    );
-  }*/
-
-/*
-  const ColorScheme _shrineColorScheme = ColorScheme(
-    primary: shrinePink100,
-    primaryVariant: shrineBrown900,
-    secondary: shrinePink50,
-    secondaryVariant: shrineBrown900,
-    surface: shrineSurfaceWhite,
-    background: shrineBackgroundWhite,
-    error: shrineErrorRed,
-    onPrimary: shrineBrown900,
-    onSecondary: shrineBrown900,
-    onSurface: shrineBrown900,
-    onBackground: shrineBrown900,
-    onError: shrineSurfaceWhite,
-    brightness: Brightness.light,
-  );*/
-
-/*
-  const Color shrinePink50 = Color(0xFFFEEAE6);
-  const Color shrinePink100 = Color(0xFFFEDBD0);
-  const Color shrinePink300 = Color(0xFFFBB8AC);
-  const Color shrinePink400 = Color(0xFFEAA4A4);
-  const Color shrineBrown900 = Color(0xFF442B2D);
-  const Color shrineBrown600 = Color(0xFF7D4F52);
-  const Color shrineErrorRed = Color(0xFFC5032B);
-  const Color shrineSurfaceWhite = Color(0xFFFFFBFA);
-  const Color shrineBackgroundWhite = Colors.white;
-  const defaultLetterSpacing = 0.03;
-  */
-
-/*
-  Widget customAppBar(){
-
-    return Scaffold(
-      appBar: AppBar(
-        bottom: const TabBar(
-          tabs: [
-            Tab(icon: Icon(Icons.home)),
-            Tab(icon: Icon(Icons.airline_seat_individual_suite)),
-            Tab(icon: Icon(Icons.search_sharp)),
-            Tab(icon: Icon(Icons.notifications))
-          ],
-        ),
-        actions: <Widget>[
-          Row(
-            children: <Widget>[
-              Text("Salir"),
-              new IconButton(
-                icon: Icon(
-                    Icons.exit_to_app,
-                    color: Colors.white),
-                onPressed: _logout,
-              )
-            ],
-          )
-        ],
-        title: Text('Hola ${_nombre}'),
-      ),
-      body: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          widgetHome(),
-          Lugares(),
-          MyMaps(),
-          NotificacionesInquilino()
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 4,
-        child: bottomAppBar(),//customAppBar(),
-      ),
-    );
-  }
-
-}
- */

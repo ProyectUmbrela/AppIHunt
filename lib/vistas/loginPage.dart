@@ -11,6 +11,7 @@ import 'package:ihunt/vistas/mainscreen.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ihunt/vistas/recuperarContrasena.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -62,9 +63,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
+
+
   Widget recuperarPass(){
     return InkWell(
-      onTap: ()=> {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => RecuperarContrasena()));
+        },
       child: Column(
         children: <Widget>[
           Container(
@@ -191,7 +200,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -243,7 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Container(
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text("Correo o usuario"),
+                        child: Text("Correo"),
                       ),
                     ),
                   ),
