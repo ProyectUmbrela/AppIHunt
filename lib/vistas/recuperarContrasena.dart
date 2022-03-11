@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
-import 'package:ihunt/utils/fire_auth.dart';
+//import 'package:ihunt/utils/fire_auth.dart';
 import 'package:ihunt/utils/widgets.dart';
+import 'package:ihunt/vistas/loginPage.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class RecuperarContrasena extends StatefulWidget {
@@ -78,14 +79,18 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
       print("A ${resp['message']}");
       _showDialog(1, 'El correo no existe');
       setState(() => _saving = false);
-
     }
     else{
       print("B ${resp['message']}");
-      _showDialog(1, 'Se ha enviado un correo para recuperar tu contraseña');
+      _showDialog(2, 'Se ha enviado un correo para recuperar tu contraseña');
       setState(() => _saving = false);
-    }
 
+      Future.delayed(Duration(seconds: 3), () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()));
+      });
+    }
   }
 
   @override
