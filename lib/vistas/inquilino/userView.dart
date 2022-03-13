@@ -155,11 +155,12 @@ class _UserState extends State<UserView> {
 
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    //final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: _getView(_currentIndex),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: <Widget>[
           PopupMenuButton(
             // add icon, by default "3 dot" icon
