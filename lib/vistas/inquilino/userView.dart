@@ -151,14 +151,15 @@ class _UserState extends State<UserView> {
 
     return Center(child: Text("There is no page builder for this index."),);
   }
-
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     //final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      body: _getView(_currentIndex),
+      body: Center(
+        child:_getView(_currentIndex)),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
@@ -200,7 +201,8 @@ class _UserState extends State<UserView> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: colorScheme.primary,
-        selectedItemColor: Colors.amber,//colorScheme.onSurface,
+        //selectedItemColor: Colors.amber,//colorScheme.onSurface,
+        selectedItemColor: Colors.white,
         //unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
         //selectedLabelStyle: textTheme.caption,
         //unselectedLabelStyle: textTheme.caption,
@@ -211,6 +213,27 @@ class _UserState extends State<UserView> {
           }
         },
         items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Principal',
+            //backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.airline_seat_individual_suite),
+            label: 'Hbitaciones',
+            //backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            label: 'Lugares',
+            //backgroundColor: Colors.white,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.library_books),
+            label: 'Invitaciones',
+            //backgroundColor: Colors.white,
+          ),
+          /*
           BottomNavigationBarItem(
             title: Text(
               'Principal',
@@ -241,7 +264,7 @@ class _UserState extends State<UserView> {
               color: Colors.white,),),
             icon: Icon(Icons.library_books,
               color:Colors.white,),
-          ),
+          ),*/
         ],
       ),
     );

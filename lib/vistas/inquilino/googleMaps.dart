@@ -38,12 +38,10 @@ class infoHabitacion{
 
 }
 
-
-
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
-  String _coleccion = "marker_rent"; // habitaciones
+  String _coleccion = "marker_rent";//"marker_rent"; // habitaciones -> produccion
 
   //google controller and markers
   GoogleMapController _controller;
