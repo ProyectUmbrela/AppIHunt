@@ -299,7 +299,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
         var _name = snapShoot['nombre'];
         String tokenAuth = await currentUser.getIdToken();
 
-        final msg = jsonEncode({
+        await getLocation(adressCtrl.text);
+
+        var body = {
           "idhabitacion": roomidCtrl.text,
           "idpropietario": _id,
           "direccion": adressCtrl.text,
@@ -307,13 +309,38 @@ class _RegisterRoomState extends State<RegisterRoom> {
           "servicios": servicesCtrl.text,
           "descripcion": descriptionCtrl.text,
           "precio": double.parse(priceCtrl.text),
-          "terminos": termsCtrl.text
-        });
+          "terminos": termsCtrl.text,
+          'latitud' : lat,
+          "longitud": lngt,
+          'publicar': 1,
+          'disponibilidad': 0,
+          'fotos': {}
+        };
 
-        await getLocation(adressCtrl.text);
-        addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, _name, roomidCtrl.text);
+        if (image_files.length == 0){
+
+          body['check_images'] = 0;
+
+        }else{
+
+          body['check_images'] = 1;
+          // AGREGAR IMAGENES STR
+          for (int i = 0; i < image_files.length; i++){
+            final bytes = image_files[i].readAsBytesSync();
+            print('++++++++++++++++++ IMAGEN ${i}');
+            //String img64 = base64Encode(bytes);
+            //body['fotos'][i.toString()] = img64;
+          }
+
+        }
+
+        final msg = jsonEncode(body);
+        print(' *********************** MSG ${msg}');
+        //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, _name, roomidCtrl.text);
+
 
         var response = await _api.RegisterRoomPost(msg, tokenAuth);
+        print('------------------- RESPUESTA ${response.statusCode}');
         Map data = jsonDecode(response.body);
 
         if (response.statusCode == 201) {

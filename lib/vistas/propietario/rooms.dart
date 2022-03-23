@@ -151,10 +151,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     String title = 'Lista de habitaciones';
 
     return Scaffold(
-      appBar: AppBar(
-          title: Text(title),
-          centerTitle: true
-      ),
       body: FutureBuilder(
           future: getRooms(id),
           builder: (context, snapshot) {

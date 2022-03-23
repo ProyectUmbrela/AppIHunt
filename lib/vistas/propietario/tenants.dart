@@ -177,10 +177,6 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     String title = 'Lista de inquilinos';
     return Scaffold(
-      appBar: AppBar(
-          title: Text(title),
-          centerTitle: true
-      ),
       body: FutureBuilder(
           future: getTenants(id),
           builder: (context, snapshot) {

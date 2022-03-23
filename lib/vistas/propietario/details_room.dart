@@ -207,7 +207,7 @@ class _DetailRoomState extends State<DetailRoom> {
 
       if (response.statusCode == 201) {
         // CREAR UN REFRESH EN LA PAGINA
-        debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE");
+        debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE DE FIRESTORE Y MYSQL");
         Navigator.pop(context);
         /*Navigator.push(
           context,

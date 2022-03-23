@@ -22,9 +22,10 @@ class _LandlordState extends State<Landlord>
     with SingleTickerProviderStateMixin {
 
   // VARIABLES DE SESION
-  String id_usuario;
-  String nombre;
+  User _currentUser;
+  String _nombre;
   int _currentIndex = 0;
+
 
   @override
   void initState(){
@@ -32,12 +33,26 @@ class _LandlordState extends State<Landlord>
   }
 
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
+    _currentUser = FirebaseAuth.instance.currentUser;
+
+    var snapShoot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
 
     setState(() {
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id_usuario = sharedPreferences.getString("idusuario") ?? "Error";
+      _nombre = snapShoot['nombre'];
+      //_idUsuario = snapShoot['usuario'];
     });
+  }
+
+  Future<void> saveTokenToDatabase(String token) async {
+    // upsert, insert if not exists or add anew one if already exists
+    var _current = await _currentUser.uid;
+
+    await FirebaseFirestore.instance.collection('users').doc(_current).set(
+        {'updatedOn': FieldValue.serverTimestamp(), 'token': token},
+        SetOptions(merge: true));
   }
 
   Future<void> _logout() async {
@@ -101,7 +116,9 @@ class _LandlordState extends State<Landlord>
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      body: _getView(_currentIndex),
+      body: Center(
+          child: _getView(_currentIndex)
+      ),
       appBar: AppBar(
         actions: <Widget>[
           PopupMenuButton(
@@ -130,7 +147,7 @@ class _LandlordState extends State<Landlord>
           ),
         ],
         title: Text(
-          'Hola ${nombre}',
+          'Hola ${_nombre}',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -142,10 +159,7 @@ class _LandlordState extends State<Landlord>
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: colorScheme.primary,
-        selectedItemColor: Colors.amber,//colorScheme.onSurface,
-        //unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
-        //selectedLabelStyle: textTheme.caption,
-        //unselectedLabelStyle: textTheme.caption,
+        selectedItemColor: Colors.white,
         onTap: (value) {
           // Si el index es distinto a la vista actual
           if(_currentIndex != value){

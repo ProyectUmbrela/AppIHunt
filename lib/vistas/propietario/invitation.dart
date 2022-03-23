@@ -103,10 +103,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
     String title = 'Lista de invitaciones';
 
     return Scaffold(
-      appBar: AppBar(
-          title: Text(title),
-          centerTitle: true
-      ),
       body: FutureBuilder(
           future: getInvitations(id),
           builder: (context, snapshot) {
