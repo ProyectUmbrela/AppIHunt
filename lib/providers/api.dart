@@ -7,6 +7,7 @@ class Api {
 
   String _url = 'https://appiuserstest.herokuapp.com/ihunt';
   ///String _url = 'https://prdapp.herokuapp.com/ihunt';
+  String _utilsUrl = 'https://appivarios.herokuapp.com/ihunt/buscarcodigopostal';
 
   String _register = '/register';
   String _login = '/login';
@@ -118,5 +119,10 @@ class Api {
     return response;
   }
 
+  Future<dynamic> GetAddress(data) async {
+    var response = await http.post(Uri.parse(this._utilsUrl),
+        body: data, headers: this._headers);
+    return response;
+  }
 
 }
