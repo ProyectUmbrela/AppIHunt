@@ -290,8 +290,8 @@ class _RegisterState extends State<Register> {
                       )),
                       Expanded(
                           child: Container(
-                        child: longButtons("Cancelar", canceled),
-                        alignment: Alignment.centerRight,
+                            child: longButtons("Cancelar", canceled),
+                            alignment: Alignment.centerRight,
                       )),
                     ],
                   )

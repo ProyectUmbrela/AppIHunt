@@ -23,7 +23,6 @@ class UserView extends StatefulWidget {
 
 class _UserState extends State<UserView> {
   User _currentUser;
-  //String _idUsuario;
   String _nombre;
   int _currentIndex = 0;
 
@@ -151,11 +150,10 @@ class _UserState extends State<UserView> {
 
     return Center(child: Text("There is no page builder for this index."),);
   }
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  //static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    //final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       body: Center(
@@ -195,17 +193,12 @@ class _UserState extends State<UserView> {
             fontSize: 20,
           ),
         ),
-        //backgroundColor: colorScheme.primary,
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: colorScheme.primary,
-        //selectedItemColor: Colors.amber,//colorScheme.onSurface,
         selectedItemColor: Colors.white,
-        //unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
-        //selectedLabelStyle: textTheme.caption,
-        //unselectedLabelStyle: textTheme.caption,
         onTap: (value) {
           // Si el index es distinto a la vista actual
           if(_currentIndex != value){
@@ -216,55 +209,19 @@ class _UserState extends State<UserView> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Principal',
-            //backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.airline_seat_individual_suite),
             label: 'Hbitaciones',
-            //backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_on),
             label: 'Lugares',
-            //backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_books),
             label: 'Invitaciones',
-            //backgroundColor: Colors.white,
           ),
-          /*
-          BottomNavigationBarItem(
-            title: Text(
-              'Principal',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.home,
-              color:Colors.white,),),
-          BottomNavigationBarItem(
-            title: Text(
-              'Hbitaciones',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.airline_seat_individual_suite,
-              color:Colors.white,),
-          ),
-          BottomNavigationBarItem(
-            title: Text(
-              'Lugares',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.location_on,
-              color:Colors.white,),
-          ),
-          BottomNavigationBarItem(
-            title: Text(
-              'Invitaciones',
-              style: TextStyle(
-              color: Colors.white,),),
-            icon: Icon(Icons.library_books,
-              color:Colors.white,),
-          ),*/
         ],
       ),
     );

@@ -232,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
       )
     );
 
-
+    final heighT = MediaQuery.of(context).size.height * 0.08;
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
@@ -287,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
                   recuperarPass(),
                   _divider(),
                   Padding(
-                    padding: const EdgeInsets.all(50.0),
+                    padding: new EdgeInsets.all(heighT),
                   ),
                   _createAccountLabel()
                 ],

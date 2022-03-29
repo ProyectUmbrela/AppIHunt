@@ -24,7 +24,6 @@ class infoHabitacion{
   String costo;
   String detalles;
   String direccion;
-  int habitaciones;
   String titular;
 
 
@@ -33,7 +32,6 @@ class infoHabitacion{
   this.costo,
   this.detalles,
   this.direccion,
-  this.habitaciones,
   this.titular);
 
 }
@@ -41,7 +39,7 @@ class infoHabitacion{
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
-  String _coleccion = "marker_rent";//"marker_rent"; // habitaciones -> produccion
+  String _coleccion = "habitaciones";//"marker_rent"; // habitaciones -> produccion
 
   //google controller and markers
   GoogleMapController _controller;
@@ -201,63 +199,42 @@ class MapsPage extends State<MyMaps> {
   }
 
   LatLng initCameraPosition;
-  CameraPosition _currentPosition;
-
-  /*
-  static final CameraPosition initCameraPosition = CameraPosition(
-
-      target: LatLng(18.9242095, -99.21812706731137),
-      zoom: 14.0
-  );*/
+  //CameraPosition _currentPosition;
 
 
   //GET THE CURRENT POSITION
   Future<Position> _getGeoLocationPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
-    print("######################################################### A");
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      print("######################################################### B");
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
       await Geolocator.openLocationSettings();
-      print("######################################################### C");
       return Future.error('Location services are disabled.');
     }
-    print("######################################################### D");
     permission = await Geolocator.checkPermission();
-    print("######################################################### E");
     if (permission == LocationPermission.denied) {
-      print("######################################################### F");
       permission = await Geolocator.requestPermission();
-      print("######################################################### G");
       if (permission == LocationPermission.denied) {
-        print("######################################################### H");
         return Future.error('Location permissions are denied');
       }
 
       else if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        print("######################################################### I");
         //lat=6.9271;long=79.8612;
         initCameraPosition = LatLng(7.4219983, -122.084);
-        print("######################################################### J");
       }
       else{
-        print(" AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ");
       }
     }
-    print("######################################################### K");
     if (permission == LocationPermission.deniedForever) {
-      print("######################################################### L");
       // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    print("######################################################### M");
 
 
     // When we reach here, permissions are granted and we can
@@ -265,10 +242,8 @@ class MapsPage extends State<MyMaps> {
     Position position = await Geolocator.getCurrentPosition(
                                             desiredAccuracy: LocationAccuracy.high,
                                             timeLimit: const Duration (seconds: 1));
-    print("######################################################### N");
 
     // Latitude: 37.4219983, Longitude: -122.084
-
 
     print("#=======================> ${position} <==============================");
 
@@ -287,7 +262,6 @@ class MapsPage extends State<MyMaps> {
     super.initState();
     setStyleMap();
     setCustomMarker();
-    //_getGeoLocationPosition();
 
   }
 
@@ -316,7 +290,7 @@ class MapsPage extends State<MyMaps> {
   }
 
   Widget getViewWidget(_markers) {
-
+    print("111111111111111111111111111111111111111111");
     return FutureBuilder(
         future: _getGeoLocationPosition(),
         builder: (context, snapshot) {
@@ -338,6 +312,7 @@ class MapsPage extends State<MyMaps> {
             }
             else{
               Currentposition  =  LatLng(snapshot.data.latitude , snapshot.data.longitude);
+
             }
 
             return GoogleMap(
@@ -420,6 +395,8 @@ class MapsPage extends State<MyMaps> {
                   int hasImage = snapshot.data.docs[i]['check_images'];
                   int publicar = snapshot.data.docs[i]['publicar'];
 
+
+                  //print("AAAAAAAAAAAAAAAAA==============================================> ${}");
                   // Si tiene imagenes y se quiere publicar
                   if (hasImage == 1 && publicar == 1){
                       var rawFotos = snapshot.data.docs[i]['fotos'];
@@ -446,29 +423,24 @@ class MapsPage extends State<MyMaps> {
                       continue;
                     }
                   }
+                  //print("A ############################### ${snapshot.data.docs[i]['coords']['latitud']}");
+                  //toStrin
 
-                  double lat = snapshot.data.docs[i]['coords'].latitude;
-                  double lng = snapshot.data.docs[i]['coords'].longitude;
-
-
-                  var latLng = LatLng(lat, lng);
+                  double latitude = snapshot.data.docs[i]['coords'].latitude;
+                  double longitude = snapshot.data.docs[i]['coords'].longitude;
+                  var latLng = LatLng(latitude, longitude);
 
                   String direccion = snapshot.data.docs[i]['direccion'];
-                  //String telefono = snapshot.data.docs[i]['telefono'];
                   String titular = snapshot.data.docs[i]['titular'];
                   String servicios = snapshot.data.docs[i]['servicios'];
                   String costo = snapshot.data.docs[i]['costo'];
                   String detalles = snapshot.data.docs[i]['detalles'];
-
-                  int habitaciones = snapshot.data.docs[i]['habitaciones'];
-
 
                   infoHabitacion habitacion = infoHabitacion(
                       servicios,
                       costo,
                       detalles,
                       direccion,
-                      habitaciones,
                       titular);
 
                   initMarker(
@@ -479,18 +451,6 @@ class MapsPage extends State<MyMaps> {
 
                 }
                 return getViewWidget(_markers);
-                /*
-                return GoogleMap(
-                  myLocationButtonEnabled: true,
-                  mapType: MapType.normal,
-                  myLocationEnabled: true,
-                  compassEnabled: true,
-                  initialCameraPosition: CameraPosition(
-                      target: initCameraPosition,
-                      zoom: 14.0),
-                  markers: Set<Marker>.of(_markers.values),
-                  onMapCreated: _onMapCreated,
-                );*/
               }
               return Center(
                 child: CircularProgressIndicator(),
