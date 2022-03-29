@@ -47,18 +47,20 @@ class _RegisterRoomState extends State<RegisterRoom> {
   final formKey = new GlobalKey<FormState>();
 
   TextEditingController roomidCtrl = new TextEditingController();
-  TextEditingController adressCtrl = new TextEditingController();
+  TextEditingController cpCtrl = new TextEditingController();
   TextEditingController dimensionsCtrl = new TextEditingController();
   TextEditingController servicesCtrl = new TextEditingController();
   TextEditingController descriptionCtrl = new TextEditingController();
   TextEditingController priceCtrl = new TextEditingController();
   TextEditingController termsCtrl = new TextEditingController();
 
-  String _roomid, _adress, _dimensions, _services, _description, _price, _terms;
+  String _roomid, _cp, _colonia, _dimensions, _services, _description, _price, _terms;
 
   // VARIABLES PARA COORDENADAS
   double lat;
   double lngt;
+  int _index = 0;
+  String _state = '';
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +170,30 @@ class _RegisterRoomState extends State<RegisterRoom> {
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
     );
 
-    final adress = TextFormField(
+    final cp = TextFormField(
       autofocus: false,
-      controller: adressCtrl,
-      validator: (value) => value.isEmpty ? "La dirección de la habitación es requerida" : null,
-      onSaved: (value) => _adress = value,
+      controller: cpCtrl,
+      validator: (value) => value.isEmpty ? "Ingresa el código postal" : null,
+      onSaved: (value) => _cp = value,
       decoration:
       buildInputDecoration("Dirección", Icons.map),
+    );
+
+    final colonias = DropdownButtonFormField<String>(
+      value: _colonia,
+      hint: Text(
+        'Seleccione un municipio',
+      ),
+      onChanged: (value) =>
+          setState(() => _colonia = value),
+      validator: (value) => value == null ? 'Por favor elija una opción' : null,
+      items:
+      [''].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
 
     final dimensions = TextFormField(
@@ -215,6 +234,71 @@ class _RegisterRoomState extends State<RegisterRoom> {
       onSaved: (value) => _terms = value,
       decoration:
       buildInputDecoration("Términos", Icons.add_alert),
+    );
+
+    Future getCp(cp) async {
+        Api _api = Api();
+
+        final msg = jsonEncode({
+          "cp": cpCtrl.text
+        });
+
+        var response = await _api.GetAddress(msg);
+        var data = jsonDecode(response.body);
+
+        data = jsonDecode(data['Direcciones']);
+
+        _state = data['estado'];
+
+        print('---------- CP INGRESADO: ${cp} ${response.statusCode} ${data}');
+
+        return data;
+    }
+
+    final address_ = Stepper(
+      currentStep: _index,
+      onStepCancel: () {
+        if (_index > 0) {
+          setState(() {
+            _index -= 1;
+          });
+        }
+      },
+      onStepContinue: () {
+        if (_index <= 0) {
+          setState(() {
+            _index += 1;
+          });
+        }
+      },
+      onStepTapped: (int index) {
+        setState(() {
+          _index = index;
+        });
+      },
+      steps: <Step>[
+        new Step(
+          title: Text('Ingresa el código postal'),
+          content: Container(
+              alignment: Alignment.centerLeft,
+              child: cp
+          ),
+        ),
+        new Step(
+          title: Text('Estado y Municipio'),
+          content: Container(
+              alignment: Alignment.centerLeft,
+              child: colonias
+          ),
+        ),
+        new Step(
+          title: Text('Colonia'),
+          content: Container(
+              alignment: Alignment.centerLeft,
+              child: colonias
+          ),
+        )
+      ],
     );
 
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
@@ -299,12 +383,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
         var _name = snapShoot['nombre'];
         String tokenAuth = await currentUser.getIdToken();
 
-        await getLocation(adressCtrl.text);
+        await getLocation('');
 
         var body = {
           "idhabitacion": roomidCtrl.text,
           "idpropietario": _id,
-          "direccion": adressCtrl.text,
+          "direccion": '',
           "dimension": dimensionsCtrl.text,
           "servicios": servicesCtrl.text,
           "descripcion": descriptionCtrl.text,
@@ -322,7 +406,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           body['check_images'] = 0;
 
         }else{
-
+          print('######################### ${image_files}');
           body['check_images'] = 1;
           // AGREGAR IMAGENES STR
           for (int i = 0; i < image_files.length; i++){
@@ -337,7 +421,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
         final msg = jsonEncode(body);
         print(' *********************** MSG ${msg}');
         //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, _name, roomidCtrl.text);
-
 
         var response = await _api.RegisterRoomPost(msg, tokenAuth);
         print('------------------- RESPUESTA ${response.statusCode}');
@@ -395,7 +478,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
                       label("Dirección"),
                       SizedBox(height: 5),
-                      adress,
+                      address_,
                       SizedBox(
                         height: 15,
                       ),
