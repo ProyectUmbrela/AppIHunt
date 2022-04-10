@@ -84,7 +84,6 @@ class IHuntApp extends StatelessWidget {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get();
-    //print("==============> ${FirebaseAuth.instance.currentUser.uid}");
     return dataUser;
   }
 
@@ -101,26 +100,36 @@ class IHuntApp extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
-                    //Text('Cargando...'),
                   ]
               ),
             );
           }
           else if(snapshot.hasData) {
 
-            print("ELSE CONDITIION");
-            print("#######################################################");
-            print("#######################################################");
-
-            print("${snapshot.data['tipo']}");
-            print("${snapshot.data['usuario']}");
-            print("#######################################################");
-            print("#######################################################");
+            try{
+              print("  ======>     ${snapshot.hasData}  ");
+              print("1 ELSE CONDITIION");
+              print("#######################################################");
+              print("#######################################################");
+              print("A ${snapshot.data['tipo']}");
+              print("B ${snapshot.data['usuario']}");
+              print("#######################################################");
+              print("#######################################################");
+            }catch (error){
+              if(error.toString().contains('Bad state')){
+                print("#################error: $error");
+                return LoginPage();
+              }else{
+                return MainScreen();
+              }
+            }
 
             if (snapshot.data['tipo'] == 'Usuario'){
               return UserView();
+
             }else{
               return Landlord();
+
             }
           }
           else{
@@ -172,7 +181,6 @@ class IHuntApp extends StatelessWidget {
       locale: const Locale('es'),
       routes: {
         '/login': (context) => LoginPage(),
-        //'/Init': (context) => Inicio(),
         '/user': (context) => UserView(),
         '/landlord': (context) => Landlord(),
         '/register': (context) => Register(),

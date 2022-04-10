@@ -245,7 +245,7 @@ class MapsPage extends State<MyMaps> {
 
     // Latitude: 37.4219983, Longitude: -122.084
 
-    print("#=======================> ${position} <==============================");
+    //print("#=======================> ${position} <==============================");
 
     return position;
   }
@@ -290,21 +290,14 @@ class MapsPage extends State<MyMaps> {
   }
 
   Widget getViewWidget(_markers) {
-    print("111111111111111111111111111111111111111111");
+
     return FutureBuilder(
         future: _getGeoLocationPosition(),
         builder: (context, snapshot) {
           //print("B =======================================> ${snapshot}");
           if (snapshot.connectionState == ConnectionState.done) {
             LatLng Currentposition;
-            print("ELSE CONDITIION");
-            print("#######################################################");
-            print("#######################################################");
 
-            print("************** LATITUDE: ${snapshot.data}");
-
-            print("#######################################################");
-            print("#######################################################");
             // Latitude: 37.4219983
             // Longitude: -122.084
             if (!snapshot.hasData){

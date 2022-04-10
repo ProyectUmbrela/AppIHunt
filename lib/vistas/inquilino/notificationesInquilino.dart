@@ -109,14 +109,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     List<Invitacion> invitaciones = [];
     int statusCode = response.statusCode;
     var resp = json.decode(response.body);
-    print("#####################################################################");
-    print("A ####################################################################");
-
-    print("${tokenAuth}");
-    print("${resp}");
-
-    print("A ####################################################################");
-    print("#####################################################################");
 
     if (statusCode == 201) {
       List invitacion = resp['invitaciones'];

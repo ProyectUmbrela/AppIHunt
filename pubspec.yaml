@@ -91,6 +91,7 @@ dependencies:
   url_launcher: ^6.0.17
   material_floating_search_bar: ^0.3.6
   geocoder: ^0.2.1
+  flutter_automation: ^1.2.2 #-------------------------------------------------------------------
 
 
 dev_dependencies:
