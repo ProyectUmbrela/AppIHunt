@@ -150,7 +150,104 @@ class _UserState extends State<UserView> {
 
     return Center(child: Text("There is no page builder for this index."),);
   }
-  //static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  Widget bodyFirst() {
+    return Container(
+        color: Colors.green, child: Center(child: Text("First Page")));
+  }
+
+
+  Widget menuOptions(){
+    return Drawer(
+      // Add a ListView to the drawer. This ensures the user can scroll
+      // through the options in the drawer if there isn't enough vertical
+      // space to fit everything.
+      child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'Perfil',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 19,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text(
+              'Cuenta',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
+            ),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+              bodyFirst();
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Notificaciones',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
+            ),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Ayuda',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
+            ),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Aviso de privacidad',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
+            ),
+            onTap: () {
+              // Update the state of the app.
+              // ...
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Salir',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
+            ),
+            onTap: () {
+              _logout();
+            },
+          ),
+        ],
+      ),
+    );
+
+  }
 
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -159,41 +256,50 @@ class _UserState extends State<UserView> {
       body: Center(
         child:_getView(_currentIndex)),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          PopupMenuButton(
-            // add icon, by default "3 dot" icon
-              icon: Icon(Icons.menu),
-              itemBuilder: (context){
-                return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Mi cuenta"),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: Text("Salir"),
-                  ),
-                ];
-              },
-              onSelected:(value){
-                if(value == 0){
-                  print("My account menu is selected.");
-                }else if(value == 1){
-                  _logout();
-                  print("Settings menu is selected.");
+          title: Text(
+            'Hola ${_nombre}',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
+          )),
+        /*appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            PopupMenuButton(
+              // add icon, by default "3 dot" icon
+                icon: Icon(Icons.menu),
+                itemBuilder: (context){
+                  return [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("Mi cuenta"),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Text("Salir"),
+                    ),
+                  ];
+                },
+                onSelected:(value){
+                  if(value == 0){
+                    print("My account menu is selected.");
+                  }else if(value == 1){
+                    _logout();
+                    print("Settings menu is selected.");
+                  }
                 }
-              }
+            ),
+          ],
+          title: Text(
+            'Hola ${_nombre}',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ),
           ),
-        ],
-        title: Text(
-          'Hola ${_nombre}',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-      ),
+        ),*/
+      endDrawer: menuOptions(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
