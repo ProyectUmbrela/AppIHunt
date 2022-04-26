@@ -153,9 +153,10 @@ class _UserState extends State<UserView> {
 
   Widget bodyFirst() {
     return Container(
-        color: Colors.green, child: Center(child: Text("First Page")));
+        color: Colors.green,
+        child: Center(child: Text("First Page"))
+    );
   }
-
 
   Widget menuOptions(){
     return Drawer(
@@ -166,12 +167,12 @@ class _UserState extends State<UserView> {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+           DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
             child: Text(
-              'Perfil',
+              '$_nombre',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 19,
@@ -182,7 +183,7 @@ class _UserState extends State<UserView> {
             title: Text(
               'Cuenta',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.black54,
                 fontSize: 17,
               ),
             ),
@@ -196,7 +197,7 @@ class _UserState extends State<UserView> {
             title: Text(
               'Notificaciones',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.black54,
                 fontSize: 17,
               ),
             ),
@@ -209,20 +210,7 @@ class _UserState extends State<UserView> {
             title: Text(
               'Ayuda',
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 17,
-              ),
-            ),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
-          ),
-          ListTile(
-            title: Text(
-              'Aviso de privacidad',
-              style: TextStyle(
-                color: Colors.black,
+                color: Colors.black54,
                 fontSize: 17,
               ),
             ),
@@ -235,7 +223,7 @@ class _UserState extends State<UserView> {
             title: Text(
               'Salir',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.black54,
                 fontSize: 17,
               ),
             ),
@@ -256,49 +244,16 @@ class _UserState extends State<UserView> {
       body: Center(
         child:_getView(_currentIndex)),
       appBar: AppBar(
-          title: Text(
-            'Hola ${_nombre}',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          )),
-        /*appBar: AppBar(
-          automaticallyImplyLeading: false,
-          actions: <Widget>[
-            PopupMenuButton(
-              // add icon, by default "3 dot" icon
-                icon: Icon(Icons.menu),
-                itemBuilder: (context){
-                  return [
-                    PopupMenuItem<int>(
-                      value: 0,
-                      child: Text("Mi cuenta"),
-                    ),
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Text("Salir"),
-                    ),
-                  ];
-                },
-                onSelected:(value){
-                  if(value == 0){
-                    print("My account menu is selected.");
-                  }else if(value == 1){
-                    _logout();
-                    print("Settings menu is selected.");
-                  }
-                }
-            ),
-          ],
-          title: Text(
-            'Hola ${_nombre}',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          ),
-        ),*/
+          title: Center(
+              child: Text(
+                'RentI',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                ),
+              )
+          )
+      ),
       endDrawer: menuOptions(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
