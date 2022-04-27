@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
+
 class FireAuth {
 
   /*
@@ -50,14 +51,16 @@ class FireAuth {
   }*/
 
 
+
   // For signing in an user (have already registered)
-  static Future<User> signInUsingEmailPassword({
+  static Future<List> signInUsingEmailPassword({
     String email,
     String password,
   }) async {
 
     FirebaseAuth auth = FirebaseAuth.instance;
     var user;
+    var message;
 
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
@@ -65,25 +68,37 @@ class FireAuth {
         password: password,
       );
       user = userCredential.user;
+      message = 'ok';
 
     } on FirebaseAuthException catch (e) {
+      print("*********************************************** ${e.code}");
       if (e.code == 'user-not-fund') {
+        user = null;
+        message = e.code;
         print('No se encontró un usuario con el correo.');
 
       } else if (e.code == 'wrong-password') {
+        user = null;
+        message = e.code;
         print('Contraseña incorrecta.');
+
+      } else if (e.code == 'user-disabled') {
+        user = null;
+        message = e.code;
+        print('Cuenta desactivada.');
       }
     }
-    return user;
+
+    return [user, message];
+
   }
 
   static Future<User> refreshUser(User user) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
 
+    FirebaseAuth auth = FirebaseAuth.instance;
     await user.reload();
     var refreshedUser = auth.currentUser;
     return refreshedUser;
-
   }
 
 }

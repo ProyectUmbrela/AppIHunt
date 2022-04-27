@@ -150,20 +150,20 @@ class _LoginPageState extends State<LoginPage> {
       password: passwordField.text,
     );
 
-    //print("1 =================> ${user} <==============");
-    if (user != null) {
+    print("1 =================> ${user[0]} <==============");
+    print("2 =================> ${user[1]} <==============");
+    if (user[0] != null) {
       //print("2 =================> ${user.uid} <==============");
 
-      if (user.emailVerified){
+      if (user[0].emailVerified){
 
         var snapShoot = await FirebaseFirestore
             .instance
             .collection('users')
-            .doc(user.uid)
+            .doc(user[0].uid)
             .get();
 
         if (snapShoot != null){
-
           if (snapShoot['tipo'] == 'Propietario'){
             //print("USUARIO: ######## ${snapShoot['tipo']}");
 
@@ -195,8 +195,15 @@ class _LoginPageState extends State<LoginPage> {
         setState(() => _saving = false);
       }
     }else{
-      _showDialog(2, "Usuario o contraseña incorrectos");
-      setState(() => _saving = false);
+
+      if (user[1] == 'user-disabled'){
+        _showDialog(2, "La cuenta ha sido desactivada");
+        setState(() => _saving = false);
+
+      }else{
+        _showDialog(2, "Usuario o contraseña incorrectos");
+        setState(() => _saving = false);
+      }
     }
   }
 
