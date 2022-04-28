@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-//import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
 import 'package:ihunt/vistas/inquilino/misLugares.dart';
+import 'package:ihunt/vistas/inquilino/user_profile.dart';
 import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
 
 import 'dart:async';
@@ -151,13 +152,22 @@ class _UserState extends State<UserView> {
     return Center(child: Text("There is no page builder for this index."),);
   }
 
+  /*
   Widget bodyFirst() {
-    return Container(
-        color: Colors.green,
-        child: Center(child: Text("First Page"))
+    return UserProfile();
+  }*/
+
+  Widget bodyFirst() {
+    return Scaffold(
+      appBar: AppBar(
+        title:Text('hi'),
+        leading: IconButton(
+          icon: Icon(Icons.accessible),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
     );
   }
-
   Widget menuOptions(){
     return Drawer(
       // Add a ListView to the drawer. This ensures the user can scroll
@@ -189,8 +199,12 @@ class _UserState extends State<UserView> {
             ),
             onTap: () {
               // Update the state of the app.
-              // ...
-              bodyFirst();
+              // ...UserProfile()
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserProfile()),
+              );
             },
           ),
           ListTile(
@@ -216,7 +230,7 @@ class _UserState extends State<UserView> {
             ),
             onTap: () {
               // Update the state of the app.
-              // ...
+
             },
           ),
           ListTile(
