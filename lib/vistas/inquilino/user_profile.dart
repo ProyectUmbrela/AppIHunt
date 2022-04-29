@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ihunt/vistas/inquilino/delete_account.dart';
+
+
 
 class UserProfile extends StatefulWidget {
 
@@ -120,7 +123,10 @@ class _Profile extends State<UserProfile> {
 
             ),
             onTap: () {
-
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DeleteAccount()),
+              );
 
             },
           ),
