@@ -108,17 +108,17 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            /*Text(
               "¿Aún no tienes una cuenta?",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
-            ),
+            ),*/
             Text(
-              'Registrarme',
+              'Quiero registrarme',
               style: TextStyle(
-                  color: Color(0xfff79c4f),
+                  color: Colors.black,//Colors.amber.shade900, //0xfff79c4f - 0xFF000000
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),
@@ -153,7 +153,6 @@ class _LoginPageState extends State<LoginPage> {
     print("1 =================> ${user[0]} <==============");
     print("2 =================> ${user[1]} <==============");
     if (user[0] != null) {
-      //print("2 =================> ${user.uid} <==============");
 
       if (user[0].emailVerified){
 
@@ -165,7 +164,6 @@ class _LoginPageState extends State<LoginPage> {
 
         if (snapShoot != null){
           if (snapShoot['tipo'] == 'Propietario'){
-            //print("USUARIO: ######## ${snapShoot['tipo']}");
 
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -174,7 +172,6 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
           else if (snapShoot['tipo'] == 'Usuario'){
-            //print("USUARIO: ######## ${snapShoot['tipo']}");
 
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(

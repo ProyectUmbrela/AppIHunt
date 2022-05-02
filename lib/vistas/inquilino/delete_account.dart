@@ -1,8 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+
 
 class DeleteAccount extends StatelessWidget {
-  const DeleteAccount({Key key}) : super(key: key);
+  User _currentUser;
+  String _nombre;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  //User? currentUser = await _auth.currentUser;
+
+
+  void sendData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    var user = auth.currentUser;
+    var metadata = user.metadata;
+
+
+    /*_currentUser = FirebaseAuth.instance.currentUser;
+    _currentUser.updateProfile(
+      displayName: "Abel"
+    ).then((value){
+          print("Profile has been changed successfully");
+          //DO Other compilation here if you want to like setting the state of the app
+          _currentUser.reload();
+        }).catchError((e){
+          print("There was an error updating profile");
+        });*/
+
+  }
+
+  DeleteAccount({Key key}) : super(key: key);
 
 
   @override
@@ -25,6 +54,7 @@ class DeleteAccount extends StatelessWidget {
                 new FlatButton(
                   child: Text('Enviar'),
                   onPressed: () {
+                    print("######################## data have been sent");
                     Navigator.of(context).pop();
                   },
                 )
