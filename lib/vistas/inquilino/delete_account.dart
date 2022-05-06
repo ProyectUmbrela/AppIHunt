@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
-
+//import 'package:flutter/services.dart';
+import 'package:ihunt/utils/validators.dart';
 
 class DeleteAccount extends StatelessWidget {
   User _currentUser;
   String _nombre;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  //final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //User? currentUser = await _auth.currentUser;
 
@@ -16,18 +16,6 @@ class DeleteAccount extends StatelessWidget {
     FirebaseAuth auth = FirebaseAuth.instance;
     var user = auth.currentUser;
     var metadata = user.metadata;
-
-
-    /*_currentUser = FirebaseAuth.instance.currentUser;
-    _currentUser.updateProfile(
-      displayName: "Abel"
-    ).then((value){
-          print("Profile has been changed successfully");
-          //DO Other compilation here if you want to like setting the state of the app
-          _currentUser.reload();
-        }).catchError((e){
-          print("There was an error updating profile");
-        });*/
 
   }
 
@@ -40,6 +28,7 @@ class DeleteAccount extends StatelessWidget {
     var message = 'Podrás cancelar la eliminación de cuenta antes de 24 horas una vez realizada tu solicitud, después de este tiempo no podrás revertir el proceso. Tu cuenta será eliminada en un periodo de 24 a 72 horas.';
 
     TextEditingController _textFieldController = TextEditingController();
+
     _displayDialog(BuildContext context) async {
       return showDialog(
           context: context,
@@ -54,8 +43,16 @@ class DeleteAccount extends StatelessWidget {
                 new FlatButton(
                   child: Text('Enviar'),
                   onPressed: () {
-                    print("######################## data have been sent");
-                    Navigator.of(context).pop();
+                    var isEmail = validateEmail(_textFieldController.text);
+                    if (isEmail == 'email-valid'){
+
+                      print("**************** To send data");
+                      print("************** result if is a valid email: ${isEmail}");
+                      Navigator.of(context).pop();
+                    }
+                    else{
+                      print("****************** Email not valid");
+                    }
                   },
                 )
               ],
