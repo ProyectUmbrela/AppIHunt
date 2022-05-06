@@ -42,9 +42,6 @@ class _Profile extends State<UserProfile> {
               ),
             ),
             onTap: () {
-              // Update the state of the app.
-              // ...UserProfile()
-
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UserProfile()),
@@ -127,7 +124,6 @@ class _Profile extends State<UserProfile> {
                 context,
                 MaterialPageRoute(builder: (context) => DeleteAccount()),
               );
-
             },
           ),
         ],

@@ -14,6 +14,9 @@ class Api {
   String _resetContrasena = '/resetPassword';
   String _habitacionesRentadas = '/historialInquilino';
   String _listarInvitaciones = '/listarInvitacionesUsuario';
+  String _desactivarCuenta = '/desactivarUser';
+  String _activarCuenta = '/activarUser';
+
 
   // urls correspondientes a propietario
   String _registerRoom = '/registerRoom';
@@ -51,16 +54,28 @@ class Api {
 
   Future<dynamic> GetHabitaciones(data, tokenAuth) async {
     this._headers['Authorization'] = tokenAuth;
-
     var response = await http.post(Uri.parse(this._url + this._habitacionesRentadas),
         body: data, headers: this._headers);
-
     return response;
   }
 
   Future<dynamic> GetInvitacionesUsuarioView(data, tokenAuth) async {
     this._headers['Authorization'] = tokenAuth;
     var response = await http.post(Uri.parse(this._url + this._listarInvitaciones),
+        body: data, headers: this._headers);
+    return response;
+  }
+
+
+  Future<dynamic> DisabledCuenta(data, tokenAuth) async {
+    this._headers['Authorization'] = tokenAuth;
+    var response = await http.post(Uri.parse(this._url + this._desactivarCuenta),
+        body: data, headers: this._headers);
+    return response;
+  }
+
+  Future<dynamic> EnabledCuenta(data) async {
+    var response = await http.post(Uri.parse(this._url + this._activarCuenta),
         body: data, headers: this._headers);
     return response;
   }

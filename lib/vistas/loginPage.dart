@@ -1,7 +1,11 @@
 
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ihunt/providers/api.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/vistas/register.dart';
 import 'package:ihunt/vistas/inquilino/userView.dart';
@@ -141,6 +145,50 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Future sendData(var correo) async {
+
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    Api _api = Api();
+    final body = jsonEncode({
+      'correo': correo
+    });
+    print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: ${body}");
+
+    var response = await _api.EnabledCuenta(body);
+    int statusCode = response.statusCode;
+    var resp = json.decode(response.body);
+    print("#################### 1 response: ${statusCode}");
+    print("#################### 2 response: ${resp}");
+
+  }
+
+
+  showAlertDialog(BuildContext context, var message, var correo) {
+    Widget continueButton = FlatButton(
+      child: Text("Continuar"),
+      onPressed:  (){
+        sendData(correo);
+        Navigator.of(context).pop();
+        _showDialog(2, "Solicitud cancelada, vuelve a recargar la aplicación");
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Cuenta desactivada"),
+      content: Text("¿Deseas volver a activar tu cuenta?"),
+      actions: [
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future _sendRequest(emailField, passwordField) async {
 
 
@@ -194,7 +242,8 @@ class _LoginPageState extends State<LoginPage> {
     }else{
 
       if (user[1] == 'user-disabled'){
-        _showDialog(2, "La cuenta ha sido desactivada");
+        var message = "La cuenta ha sido desactivada";
+        showAlertDialog(context, message, emailField.text);
         setState(() => _saving = false);
 
       }else{

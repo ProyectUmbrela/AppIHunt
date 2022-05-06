@@ -1,22 +1,46 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:flutter/services.dart';
 import 'package:ihunt/utils/validators.dart';
+import 'package:ihunt/providers/api.dart';
+
+
 
 class DeleteAccount extends StatelessWidget {
-  User _currentUser;
-  String _nombre;
-  //final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  //User? currentUser = await _auth.currentUser;
 
 
-  void sendData() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    var user = auth.currentUser;
-    var metadata = user.metadata;
+  Future sendData(var correo) async {
 
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
+    print("=============================== ${tokenAuth}");
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+
+    Api _api = Api();
+    final body = jsonEncode({
+      'correo': correo
+    });
+    print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+    var response = await _api.DisabledCuenta(body, tokenAuth);
+
+    int statusCode = response.statusCode;
+    var resp = json.decode(response.body);
+    print("#################### 1 response: ${statusCode}"); // 201
+    print("#################### 2 response: ${resp}");       // {code: success, message: Se ha desactivado el usuario desonses@gmail.com }
+
+  }
+
+  void _showDialog(BuildContext context, seconds, message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext builderContext) {
+        Future.delayed(Duration(seconds: seconds), () {
+        });
+        return AlertDialog(
+          content: Text(message),
+        );
+      },
+    );
   }
 
   DeleteAccount({Key key}) : super(key: key);
@@ -48,7 +72,10 @@ class DeleteAccount extends StatelessWidget {
 
                       print("**************** To send data");
                       print("************** result if is a valid email: ${isEmail}");
+
+                      sendData(_textFieldController.text);
                       Navigator.of(context).pop();
+                      _showDialog(context, 2, "Solicitud exitosa");
                     }
                     else{
                       print("****************** Email not valid");
