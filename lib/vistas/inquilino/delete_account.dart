@@ -3,32 +3,54 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/providers/api.dart';
-
+//import 'package:ihunt/vistas/inquilino/user_profile.dart';
 
 
 class DeleteAccount extends StatelessWidget {
 
 
-  Future sendData(var correo) async {
+
+  Future<String> sendData(var correo) async {
 
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
-    print("=============================== ${tokenAuth}");
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+    String currentEmail = await FirebaseAuth.instance.currentUser.email;
 
-    Api _api = Api();
-    final body = jsonEncode({
-      'correo': correo
-    });
-    print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
-    var response = await _api.DisabledCuenta(body, tokenAuth);
+    if(correo == currentEmail){
+      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+      String responseRequest;
+      Api _api = Api();
+      final body = jsonEncode({
+        'correo': correo
+      });
+      print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+      var response = await _api.DisabledCuenta(body, tokenAuth);
 
-    int statusCode = response.statusCode;
-    var resp = json.decode(response.body);
-    print("#################### 1 response: ${statusCode}"); // 201
-    print("#################### 2 response: ${resp}");       // {code: success, message: Se ha desactivado el usuario desonses@gmail.com }
+      int statusCode = response.statusCode;
+      var resp = json.decode(response.body);
+      print("#################### 1 response: ${statusCode}"); // 201 //422 invalidInput
+      // {code: success, message: Se ha desactivado el usuario desonses@gmail.com }
+      if(statusCode == 201){
+        print("Solicitud enviada");
+        print("#################### 2 response: ${resp}");
+        responseRequest = 'Solicitud enviada';
+      } else if (statusCode == 422){
+        print("No coincide el correo registrado");
+        responseRequest = 'No coincide el correo registrado';
+
+      } else{
+        print("Ocurrio un error inesperado en tu solicitud");
+        responseRequest = 'Ocurrio un error inesperado en tu solicitud';
+      }
+
+      return responseRequest;
+    }
+    else{
+      return 'No existe la cuenta';
+    }
 
   }
+
 
   void _showDialog(BuildContext context, seconds, message) {
     showDialog(
@@ -58,7 +80,7 @@ class DeleteAccount extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Ingresa el correo electrónico asociado a tu cuenta. Una vez confirmado tu sesión será cerrada.'),
+              title: Text('Ingresa el correo electrónico asociado a tu cuenta.'),
               content: TextField(
                 controller: _textFieldController,
                 decoration: InputDecoration(hintText: "correo electrónico"),
@@ -66,16 +88,24 @@ class DeleteAccount extends StatelessWidget {
               actions: <Widget>[
                 new FlatButton(
                   child: Text('Enviar'),
-                  onPressed: () {
-                    var isEmail = validateEmail(_textFieldController.text);
+                  onPressed: () async {
+                    var isEmail = EmailValidating(_textFieldController.text);
                     if (isEmail == 'email-valid'){
 
                       print("**************** To send data");
                       print("************** result if is a valid email: ${isEmail}");
 
-                      sendData(_textFieldController.text);
+                      var responseRequest = await sendData(_textFieldController.text);
                       Navigator.of(context).pop();
-                      _showDialog(context, 2, "Solicitud exitosa");
+
+                      /*Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UserProfile()),
+                      );*/
+
+
+                      _showDialog(context, 2, responseRequest);
+
                     }
                     else{
                       print("****************** Email not valid");
