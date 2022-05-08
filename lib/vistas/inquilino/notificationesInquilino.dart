@@ -207,7 +207,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   Widget projectWidget() {
 
     return FutureBuilder(
-      future: getInvitaciones(),//getInvitaciones(),
+      future: getInvitaciones(),
       builder: (context, snapshot) {
         if(!snapshot.hasData){
           // Esperando la respuesta de la API
@@ -259,10 +259,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   Widget build(BuildContext context) {
 
     return Scaffold(
-      /*appBar: AppBar(
-        title: Text('Invitaciones'),
-        automaticallyImplyLeading: false,
-      ),*/
       body: projectWidget(),
     );
   }

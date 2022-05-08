@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/providers/api.dart';
-//import 'package:ihunt/vistas/inquilino/user_profile.dart';
-
 
 class DeleteAccount extends StatelessWidget {
 
