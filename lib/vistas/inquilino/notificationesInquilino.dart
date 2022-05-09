@@ -80,18 +80,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
   }
 
   void setData() async{
-
     _currentUser = FirebaseAuth.instance.currentUser;
-    /*
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(_currentUser.uid)
-        .get();
-
-    setState(() {
-      _idUsuario = snapShoot['usuario'];
-    });*/
   }
 
 
@@ -101,8 +90,6 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     final body = jsonEncode({
       'usuario': _idUsuarioLive
     });
-
-    //String tokenAuth = await _currentUser.getIdToken();
 
     var response = await _api.GetInvitacionesUsuarioView(body, tokenAuth);
 

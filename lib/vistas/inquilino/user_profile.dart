@@ -11,9 +11,155 @@ class UserProfile extends StatefulWidget {
   _Profile createState() => _Profile();
 }
 
+class ProjectModel {
+
+  String nameUser;
+  String mailUser;
+  String phoneUser;
+
+
+  ProjectModel({
+    this.nameUser,
+    this.mailUser,
+    this.phoneUser,
+  });
+}
 
 class _Profile extends State<UserProfile> {
 
+  User _currentUser;
+
+  Future getProjectDetails() async {
+
+    _currentUser = await FirebaseAuth.instance.currentUser;
+
+    var snapShoot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser.uid)
+        .get();
+
+    return [ProjectModel(nameUser: snapShoot['nombre'], mailUser: _currentUser.email, phoneUser: "telefono")];
+
+  }
+
+  Widget projectWidget() {
+
+    return FutureBuilder(
+      future: getProjectDetails(),
+      builder: (context, snapshot) {
+        if(!snapshot.hasData){
+          // Esperando la respuesta de la API
+          return Center(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text('Cargando...'),
+                ]
+            ),
+          );
+        }
+        else if(snapshot.hasData && snapshot.data.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones",
+                  style: Theme.of(context).textTheme.headline4,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        }
+        else{
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              ProjectModel project = snapshot.data[index];
+              return Column(
+                children: <Widget>[
+                  ListTile(
+                    title: Text(project.nameUser),
+                  ),
+                  ListTile(
+                    title: Text('Teléfono'),
+                  ),
+                  ListTile(
+                    title: Text(project.mailUser),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Eliminar cuenta',
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DeleteAccount()),
+                    );
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        }
+
+        /*
+        if (projectSnap.connectionState == ConnectionState.none &&
+            projectSnap.hasData == null) {
+          return Container();
+        }
+        return ListView.builder(
+          itemCount: projectSnap.data.length,
+          itemBuilder: (context, index) {
+
+
+            ProjectModel project = projectSnap.data[index];
+            return Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text(project.nameUser),
+                ),
+                ListTile(
+                  title: Text('Teléfono'),
+                ),
+                ListTile(
+                  title: Text(project.mailUser),
+                ),
+                ListTile(
+                  title: Text(
+                    'Eliminar cuenta',
+                  ),
+                  onTap: () {
+                    /*Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DeleteAccount()),
+                    );*/
+                  },
+                )
+              ],
+            );
+          },
+        );*/
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Perfil'),
+        automaticallyImplyLeading: false,
+      ),
+      body: projectWidget(),
+    );
+  }
+
+  /*
   var GlobalUserName;
   User _currentUser;
   String _nombreUser;
@@ -158,106 +304,7 @@ class _Profile extends State<UserProfile> {
       ),
     );
   }
-
-  /*
-  Future<List> getInvitaciones() async {
-
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(_currentUser.uid)
-        .get();
-
-    //var _idUsuarioLive = snapShoot['usuario'];
-    var tokenAuth = await _currentUser.getIdToken();
-
-    //var result = await getInvitacionesRecientes(_idUsuarioLive, tokenAuth);
-    return ['tokenAuth'];
-
-  }
-
-  Widget projectWidget() {
-
-    return FutureBuilder(
-      future: getInvitaciones(),
-      builder: (context, snapshot) {
-        if(!snapshot.hasData){
-          // Esperando la respuesta de la API
-          return Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  Text('Cargando...'),
-                ]
-            ),
-          );
-        }
-        else if(snapshot.hasData && snapshot.data.isEmpty) {
-          // Informacion obtenida de la API pero esta vacio el response
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones",
-                  style: Theme.of(context).textTheme.headline4,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
-        else  {
-          // Informacion obtenida y con datos en el response
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              //Invitacion invitacion = snapshot.data[index];
-              return ListView(
-                children: <Widget>[
-                  ListTile(
-                    //leading: Icon(Icons.map),
-                    title: Text('GlobalUserName'),
-                  ),
-                  ListTile(
-                    //leading: Icon(Icons.photo_album),
-                    title: Text('Teléfono'),
-                  ),
-                  ListTile(
-                    //leading: Icon(Icons.phone),
-                    title: Text('correo'),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Eliminar cuenta',
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DeleteAccount()),
-                      );
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      },
-    );
-
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: projectWidget(),
-    );
-  }*/
-
+  */
 
 
 }

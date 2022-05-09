@@ -130,7 +130,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         aceptarRentaButton
       ],
     );
-
     // show the dialog
     showDialog(
       context: context,
@@ -145,7 +144,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
   Widget build(BuildContext context) {
     double titlesSize = 25.0;
     double textSize = 20.0;
-
 
     final rechazarButton = Material(
         borderRadius: BorderRadius.circular(5),

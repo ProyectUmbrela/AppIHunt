@@ -6,8 +6,6 @@ import 'package:ihunt/providers/api.dart';
 
 class DeleteAccount extends StatelessWidget {
 
-
-
   Future<String> sendData(var correo) async {
 
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -35,18 +33,15 @@ class DeleteAccount extends StatelessWidget {
       } else if (statusCode == 422){
         print("No coincide el correo registrado");
         responseRequest = 'No coincide el correo registrado';
-
       } else{
-        print("Ocurrio un error inesperado en tu solicitud");
+        print("Ocurrio un error en tu solicitud");
         responseRequest = 'Ocurrio un error inesperado en tu solicitud';
       }
-
       return responseRequest;
     }
     else{
       return 'No existe la cuenta';
     }
-
   }
 
 
