@@ -96,9 +96,9 @@ class _Profile extends State<UserProfile> {
                     ),
                     onTap: () {
                       Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DeleteAccount()),
-                    );
+                        context,
+                        MaterialPageRoute(builder: (context) => DeleteAccount()),
+                      );
                     },
                   )
                 ],
@@ -106,44 +106,6 @@ class _Profile extends State<UserProfile> {
             },
           );
         }
-
-        /*
-        if (projectSnap.connectionState == ConnectionState.none &&
-            projectSnap.hasData == null) {
-          return Container();
-        }
-        return ListView.builder(
-          itemCount: projectSnap.data.length,
-          itemBuilder: (context, index) {
-
-
-            ProjectModel project = projectSnap.data[index];
-            return Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text(project.nameUser),
-                ),
-                ListTile(
-                  title: Text('Teléfono'),
-                ),
-                ListTile(
-                  title: Text(project.mailUser),
-                ),
-                ListTile(
-                  title: Text(
-                    'Eliminar cuenta',
-                  ),
-                  onTap: () {
-                    /*Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DeleteAccount()),
-                    );*/
-                  },
-                )
-              ],
-            );
-          },
-        );*/
       },
     );
   }
@@ -158,153 +120,5 @@ class _Profile extends State<UserProfile> {
       body: projectWidget(),
     );
   }
-
-  /*
-  var GlobalUserName;
-  User _currentUser;
-  String _nombreUser;
-  String _correoUser;
-
-  @override
-  void initState() {
-    super.initState();
-    retrieveData();
-  }
-
-  Future retrieveData() async{
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    GlobalUserName = localStorage.getString('GlobalUserName');
-
-    /*_currentUser = await FirebaseAuth.instance.currentUser;
-
-    var snapShoot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_currentUser.uid)
-        .get();
-
-    _nombreUser = snapShoot['nombre'];
-    _correoUser = _currentUser.email;*/
-
-  }
-
-  Widget detallesRenta() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: [
-          /*DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              'Nombre',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 19,
-              ),
-            ),
-          ),*/
-          ListTile(
-            title: Text(
-              'Cuenta',
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 17,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UserProfile()),
-              );
-            },
-          ),
-          ListTile(
-            title: Text(
-              'Notificaciones',
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 17,
-              ),
-            ),
-            onTap: () {
-              // Update the state of the app.
-              // ...
-            },
-          ),
-          ListTile(
-            title: Text(
-              'Ayuda',
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 17,
-              ),
-            ),
-            onTap: () {
-              // Update the state of the app.
-
-            },
-          ),
-          ListTile(
-            title: Text(
-              'Salir',
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 17,
-              ),
-            ),
-            onTap: () {
-
-            },
-          ),
-        ],
-      ),
-    );
-
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
-
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Perfil"),
-        automaticallyImplyLeading: false,
-      ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            //leading: Icon(Icons.map),
-            title: Text('Nombre'),
-          ),
-          ListTile(
-            //leading: Icon(Icons.photo_album),
-            title: Text('Teléfono'),
-          ),
-          ListTile(
-            //leading: Icon(Icons.phone),
-            title: Text('Correo'),
-          ),
-          ListTile(
-            title: Text(
-              'Eliminar cuenta',
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DeleteAccount()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-  */
-
 
 }

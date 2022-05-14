@@ -3,7 +3,7 @@ String validateEmail(String value) {
   RegExp regex = new RegExp(
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
   if (value.isEmpty) {
-    _msg = "Your email is required";
+    _msg = "Correo requerido";
   } else if (!regex.hasMatch(value)) {
     _msg = "Please provide a valid email address";
   }/*else{
@@ -32,7 +32,7 @@ String validateMobile(String value) {
   String patttern = r'(^[0-9]*$)';
   RegExp regex = new RegExp(patttern);
   if (value.isEmpty) {
-    _msg = "Your phone number is required";
+    _msg = "Teléfono requerido";
   } else if (!regex.hasMatch(value)) {
     _msg = "Please provide a valid phone number address";
   }

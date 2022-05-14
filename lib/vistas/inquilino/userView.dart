@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -267,7 +267,7 @@ class _UserState extends State<UserView> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.airline_seat_individual_suite),
-            label: 'Hbitaciones',
+            label: 'Habitaciones',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_on),

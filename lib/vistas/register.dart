@@ -6,10 +6,12 @@ import 'package:ihunt/utils/validators.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/utils/widgets.dart';
 
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, sleep;
 
 // Paquetes para consumir api
 import 'dart:convert';
+
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final formKey = new GlobalKey<FormState>();
   bool _loading = false;
-
+  bool _saving = false;
   TextEditingController useridCtrl = new TextEditingController();
   TextEditingController usernameCtrl = new TextEditingController();
   TextEditingController useremailCtrl = new TextEditingController();
@@ -35,6 +37,7 @@ class _RegisterState extends State<Register> {
       _password,
       _confirmPassword;
   String _chosenValue;
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +63,7 @@ class _RegisterState extends State<Register> {
     final userId = TextFormField(
       autofocus: false,
       controller: useridCtrl,
-      validator: (value) => value.isEmpty ? "Your userId is required" : null,
+      validator: (value) => value.isEmpty ? "Usuario requerido" : null,
       onSaved: (value) => _userid = value,
       decoration: buildInputDecoration("Username", Icons.account_box),
     );
@@ -68,7 +71,7 @@ class _RegisterState extends State<Register> {
     final userName = TextFormField(
       autofocus: false,
       controller: usernameCtrl,
-      validator: (value) => value.isEmpty ? "Your name is required" : null,
+      validator: (value) => value.isEmpty ? "Nombre requerido" : null,
       onSaved: (value) => _username = value,
       decoration:
           buildInputDecoration("First and last name", Icons.accessibility),
@@ -94,7 +97,7 @@ class _RegisterState extends State<Register> {
       autofocus: false,
       controller: passwordCtrl,
       obscureText: true,
-      validator: (value) => value.isEmpty ? "Please enter password" : null,
+      validator: (value) => value.isEmpty ? "Contraseña requerida" : null,
       onSaved: (value) => _password = value,
       decoration:
           buildInputDecoration("Confirm password", Icons.remove_red_eye),
@@ -166,18 +169,21 @@ class _RegisterState extends State<Register> {
     }
     /***************************************************************************/
 
-    var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/register');
-    };
+    /*var canceled = () async {
+      Navigator.pushReplacementNamed(context, '/login');
+    };*/
 
     Future submit() async {
+
       final form = formKey.currentState;
 
       if (form.validate()) {
-        setState(() {
-          _loading = true;
-        });
+        /*setState(() {
+          _saving = true;
+        });*/
 
+
+        /*
         form.save();
         Api _api = Api();
 
@@ -195,27 +201,37 @@ class _RegisterState extends State<Register> {
         var response = await _api.registerPost(msg);
         Map data = jsonDecode(response.body);
 
+
         if (response.statusCode == 201) {
+          */
+
+
+        if (1 == 1) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
+          setState(() => _saving = false);
+          //Navigator.pushReplacementNamed(context, '/login');
 
-          setState(() {
-            _loading = false;
-          });
 
-          Navigator.pushReplacementNamed(context, '/login');
         } else {
-          setState(() {
-            _loading = false;
-          });
+
           if (Platform.isAndroid) {
-            _materialAlertDialog(context, data['message'], 'Notificación');
-            print(response.statusCode);
+            //_materialAlertDialog(context, data['message'], 'Notificación');
+            //print(response.statusCode);
+            print("Android platform ******************************************");
+            setState(() {
+              _saving = false;
+            });
           } else if (Platform.isIOS) {
-            _cupertinoDialog(context, data['message'], 'Notificación');
+            //_cupertinoDialog(context, data['message'], 'Notificación');
+            print("IOS platform ******************************************");
+
           }
         }
       } else {
+        setState(() {
+          _saving = false;
+        });
         if (Platform.isAndroid) {
           _materialAlertDialog(
               context,
@@ -230,75 +246,198 @@ class _RegisterState extends State<Register> {
       }
     };
 
+
+    TextStyle style = TextStyle(fontSize: 15, color: Colors.white);
+    final registerbuton = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(10),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: 120,
+          onPressed: () {
+            setState(() => _saving = true);
+            submit();
+          },
+          child:SizedBox(
+              child: Text("Registrar",
+                  textAlign: TextAlign.center,
+                  style: style.copyWith())),
+        )
+    );
+
+    final cancelbuton = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(10),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: 120,
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+          child:SizedBox(
+              child: Text("Cancelar",
+                  textAlign: TextAlign.center,
+                  style: style.copyWith())),
+        )
+    );
+
+
+    return Scaffold(
+        body: ModalProgressHUD(
+            child: Container(
+              padding: EdgeInsets.all(40.0),
+              child: Form(
+                  key: formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //logo,
+                        SizedBox(height: 15),
+                        label("Nombre de usuario"),
+                        SizedBox(height: 5),
+                        userId,
+                        SizedBox(
+                          height: 15,
+                        ),
+
+                        label("Nombre completo"),
+                        SizedBox(height: 5),
+                        userName,
+                        SizedBox(
+                          height: 15,
+                        ),
+
+                        label("Correo electrónico"),
+                        SizedBox(height: 5.0),
+                        userEmail,
+                        SizedBox(height: 15.0),
+
+                        label("Teléfono"),
+                        SizedBox(height: 5.0),
+                        userPhone,
+                        SizedBox(height: 15.0),
+
+                        label("Contraseña"),
+                        SizedBox(height: 10.0),
+                        passwordField,
+                        SizedBox(height: 15.0),
+
+                        label("Confirmar contraseña"),
+                        SizedBox(height: 10.0),
+                        confirmPassword,
+
+                        SizedBox(height: 15),
+                        type,
+
+                        SizedBox(height: 15.0),
+                        //longButtons("Registrar", submit),
+                        Row(
+                          children: <Widget>[
+                            registerbuton,
+                            Spacer(),
+                            cancelbuton
+                            /*
+                            Expanded(
+                                /*child: Container(
+                                  child: _loading ? CircularProgressIndicator() :
+                                  longButtons("Registrar", submit),
+                                  alignment: Alignment.centerLeft,
+                                )*/
+                                child: registerbuton
+                            ),
+                            Expanded(
+                                /*child: Container(
+                                  child: longButtons("Cancelar", canceled),
+                                  alignment: Alignment.centerRight,
+                                )*/
+                              child: cancelbuton,
+
+                            ),*/
+                          ],
+                        ),
+                        SizedBox(height: 15),
+                      ],
+                    ),
+                  )),
+            ),
+            inAsyncCall: _saving
+        )
+    );
+
+
+
+    /*
     return SafeArea(
         child: Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(40.0),
-        child: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          body: Container(
+            padding: EdgeInsets.all(40.0),
+            child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   //logo,
+                    label("Nombre de usuario"),
+                    SizedBox(height: 5),
+                    userId,
+                    SizedBox(
+                      height: 15,
+                    ),
 
-                  label("Nombre de usuario"),
-                  SizedBox(height: 5),
-                  userId,
-                  SizedBox(
-                    height: 15,
-                  ),
+                    label("Nombre completo"),
+                    SizedBox(height: 5),
+                    userName,
+                    SizedBox(
+                      height: 15,
+                    ),
 
-                  label("Nombre completo"),
-                  SizedBox(height: 5),
-                  userName,
-                  SizedBox(
-                    height: 15,
-                  ),
+                    label("Correo electrónico"),
+                    SizedBox(height: 5.0),
+                    userEmail,
+                    SizedBox(height: 15.0),
 
-                  label("Correo electrónico"),
-                  SizedBox(height: 5.0),
-                  userEmail,
-                  SizedBox(height: 15.0),
+                    label("Teléfono"),
+                    SizedBox(height: 5.0),
+                    userPhone,
+                    SizedBox(height: 15.0),
 
-                  label("Teléfono"),
-                  SizedBox(height: 5.0),
-                  userPhone,
-                  SizedBox(height: 15.0),
+                    label("Contraseña"),
+                    SizedBox(height: 10.0),
+                    passwordField,
+                    SizedBox(height: 15.0),
 
-                  label("Contraseña"),
-                  SizedBox(height: 10.0),
-                  passwordField,
-                  SizedBox(height: 15.0),
+                    label("Confirmar contraseña"),
+                    SizedBox(height: 10.0),
+                    confirmPassword,
 
-                  label("Confirmar contraseña"),
-                  SizedBox(height: 10.0),
-                  confirmPassword,
+                    SizedBox(height: 15),
+                    type,
 
-                  SizedBox(height: 15),
-                  type,
-
-                  SizedBox(height: 15.0),
-                  //longButtons("Registrar", submit),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                          child: Container(
-                        child: _loading ? CircularProgressIndicator() :
-                          longButtons("Aceptar", submit),
-                        alignment: Alignment.centerLeft,
-                      )),
-                      Expanded(
-                          child: Container(
-                            child: longButtons("Cancelar", canceled),
-                            alignment: Alignment.centerRight,
-                      )),
-                    ],
-                  )
+                    SizedBox(height: 15.0),
+                    //longButtons("Registrar", submit),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Container(
+                              child: _loading ? CircularProgressIndicator() :
+                              longButtons("Registrar", submit),
+                              alignment: Alignment.centerLeft,
+                            )),
+                        Expanded(
+                            child: Container(
+                              child: longButtons("Cancelar", canceled),
+                              alignment: Alignment.centerRight,
+                        )),
+                      ],
+                    )
                 ],
               ),
             )),
-      ),
+        ),
     ));
+
+  */
   }
 }

@@ -100,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => Register()));
-
         },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
