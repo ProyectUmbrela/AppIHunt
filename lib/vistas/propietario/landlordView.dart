@@ -13,6 +13,7 @@ import 'invitation.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ihunt/vistas/profiles/user_profile.dart';
 
 
 class Landlord extends StatefulWidget {
@@ -176,10 +177,10 @@ class _LandlordState extends State<Landlord>
               ),
             ),
             onTap: () {
-              /*Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UserProfile()),
-              );*/
+              );
             },
           ),
           ListTile(

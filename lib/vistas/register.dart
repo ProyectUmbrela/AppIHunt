@@ -20,7 +20,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final formKey = new GlobalKey<FormState>();
-  bool _loading = false;
+  //bool _loading = false;
   bool _saving = false;
   TextEditingController useridCtrl = new TextEditingController();
   TextEditingController usernameCtrl = new TextEditingController();
@@ -154,9 +154,9 @@ class _RegisterState extends State<Register> {
 
     Widget _showMaterialDialog(String texto, String noty) {
       return AlertDialog(
-        title: _dialogTitle(noty),
+        //title: _dialogTitle(noty),
         content: _contentText(texto),
-        actions: _buildActions(),
+        //actions: _buildActions(),
       );
     }
 
@@ -169,9 +169,15 @@ class _RegisterState extends State<Register> {
     }
     /***************************************************************************/
 
-    /*var canceled = () async {
-      Navigator.pushReplacementNamed(context, '/login');
-    };*/
+    void clearForm() {
+      //fieldText.clear();
+      useridCtrl.clear();
+      usernameCtrl.clear();
+      useremailCtrl.clear();
+      userphoneCtrl.clear();
+      passwordCtrl.clear();
+      confirmPasswordCtrl.clear();
+    }
 
     Future submit() async {
 
@@ -183,7 +189,7 @@ class _RegisterState extends State<Register> {
         });*/
 
 
-        /*
+
         form.save();
         Api _api = Api();
 
@@ -201,30 +207,42 @@ class _RegisterState extends State<Register> {
         var response = await _api.registerPost(msg);
         Map data = jsonDecode(response.body);
 
-
+        print("############## ${data}");
         if (response.statusCode == 201) {
-          */
 
-
-        if (1 == 1) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           debugPrint("Data posted successfully");
           setState(() => _saving = false);
+
+          _materialAlertDialog(context, 'Registro exitoso, revisa tu correo para completar tu registro', 'Notificación');
+          clearForm();
           //Navigator.pushReplacementNamed(context, '/login');
 
 
-        } else {
+        }
+        else if(data['message'] == 'El usuario ya existe'){
+          //print("El usuario ya existe");
+          setState(() {
+            _saving = false;
+          });
 
+          _materialAlertDialog(context, 'Ya existe una cuenta con este correo', 'Notificación');
+          //useridCtrl.clear();
+        } else {
           if (Platform.isAndroid) {
-            //_materialAlertDialog(context, data['message'], 'Notificación');
-            //print(response.statusCode);
-            print("Android platform ******************************************");
             setState(() {
               _saving = false;
             });
+            _materialAlertDialog(context, data['message'], 'Notificación');
+            //print(response.statusCode);
+            //print("Android platform ******************************************");
+
           } else if (Platform.isIOS) {
-            //_cupertinoDialog(context, data['message'], 'Notificación');
-            print("IOS platform ******************************************");
+            setState(() {
+              _saving = false;
+            });
+            _cupertinoDialog(context, data['message'], 'Notificación');
+            //print("IOS platform ******************************************");
 
           }
         }
@@ -253,7 +271,8 @@ class _RegisterState extends State<Register> {
         borderRadius: BorderRadius.circular(10),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: 120,
+          //height: 20,
+          minWidth: 100,
           onPressed: () {
             setState(() => _saving = true);
             submit();
@@ -270,7 +289,8 @@ class _RegisterState extends State<Register> {
         borderRadius: BorderRadius.circular(10),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: 120,
+          //height: 20,
+          minWidth: 100,
           onPressed: () {
             Navigator.pushReplacementNamed(context, '/login');
           },

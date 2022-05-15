@@ -7,9 +7,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
 import 'package:ihunt/vistas/inquilino/misLugares.dart';
-import 'package:ihunt/vistas/inquilino/user_profile.dart';
+//import 'package:ihunt/vistas/inquilino/user_profile.dart';
 import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
-
+import 'package:ihunt/vistas/profiles/user_profile.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
