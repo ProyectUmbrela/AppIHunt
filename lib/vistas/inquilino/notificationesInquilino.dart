@@ -70,7 +70,7 @@ class Invitacion {
 class NotificationesInquilinoState extends State<NotificacionesInquilino>{
 
   User _currentUser;
-  String _idUsuario;
+  //String _idUsuario;
 
 
   @override
