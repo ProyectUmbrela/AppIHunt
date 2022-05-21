@@ -39,7 +39,6 @@ List<DropdownMenuItem<String>> get dropdownItems{
 class _RegisterRoomState extends State<RegisterRoom> {
 
   String selectedCountry;
-
   int _currentstep = 0;
   StepperType stepperType = StepperType.vertical;
   switchStepsType() {
@@ -47,6 +46,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
     ? stepperType = StepperType.horizontal
         : stepperType = StepperType.vertical);
   }
+
+  var addressCompound = '';
+  var estadoCompound = '';
+  var municipioCompound = '';
+
 
   TextEditingController roomidCtrl = new TextEditingController();
   TextEditingController cpCtrl = new TextEditingController();
@@ -59,10 +63,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
 
     return Scaffold(
         appBar: AppBar(
@@ -134,17 +134,82 @@ class _RegisterRoomState extends State<RegisterRoom> {
   Future getCp() async {
     Api _api = Api();
 
-    final msg = jsonEncode({
-      "cp": "62570" //cpCtrl.text
-    });
+    String cp_value = await cpCtrl.text;
+    if (cp_value.isNotEmpty){
+      print("******************************* A VALUE HAS BEEN RECEIVED: ${cp_value}");
+      final msg = jsonEncode({
+        "cp": cp_value //cpCtrl.text
+      });
 
-    var response = await _api.GetAddress(msg);
-    var data = jsonDecode(response.body);
+      List <String> estados = [];
+      var response = await _api.GetAddress(msg);
+      var data = jsonDecode(response.body);
 
-    print(data['Direcciones']);
-    List<String> listAsentamientos = ['Pedregal de Tejalpa', 'Oriental', 'Tejalpa', 'Ampliacion Tejalpa', 'Vicente Guerrero', 'Ampliacion Vicente Guerrero', 'Atenatitlan', 'Cuauhtemoc Cardenas', 'Los Pinos Tejalpa', 'San Isidro', 'Deportiva', 'El Capiri', 'Josefa Ortiz de Dominguez'];
+      var estado = jsonDecode(data['Direcciones']);
 
-    return listAsentamientos;
+      estado.forEach((key, value) {
+        print('********* Key = $key : Value = $value');
+        //estadoCompound = value;
+      });
+
+      //List<String> listAsentamientos = ['Pedregal de Tejalpa', 'Oriental', 'Tejalpa', 'Ampliacion Tejalpa', 'Vicente Guerrero', 'Ampliacion Vicente Guerrero', 'Atenatitlan', 'Cuauhtemoc Cardenas', 'Los Pinos Tejalpa', 'San Isidro', 'Deportiva', 'El Capiri', 'Josefa Ortiz de Dominguez'];
+      List<String> listAsentamientos = [
+        "Amarena Residencial",
+        "Residencial Aria",
+        "El Baldaquin Residencial",
+        "Aquitania",
+        "Residencial San Salvador",
+        "Villas Kent Seccion Guadalupe",
+        "ISSEMYM la Providencia",
+        "Azaleas",
+        "Azaleas I y II",
+        "Los Sauces",
+        "Normandia",
+        "El Pueblito",
+        "Rinconada San Luis",
+        "Sur de La Hacienda",
+        "Villas Kent Seccion el Nevado",
+        "Villas Santa Teresa",
+        "Villas Tizatlalli",
+        "Santa Cecilia",
+        "Estrella",
+        "Galapagos",
+        "San Antonio",
+        "Habitat Metepec",
+        "Quintas de San Jeronimo",
+        "Paseo Santa Elena",
+        "Santa Rita",
+        "Villa los Arrayanes I",
+        "Villa los Arrayanes II",
+        "Villas Country",
+        "San Miguel",
+        "El Pirul",
+        "La Capilla",
+        "Los Cisnes",
+        "Real de Azaleas I",
+        "Rinconada Mexicana",
+        "Alsacia",
+        "Explanada del Parque",
+        "Lorena",
+        "La Asuncion",
+        "Rancho San Lucas",
+        "Real de Azaleas III",
+        "Santa Maria Regla",
+        "Palma Real",
+        "Rinconada la Concordia",
+        "Altavista",
+        "Haciendas de Guadalupe",
+        "San Salvador Tizatlalli",
+        "Esperanza Lopez Mateos",
+        "Agricola Francisco I. Madero",
+        "Bellavista",
+        "Árbol de la Vida"
+      ];
+      return listAsentamientos;
+    }else{
+      return [];
+    }
+
   }
 
   String selectedValueCP = null;
@@ -162,24 +227,19 @@ class _RegisterRoomState extends State<RegisterRoom> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
-                  //Text('Cargando...'),
                 ]
             ),
           );
         }
         else if(snapshot.hasData && snapshot.data.isEmpty) {
           // Informacion obtenida de la API pero esta vacio el response
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  "Aún no tienes habitaciones rentadas",
-                  style: Theme.of(context).textTheme.headline4,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+          return DropdownButtonFormField(
+            items: [''].map<DropdownMenuItem<String>>((String value) {
+              return  DropdownMenuItem(
+                value: 'null',
+                child: Text('null')
+              );
+            }).toList(),
           );
         }
         else  {
@@ -221,7 +281,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       ),
       Step(
           title: Text(_currentstep ==1 ? 'Municipio': ''),
-          content:projectWidget(),
+          content: projectWidget(),
           isActive: _currentstep >= 1,
           state: _currentstep ==1 ? StepState.editing: StepState.complete
         /*

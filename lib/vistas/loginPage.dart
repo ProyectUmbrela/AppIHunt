@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
+  int statusCode;
   Future sendData(var correo) async {
 
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -151,11 +151,11 @@ class _LoginPageState extends State<LoginPage> {
     print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: ${body}");
 
     var response = await _api.EnabledCuenta(body);
-    int statusCode = response.statusCode;
+    statusCode = response.statusCode;
     var resp = json.decode(response.body);
     print("#################### 1 response: ${statusCode}");
     print("#################### 2 response: ${resp}");
-
+    return statusCode;
   }
 
 
@@ -163,9 +163,20 @@ class _LoginPageState extends State<LoginPage> {
     Widget continueButton = FlatButton(
       child: Text("Continuar"),
       onPressed:  (){
-        sendData(correo);
-        Navigator.of(context).pop();
-        _showDialog(2, "Solicitud cancelada, vuelve a recargar la aplicación");
+        sendData(correo).then((response) {
+          print("############# value returned: ${response}");
+          if(response == 416){
+            Navigator.of(context).pop();
+            _showDialog(2, "Tu cuenta ya se encuentra en proceso de eliminación");
+          }else{
+            Navigator.of(context).pop();
+            _showDialog(2, "Solicitud cancelada, vuelve a recargar la aplicación");
+          }
+        }).catchError((e) {
+          Navigator.of(context).pop();
+          _showDialog(2, "Ocurrió un error con tu solicitud");
+        });
+
       },
     );
     // set up the AlertDialog
