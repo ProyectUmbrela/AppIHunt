@@ -381,7 +381,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
           );
         },
         icon: Icon(Icons.add),
-        label: Text("Registrar habitación"),
+        label: Text("Habitación"),
         foregroundColor: Colors.black,
         backgroundColor: Colors.cyan,
       ),

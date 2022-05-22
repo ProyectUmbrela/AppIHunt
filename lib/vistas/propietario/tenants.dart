@@ -354,7 +354,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
           );
         },
         icon: Icon(Icons.add),
-        label: Text("Registrar inquilino"),
+        label: Text("Inquilino"),
         foregroundColor: Colors.black,
         backgroundColor: Colors.cyan,
       ),

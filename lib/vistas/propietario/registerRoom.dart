@@ -58,31 +58,114 @@ class _RegisterRoomState extends State<RegisterRoom> {
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
     );
 
+    final dimensions = TextFormField(
+      autofocus: false,
+      controller: dimensionsCtrl,
+      validator: (value) => value.isEmpty ? "La dimensión de la habitacón es requerida" : null,
+      onSaved: (value) => _dimensions = value,
+      decoration: buildInputDecoration("Dimensión", Icons.menu),
+    );
+
+    final services = TextFormField(
+      autofocus: false,
+      controller: servicesCtrl,
+      onSaved: (value) => _services = value,
+      decoration: buildInputDecoration("Servicios", Icons.local_laundry_service),
+    );
+
+    final description = TextFormField(
+      autofocus: false,
+      controller: descriptionCtrl,
+      onSaved: (value) => _description = value,
+      decoration:
+      buildInputDecoration("Descripción", Icons.description),
+    );
+
+    final price = TextFormField(
+      autofocus: false,
+      controller: priceCtrl,
+      validator: numberValidator,
+      onSaved: (value) => _price = value,
+      decoration:
+      buildInputDecoration("Precio", Icons.monetization_on),
+    );
+
+    final terms = TextFormField(
+      autofocus: false,
+      controller: termsCtrl,
+      onSaved: (value) => _terms = value,
+      decoration:
+      buildInputDecoration("Términos", Icons.add_alert),
+    );
+
+    TextStyle style = TextStyle(fontSize: 18);
+
+    final registrarRoom = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          onPressed: () {
+            //setState(() => _saving = true);
+            //_sendRequest(myControllerEmail, myControllerPassword);
+            //
+          },
+          child: Text("Registrar",
+              textAlign: TextAlign.center,
+              style: style.copyWith(color: Colors.white)),
+        )
+    );
 
     return SafeArea(
         child: Scaffold(
         body: Container(
-          padding: EdgeInsets.all(40.0),
+          padding: EdgeInsets.all(20.0),
           child: Form(
             //key: formKey,
             child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    label("Habitacion"),
+
+                    label("Habitación"),
                     SizedBox(height: 5,),
                     roomId,
                     SizedBox(height: 15,),
-
+                    /***********************/
                     label("Dirección"),
                     SizedBox(height: 5),
                     direccion(),
                     SizedBox(height: 15,),
-
-                    label("Habitacion"),
+                    /***********************/
+                    label("Dimensión de la habitación"),
                     SizedBox(height: 5,),
-                    roomId,
+                    dimensions,
                     SizedBox(height: 15,),
+                    /***********************/
+                    label("Servicios incluidos"),
+                    SizedBox(height: 5,),
+                    services,
+                    SizedBox(height: 15,),
+                    /***********************/
+                    label("Detalles adicionales"),
+                    SizedBox(height: 5,),
+                    description,
+                    SizedBox(height: 15,),
+                    /***********************/
+                    label("Costo mensual"),
+                    SizedBox(height: 5,),
+                    price,
+                    SizedBox(height: 15,),
+                    /***********************/
+                    label("Términos de renta"),
+                    SizedBox(height: 5,),
+                    terms,
+                    SizedBox(height: 55,),
+                    /***********************/
+                    registrarRoom,
+
                   ],
               )
             ),
@@ -91,6 +174,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
     ));
   }
 
+
+  Future sendRoom() async{
+
+  }
 
   Widget direccion(){
 
@@ -294,6 +381,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   }
 
   List<Step> _mySteps() {
+
     List<Step> _steps = [
       Step(
           title:  Text(_currentstep == 0 ? 'Código postal': ''),
@@ -309,7 +397,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           state: _currentstep == 0 ? StepState.editing: StepState.complete
       ),
       Step(
-          title: Text(_currentstep == 1 ? 'Municipio': ''),
+          title: Text(_currentstep == 1 ? 'Localidad': ''),
           content: projectWidget(),
           isActive: _currentstep >= 1,
           state: _currentstep == 1 ? StepState.editing: StepState.complete
@@ -329,16 +417,16 @@ class _RegisterRoomState extends State<RegisterRoom> {
           state: _currentstep ==1 ? StepState.editing: StepState.complete*/
       ),
       Step(
-          title: Text(_currentstep ==2 ? 'Address': ''),
+          title: Text(_currentstep ==2 ? 'Calle': ''),
           content: TextFormField(
             decoration: InputDecoration(
-              hintText: 'Address',
+              hintText: 'Calle y num',
               border: OutlineInputBorder(),
             ),
           ),
           isActive: _currentstep >= 2,
           state: _currentstep ==2 ? StepState.editing: StepState.complete
-      ),
+      ),/*
       Step(
           title: Text(_currentstep ==3 ? 'Game': ''),
           content: TextFormField(
@@ -360,7 +448,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           ),
           isActive: _currentstep >= 4,
           state: _currentstep ==4 ? StepState.editing: StepState.complete
-      ),
+      ),*/
     ];
 
     return _steps;
