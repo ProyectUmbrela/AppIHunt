@@ -24,18 +24,6 @@ class RegisterRoom extends StatefulWidget {
 }
 
 
-/*
-List<DropdownMenuItem<String>> get dropdownItems{
-  List<DropdownMenuItem<String>> menuItems = [
-    DropdownMenuItem(child: Text("USA"),value: "USA"),
-    DropdownMenuItem(child: Text("Canada"),value: "Canada"),
-    DropdownMenuItem(child: Text("Brazil"),value: "Brazil"),
-    DropdownMenuItem(child: Text("England"),value: "England"),
-  ];
-  return menuItems;
-}*/
-
-
 class _RegisterRoomState extends State<RegisterRoom> {
 
   String selectedCountry;
@@ -132,27 +120,35 @@ class _RegisterRoomState extends State<RegisterRoom> {
   );*/
 
   Future getCp() async {
+    List<String> listAsentamientosCustom = [];
+
     Api _api = Api();
 
     String cp_value = await cpCtrl.text;
-    if (cp_value.isNotEmpty){
+    if ((cp_value.isNotEmpty) && (cp_value.length==5)){
       print("******************************* A VALUE HAS BEEN RECEIVED: ${cp_value}");
       final msg = jsonEncode({
         "cp": cp_value //cpCtrl.text
       });
 
-      List <String> estados = [];
+
       var response = await _api.GetAddress(msg);
       var data = jsonDecode(response.body);
-
       var estado = jsonDecode(data['Direcciones']);
 
       estado.forEach((key, value) {
-        print('********* Key = $key : Value = $value');
-        //estadoCompound = value;
+        var newresult = estado['municipios'][0];
+        for(var asentamiento in newresult['asentamientos']){
+          for(var item in asentamiento['asentamiento']){
+            if(!listAsentamientosCustom.contains(item)){
+              listAsentamientosCustom.add(item);
+            }
+          }
+        }
       });
 
-      //List<String> listAsentamientos = ['Pedregal de Tejalpa', 'Oriental', 'Tejalpa', 'Ampliacion Tejalpa', 'Vicente Guerrero', 'Ampliacion Vicente Guerrero', 'Atenatitlan', 'Cuauhtemoc Cardenas', 'Los Pinos Tejalpa', 'San Isidro', 'Deportiva', 'El Capiri', 'Josefa Ortiz de Dominguez'];
+      print("========> ${listAsentamientosCustom}");
+
       List<String> listAsentamientos = [
         "Amarena Residencial",
         "Residencial Aria",
@@ -205,11 +201,15 @@ class _RegisterRoomState extends State<RegisterRoom> {
         "Bellavista",
         "Árbol de la Vida"
       ];
-      return listAsentamientos;
+
+      listAsentamientosCustom.sort();
+
+      return listAsentamientosCustom;
+
     }else{
+      print("####################### ERROR CON EL CODIFO POSTAL");
       return [];
     }
-
   }
 
   String selectedValueCP = null;
@@ -246,6 +246,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           // Informacion obtenida y con datos en el response
           return DropdownButtonFormField(
             //decoration: new InputDecoration(icon: Icon(Icons.language)),
+            hint: Text("Colonia o asentamiento"),
             value: selectedCountry,
             items: snapshot.data.map<DropdownMenuItem<String>>((String country) {
               return  DropdownMenuItem(
