@@ -28,16 +28,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   String selectedCountry;
   int _currentstep = 0;
-  StepperType stepperType = StepperType.vertical;
-  switchStepsType() {
-    setState(() => stepperType == StepperType.vertical
-    ? stepperType = StepperType.horizontal
-        : stepperType = StepperType.vertical);
-  }
-
   var addressCompound = '';
   var estadoCompound = '';
   var municipioCompound = '';
+  String selectedValueCP = null;
 
 
   TextEditingController roomidCtrl = new TextEditingController();
@@ -49,88 +43,114 @@ class _RegisterRoomState extends State<RegisterRoom> {
   TextEditingController termsCtrl = new TextEditingController();
   String _roomid, _cpInput, _colonia, _dimensions, _services, _description, _price, _terms;
 
+
+
+
+
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Stepper'),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-        body: Row(
-          children: [
-            Expanded(
-              child: Stepper(
-                physics : ClampingScrollPhysics(),
-                steps: _mySteps(),
-                currentStep: this._currentstep,
-                onStepTapped: (step) {
-                  setState(() {
-                    this._currentstep = step;
-                  });
-                },
-                onStepContinue: () {
-                  setState(() {
-                    if (this._currentstep < this._mySteps().length - 1) {
-                      this._currentstep = this._currentstep + 1;
-                    } else {
-                      print('completed, check field');
-                    }
-                  });
-                },
-                onStepCancel: () {
-                  setState(() {
-                    if (this._currentstep > 0) {
-                      this._currentstep = this._currentstep - 1;
-                    } else {
-                      this._currentstep = 0;
-                    }
-                  });
-                },
-              ),
+    final roomId = TextFormField(
+      autofocus: false,
+      controller: roomidCtrl,
+      validator: (value) => value.isEmpty ? "Your roomId is required" : null,
+      onSaved: (value) => _roomid = value,
+      decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
+    );
+
+
+    return SafeArea(
+        child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(40.0),
+          child: Form(
+            //key: formKey,
+            child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    label("Habitacion"),
+                    SizedBox(height: 5,),
+                    roomId,
+                    SizedBox(height: 15,),
+
+                    label("Dirección"),
+                    SizedBox(height: 5),
+                    direccion(),
+                    SizedBox(height: 15,),
+
+                    label("Habitacion"),
+                    SizedBox(height: 5,),
+                    roomId,
+                    SizedBox(height: 15,),
+                  ],
+              )
             ),
-          ],
-        ));
+          ),
+        )
+    ));
   }
 
-  /*
-  final cp = TextFormField(
-    autofocus: false,
-    controller: cpCtrl,
-    validator: (value) => value.isEmpty ? "Ingresa el código postal" : null,
-    onSaved: (value) => _cp = value,
-    decoration: buildInputDecoration("Dirección", Icons.map),
 
-    final colonias = DropdownButtonFormField<String>(
-      value: _colonia,
-      hint: Text(
-        'Seleccione un municipio',
-      ),
-      onChanged: (value) =>
-          setState(() => _colonia = value),
-      validator: (value) => value == null ? 'Por favor elija una opción' : null,
-      items: dropdownItems/*[''].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),*/
+  Widget direccion(){
+
+    return Row(
+        children: [
+          Expanded(
+            child: Stepper(
+              physics : ClampingScrollPhysics(),
+              steps: _mySteps(),
+              currentStep: this._currentstep,
+              onStepTapped: (step) {
+                setState(() {
+                  this._currentstep = step;
+                });
+              },
+              onStepContinue: () {
+                setState(() {
+                  if (this._currentstep < this._mySteps().length - 1) {
+                    this._currentstep = this._currentstep + 1;
+                  } else {
+                    print('completed, check field');
+                  }
+                });
+              },
+              onStepCancel: () {
+                setState(() {
+                  if (this._currentstep > 0) {
+                    this._currentstep = this._currentstep - 1;
+                  } else {
+                    this._currentstep = 0;
+                  }
+                });
+              },
+            ),
+          ),
+        ],
     );
-  );*/
+  }
+
 
   Future getCp() async {
+
+    //***************************************
+    //***************************************
+    //***************************************
+    // codigo postal no valido: 62557
+    //***************************************
+    //***************************************
+    //***************************************
+
     List<String> listAsentamientosCustom = [];
 
     Api _api = Api();
 
     String cp_value = await cpCtrl.text;
-    if ((cp_value.isNotEmpty) && (cp_value.length==5)){
+    if ((cp_value.isNotEmpty) && (cp_value.length == 5)){
       print("******************************* A VALUE HAS BEEN RECEIVED: ${cp_value}");
       final msg = jsonEncode({
         "cp": cp_value //cpCtrl.text
       });
-
 
       var response = await _api.GetAddress(msg);
       var data = jsonDecode(response.body);
@@ -207,12 +227,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
       return listAsentamientosCustom;
 
     }else{
-      print("####################### ERROR CON EL CODIFO POSTAL");
+      print("####################### ERROR CON EL CODIGO POSTAL: ${cp_value}");
       return [];
     }
   }
 
-  String selectedValueCP = null;
+
 
   Widget projectWidget() {
 
@@ -248,6 +268,15 @@ class _RegisterRoomState extends State<RegisterRoom> {
             //decoration: new InputDecoration(icon: Icon(Icons.language)),
             hint: Text("Colonia o asentamiento"),
             value: selectedCountry,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: true,
+              ),
             items: snapshot.data.map<DropdownMenuItem<String>>((String country) {
               return  DropdownMenuItem(
                 value: country,
@@ -274,17 +303,16 @@ class _RegisterRoomState extends State<RegisterRoom> {
             decoration: InputDecoration(
               hintText: 'Código postal',
               border: OutlineInputBorder(),
-              //icon: Icon(Icons.map)
             ),
           ),
           isActive: _currentstep >= 0,
           state: _currentstep == 0 ? StepState.editing: StepState.complete
       ),
       Step(
-          title: Text(_currentstep ==1 ? 'Municipio': ''),
+          title: Text(_currentstep == 1 ? 'Municipio': ''),
           content: projectWidget(),
           isActive: _currentstep >= 1,
-          state: _currentstep ==1 ? StepState.editing: StepState.complete
+          state: _currentstep == 1 ? StepState.editing: StepState.complete
         /*
           title: Text(_currentstep ==1 ? 'Municipio': ''),
           content: DropdownButtonFormField<String>(
@@ -337,12 +365,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
     return _steps;
   }
-
-
-
-
-
-
 
 
 
