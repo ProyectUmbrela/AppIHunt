@@ -32,7 +32,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   var estadoCompound = '';
   var municipioCompound = '';
   String selectedValueCP = null;
-
+  TextStyle style = TextStyle(fontSize: 18);
 
   TextEditingController roomidCtrl = new TextEditingController();
   TextEditingController cpCtrl = new TextEditingController();
@@ -98,7 +98,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       buildInputDecoration("Términos", Icons.add_alert),
     );
 
-    TextStyle style = TextStyle(fontSize: 18);
+
 
     final registrarRoom = Material(
         elevation: 5.0,
