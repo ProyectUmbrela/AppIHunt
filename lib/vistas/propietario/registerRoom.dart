@@ -162,6 +162,27 @@ class _RegisterRoomState extends State<RegisterRoom> {
                     label("Términos de renta"),
                     SizedBox(height: 5,),
                     terms,
+                    /***********************/
+                    SizedBox(height: 35,),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: MaterialButton(
+                              color: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              onPressed: () {
+                                _imgFromGallery();
+                              },
+                              child: Text(
+                                "selccionar imagen",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ))
+                      ],
+                    ),
+                    /***********************/
                     SizedBox(height: 55,),
                     /***********************/
                     registrarRoom,
@@ -174,11 +195,25 @@ class _RegisterRoomState extends State<RegisterRoom> {
     ));
   }
 
-
+  // ENVIAR DATOS PARA REGISTRAR HABITACION
   Future sendRoom() async{
 
   }
 
+
+
+  // OBTENER IMAGENES DE LA GALERIA
+  _imgFromGallery() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.gallery);
+
+    setState(() {
+      //image_files.add(image);
+      //print("########################## ############## LOGITUD DE LISTA ${image_files.length}");
+    });
+  }
+
+  // STEPPER PARA OBTENER LA DIRECCION
   Widget direccion(){
 
     return Row(
@@ -217,7 +252,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     );
   }
 
-
+  // OBTIENE LOS MUINICIPIOS Y LOCALIDADES DADO UN CODIGO POSTAL VALIDO
   Future getCp() async {
 
     //***************************************
@@ -320,7 +355,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   }
 
 
-
+  // GENERA LA LISTA DE RESULTADOS OBTENIDOS EN getCp() FUNCTION
   Widget projectWidget() {
 
     return FutureBuilder(
@@ -380,6 +415,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     );
   }
 
+  // LISTA DE PASOS DENTRO DE DIRECCION
   List<Step> _mySteps() {
 
     List<Step> _steps = [

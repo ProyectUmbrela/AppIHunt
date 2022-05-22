@@ -66,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget recuperarPass(){
     return InkWell(
       onTap: () {
