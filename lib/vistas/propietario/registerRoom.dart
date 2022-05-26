@@ -168,16 +168,16 @@ class _RegisterRoomState extends State<RegisterRoom> {
                       children: <Widget>[
                         Expanded(
                             child: MaterialButton(
-                              color: Colors.blue,
+                              color: Color(0xFFE0E0E0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               onPressed: () {
                                 _imgFromGallery();
                               },
-                              child: Text(
-                                "selccionar imagen",
-                                style: TextStyle(color: Colors.white),
+                              child: Text("Seleccionar imagen",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 16.0, color: Colors.black)
                               ),
                             ))
                       ],
@@ -186,7 +186,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
                     SizedBox(height: 55,),
                     /***********************/
                     registrarRoom,
-
                   ],
               )
             ),
@@ -241,6 +240,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
                 setState(() {
                   if (this._currentstep > 0) {
                     this._currentstep = this._currentstep - 1;
+                    selectedCountry = null; //****************************************
                   } else {
                     this._currentstep = 0;
                   }
@@ -251,6 +251,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         ],
     );
   }
+
 
   // OBTIENE LOS MUINICIPIOS Y LOCALIDADES DADO UN CODIGO POSTAL VALIDO
   Future getCp() async {
@@ -263,7 +264,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     //***************************************
     //***************************************
 
-    List<String> listAsentamientosCustom = [];
+
 
     Api _api = Api();
 
@@ -275,79 +276,87 @@ class _RegisterRoomState extends State<RegisterRoom> {
       });
 
       var response = await _api.GetAddress(msg);
-      var data = jsonDecode(response.body);
-      var estado = jsonDecode(data['Direcciones']);
+      int statusCode = response.statusCode;
 
-      estado.forEach((key, value) {
-        var newresult = estado['municipios'][0];
-        for(var asentamiento in newresult['asentamientos']){
-          for(var item in asentamiento['asentamiento']){
-            if(!listAsentamientosCustom.contains(item)){
-              listAsentamientosCustom.add(item);
+      if(statusCode == 201){
+
+        var data = jsonDecode(response.body);
+        var estado = jsonDecode(data['Direcciones']);
+        List<String> listAsentamientosCustom = [];
+        estado.forEach((key, value) {
+          var newresult = estado['municipios'][0];
+          for (var asentamiento in newresult['asentamientos']) {
+            for (var item in asentamiento['asentamiento']) {
+              if (!listAsentamientosCustom.contains(item)) {
+                listAsentamientosCustom.add(item);
+              }
             }
           }
-        }
-      });
+        });
 
-      print("========> ${listAsentamientosCustom}");
+        print("========> ${listAsentamientosCustom}");
+        /*
+        List<String> listAsentamientos = [
+          "Amarena Residencial",
+          "Residencial Aria",
+          "El Baldaquin Residencial",
+          "Aquitania",
+          "Residencial San Salvador",
+          "Villas Kent Seccion Guadalupe",
+          "ISSEMYM la Providencia",
+          "Azaleas",
+          "Azaleas I y II",
+          "Los Sauces",
+          "Normandia",
+          "El Pueblito",
+          "Rinconada San Luis",
+          "Sur de La Hacienda",
+          "Villas Kent Seccion el Nevado",
+          "Villas Santa Teresa",
+          "Villas Tizatlalli",
+          "Santa Cecilia",
+          "Estrella",
+          "Galapagos",
+          "San Antonio",
+          "Habitat Metepec",
+          "Quintas de San Jeronimo",
+          "Paseo Santa Elena",
+          "Santa Rita",
+          "Villa los Arrayanes I",
+          "Villa los Arrayanes II",
+          "Villas Country",
+          "San Miguel",
+          "El Pirul",
+          "La Capilla",
+          "Los Cisnes",
+          "Real de Azaleas I",
+          "Rinconada Mexicana",
+          "Alsacia",
+          "Explanada del Parque",
+          "Lorena",
+          "La Asuncion",
+          "Rancho San Lucas",
+          "Real de Azaleas III",
+          "Santa Maria Regla",
+          "Palma Real",
+          "Rinconada la Concordia",
+          "Altavista",
+          "Haciendas de Guadalupe",
+          "San Salvador Tizatlalli",
+          "Esperanza Lopez Mateos",
+          "Agricola Francisco I. Madero",
+          "Bellavista",
+          "Árbol de la Vida"
+        ];*/
 
-      List<String> listAsentamientos = [
-        "Amarena Residencial",
-        "Residencial Aria",
-        "El Baldaquin Residencial",
-        "Aquitania",
-        "Residencial San Salvador",
-        "Villas Kent Seccion Guadalupe",
-        "ISSEMYM la Providencia",
-        "Azaleas",
-        "Azaleas I y II",
-        "Los Sauces",
-        "Normandia",
-        "El Pueblito",
-        "Rinconada San Luis",
-        "Sur de La Hacienda",
-        "Villas Kent Seccion el Nevado",
-        "Villas Santa Teresa",
-        "Villas Tizatlalli",
-        "Santa Cecilia",
-        "Estrella",
-        "Galapagos",
-        "San Antonio",
-        "Habitat Metepec",
-        "Quintas de San Jeronimo",
-        "Paseo Santa Elena",
-        "Santa Rita",
-        "Villa los Arrayanes I",
-        "Villa los Arrayanes II",
-        "Villas Country",
-        "San Miguel",
-        "El Pirul",
-        "La Capilla",
-        "Los Cisnes",
-        "Real de Azaleas I",
-        "Rinconada Mexicana",
-        "Alsacia",
-        "Explanada del Parque",
-        "Lorena",
-        "La Asuncion",
-        "Rancho San Lucas",
-        "Real de Azaleas III",
-        "Santa Maria Regla",
-        "Palma Real",
-        "Rinconada la Concordia",
-        "Altavista",
-        "Haciendas de Guadalupe",
-        "San Salvador Tizatlalli",
-        "Esperanza Lopez Mateos",
-        "Agricola Francisco I. Madero",
-        "Bellavista",
-        "Árbol de la Vida"
-      ];
+        listAsentamientosCustom.sort();
+        return listAsentamientosCustom;
 
-      listAsentamientosCustom.sort();
-
-      return listAsentamientosCustom;
-
+      }
+      else{
+        print("############ ERROR GENERADO CODIGO POSTAL NO VALIDO: ${response}");
+        return [];
+      }
     }else{
       print("####################### ERROR CON EL CODIGO POSTAL: ${cp_value}");
       return [];
@@ -363,7 +372,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
       builder: (context, snapshot) {
         if(!snapshot.hasData){
           // Esperando la respuesta de la API
-          return Center(
+          return SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          );
+          /*return Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -371,7 +385,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
                   CircularProgressIndicator(),
                 ]
             ),
-          );
+          );*/
         }
         else if(snapshot.hasData && snapshot.data.isEmpty) {
           // Informacion obtenida de la API pero esta vacio el response
@@ -437,23 +451,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
           content: projectWidget(),
           isActive: _currentstep >= 1,
           state: _currentstep == 1 ? StepState.editing: StepState.complete
-        /*
-          title: Text(_currentstep ==1 ? 'Municipio': ''),
-          content: DropdownButtonFormField<String>(
-              value: _colonia,
-              hint: Text(
-                'Seleccione un municipio',
-              ),
-              onChanged: (value) =>
-                  setState(() => _colonia = value),
-              validator: (value) => value == null ? 'Por favor elija una opción' : null,
-              //items: dropdownItems
-          ),
-          isActive: _currentstep >= 1,
-          state: _currentstep ==1 ? StepState.editing: StepState.complete*/
       ),
       Step(
-          title: Text(_currentstep ==2 ? 'Calle': ''),
+          title: Text(_currentstep == 2 ? 'Calle': ''),
           content: TextFormField(
             decoration: InputDecoration(
               hintText: 'Calle y num',
@@ -461,30 +461,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
             ),
           ),
           isActive: _currentstep >= 2,
-          state: _currentstep ==2 ? StepState.editing: StepState.complete
-      ),/*
-      Step(
-          title: Text(_currentstep ==3 ? 'Game': ''),
-          content: TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Game',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          isActive: _currentstep >= 3,
-          state: _currentstep ==3 ? StepState.editing: StepState.complete
+          state: _currentstep == 2 ? StepState.editing: StepState.complete
       ),
-      Step(
-          title: Text(_currentstep ==4 ? 'Phone': ''),
-          content: TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Phone',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          isActive: _currentstep >= 4,
-          state: _currentstep ==4 ? StepState.editing: StepState.complete
-      ),*/
     ];
 
     return _steps;

@@ -96,7 +96,6 @@ class DeleteAccount extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => UserProfile()),
                       );*/
 
-
                       _showDialog(context, 2, responseRequest);
 
                     }
