@@ -165,7 +165,11 @@ class IHuntApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
+      /*
+      If the application is built using GlobalMaterialLocalizations.delegate, consider using GlobalMaterialLocalizations.delegates (plural) instead, as that will automatically declare the appropriate Cupertino localizations.
+       The declared supported locales for this app are: en, es, zh, he, ru, fr_BE, fr_CA, ja, de, hi, ar
+
+        supportedLocales: [
         const Locale('en'),
         const Locale('es'),
         const Locale('zh'),
@@ -177,7 +181,7 @@ class IHuntApp extends StatelessWidget {
         const Locale('de'),
         const Locale('hi'),
         const Locale('ar'),
-      ],
+      ],*/
       locale: const Locale('es'),
       routes: {
         '/login': (context) => LoginPage(),

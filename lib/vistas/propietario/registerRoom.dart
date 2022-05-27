@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 //import 'package:carousel_slider/carousel_slider.dart';
+///import 'package:flutter/gestures.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:intl/intl.dart';
+
 
 
 /////////////////////////////////////////import 'package:location/location.dart';
@@ -118,6 +120,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         )
     );
 
+
     return SafeArea(
         child: Scaffold(
         body: Container(
@@ -174,6 +177,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
                               ),
                               onPressed: () {
                                 _imgFromGallery();
+
+
                               },
                               child: Text("Seleccionar imagen",
                                   textAlign: TextAlign.center,
@@ -199,18 +204,25 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   }
 
+  List<File> imageFileList = [];
 
+  final ImagePicker _picker = ImagePicker();
 
   // OBTENER IMAGENES DE LA GALERIA
   _imgFromGallery() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.gallery);
 
-    setState(() {
-      //image_files.add(image);
-      //print("########################## ############## LOGITUD DE LISTA ${image_files.length}");
+
+    var images = await _picker.pickMultiImage();
+    images.forEach((image) {
+      setState(() {
+        imageFileList.add(File(image.path));
+      });
     });
   }
+
+
+
+
 
   // STEPPER PARA OBTENER LA DIRECCION
   Widget direccion(){

@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -107,13 +106,6 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            /*Text(
-              "¿Aún no tienes una cuenta?",
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10,
-            ),*/
             Text(
               'Quiero registrarme',
               style: TextStyle(

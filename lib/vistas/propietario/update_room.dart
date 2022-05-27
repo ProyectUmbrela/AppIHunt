@@ -94,13 +94,14 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
     // OBTENER IMAGENES
     _imgFromGallery() async {
+      /*
       File image = await ImagePicker.pickImage(
           source: ImageSource.gallery);
 
       setState(() {
         image_files.add(image);
         //print("######################################## LOGITUD DE LISTA ${image_files.length}");
-      });
+      });*/
     }
     _images_to_base64() async{
       var dicc = {
