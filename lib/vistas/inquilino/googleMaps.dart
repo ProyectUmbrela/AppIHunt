@@ -67,7 +67,6 @@ class MapsPage extends State<MyMaps> {
       markerId: markerId,
       position: position,
       icon: _mapMarker,
-      //onTap: ()=> {},
       infoWindow: InfoWindow(
         snippet: "Ver más detalles",
         title: "Habitación en Renta",
@@ -110,7 +109,6 @@ class MapsPage extends State<MyMaps> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget> [
                                         Row(
-                                          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
                                             Column(
                                               mainAxisAlignment: MainAxisAlignment.center,

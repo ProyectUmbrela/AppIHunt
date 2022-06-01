@@ -52,7 +52,7 @@ String numberValidator(String value) {
   }
   final n = double.tryParse(value);
   if(n == null) {
-    return '"$value" is not a valid number';
+    return '"$value" No es un número válido';
   }
   return null;
 }

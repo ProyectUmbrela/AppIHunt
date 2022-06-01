@@ -16,6 +16,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
 
 
+
+import 'package:ihunt/vistas/propietario/multiimages.dart';
+
+
+
 class Landlord extends StatefulWidget {
   @override
   _LandlordState createState() => _LandlordState();
@@ -142,8 +147,11 @@ class _LandlordState extends State<Landlord>
         return widgetHome(); //first page
       case 1:
         return Rooms(); // second page
+
+
       case 2:
-        return Tenants(); // third page
+        return Home();
+        ////////////////////////////////////return Tenants(); // third page
       case 3:
         return Invitations(); // fourth page
     }

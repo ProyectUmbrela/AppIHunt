@@ -91,6 +91,7 @@ dependencies:
   material_floating_search_bar: ^0.3.6
   geocoder: ^0.2.1
   flutter_automation: ^1.2.2 #-------------------------------------------------------------------
+  flutter_bloc: ^8.0.1
 
 
 dev_dependencies:
