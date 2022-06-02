@@ -6,9 +6,7 @@ String validateEmail(String value) {
     _msg = "Correo requerido";
   } else if (!regex.hasMatch(value)) {
     _msg = "Please provide a valid email address";
-  }/*else{
-    _msg = 'email-valid';
-  }*/
+  }
   return _msg;
 }
 
@@ -41,7 +39,7 @@ String validateMobile(String value) {
 
 String validatePassword(String value, value2) {
   if (value != value2) {
-    return "Las contraseñas no coinciden";
+    return "La contraseña no coincide";
   }
   return null;
 }

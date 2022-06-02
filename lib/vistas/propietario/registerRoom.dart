@@ -11,6 +11,7 @@ import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 
 
@@ -40,6 +41,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> imageFileList = [];
 
+  bool _saving = false;
   //File singleImage;
   TextStyle style = TextStyle(fontSize: 18);
 
@@ -123,9 +125,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
           minWidth: MediaQuery.of(context).size.width,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-            //setState(() => _saving = true);
-            //_sendRequest(myControllerEmail, myControllerPassword);
+            setState(() => _saving = true);
             registerNewRoom();
+
+
           },
           child: Text("Registrar",
               textAlign: TextAlign.center,
@@ -166,91 +169,94 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
     return SafeArea(
         child: Scaffold(
-            body: Container(
-              padding: EdgeInsets.all(20.0),
-                child: Form(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          label("Habitación"),
-                          SizedBox(height: 5,),
-                          roomId,
-                          SizedBox(height: 15,),
-                          /***********************/
-                          label("Dirección"),
-                          SizedBox(height: 5),
-                          direccion(),
-                          SizedBox(height: 15,),
-                          /***********************/
-                          label("Dimensión de la habitación"),
-                          SizedBox(height: 5,),
-                          dimensions,
-                          SizedBox(height: 15,),
-                          /***********************/
-                          label("Servicios incluidos"),
-                          SizedBox(height: 5,),
-                          services,
-                          SizedBox(height: 15,),
-                          /***********************/
-                          label("Detalles adicionales"),
-                          SizedBox(height: 5,),
-                          description,
-                          SizedBox(height: 15,),
-                          /***********************/
-                          label("Costo mensual"),
-                          SizedBox(height: 5,),
-                          price,
-                          SizedBox(height: 15,),
-                          /***********************/
-                          label("Términos de renta"),
-                          SizedBox(height: 5,),
-                          terms,
-                          /***********************/
-                          //SizedBox(height: 35,),
-                          /***********************/
-                          SizedBox(height: 5,),
-                          /***********************/
-                          addingPhotos,
+            body: ModalProgressHUD(
+              child: Container(
+                padding: EdgeInsets.all(20.0),
+                  child: Form(
+                    key: formKey,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            label("Habitación"),
+                            SizedBox(height: 5,),
+                            roomId,
+                            SizedBox(height: 15,),
+                            /***********************/
+                            label("Dirección"),
+                            SizedBox(height: 5),
+                            direccion(),
+                            SizedBox(height: 15,),
+                            /***********************/
+                            label("Dimensión de la habitación"),
+                            SizedBox(height: 5,),
+                            dimensions,
+                            SizedBox(height: 15,),
+                            /***********************/
+                            label("Servicios incluidos"),
+                            SizedBox(height: 5,),
+                            services,
+                            SizedBox(height: 15,),
+                            /***********************/
+                            label("Detalles adicionales"),
+                            SizedBox(height: 5,),
+                            description,
+                            SizedBox(height: 15,),
+                            /***********************/
+                            label("Costo mensual"),
+                            SizedBox(height: 5,),
+                            price,
+                            SizedBox(height: 15,),
+                            /***********************/
+                            label("Términos de renta"),
+                            SizedBox(height: 5,),
+                            terms,
+                            /***********************/
+                            //SizedBox(height: 35,),
+                            /***********************/
+                            SizedBox(height: 5,),
+                            /***********************/
+                            addingPhotos,
 
-                          /*InkWell(
-                            onTap: () {
-                              selectImages();
-                            },
-                            child: Container(
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.symmetric(horizontal: 20),
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  padding: EdgeInsets.symmetric(vertical: 5),
-                                  itemCount: imageFileList.length,
-                                  itemBuilder: (context, index) => Container(
-                                    height: 100,
-                                    width: 120,
-                                    margin: EdgeInsets.only(left: 3.0, right: 3.0),
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: FileImage(File(imageFileList[index].path)),
-                                          fit: BoxFit.cover
+                            /*InkWell(
+                              onTap: () {
+                                selectImages();
+                              },
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    itemCount: imageFileList.length,
+                                    itemBuilder: (context, index) => Container(
+                                      height: 100,
+                                      width: 120,
+                                      margin: EdgeInsets.only(left: 3.0, right: 3.0),
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: FileImage(File(imageFileList[index].path)),
+                                            fit: BoxFit.cover
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                            ),
-                          ),*/
-                          SizedBox(height: 15,),
-                          registrarRoom,
-                  ],
-              )
+                              ),
+                            ),*/
+                            SizedBox(height: 15,),
+                            registrarRoom,
+                          ],
+                      ),
+                    ),
+                  ),
+              ),
+              inAsyncCall: _saving,
             ),
-          ),
-        ),
     ));
   }
 
@@ -259,7 +265,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final List<XFile> selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
-
     }
     print("Image List Length:" + imageFileList.length.toString());
     setState((){});
@@ -271,6 +276,29 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
     if (form.validate()) {
       form.save();
+
+      List<String> images64_Base = [];
+      _images_to_base64() async{
+        print("# DE IMAGENES CARGADAS = ${imageFileList.length}");
+        for (int i = 0; i < imageFileList.length; i++){
+          List<int> imageBytes = await imageFileList[i].readAsBytes();
+          String img64 = base64Encode(imageBytes);
+          images64_Base.add(img64);
+        }
+      }
+
+      // generando las imagenes en base64
+      await _images_to_base64();
+      Map mapImages = images64_Base.asMap();
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      print(mapImages[0]);
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+
+      // generando las coordenadas sobre la direccion proporcionada
+
 
       var body = {
         "idhabitacion": roomidCtrl.text,
@@ -285,7 +313,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         "longitud": "lngt",
         'publicar': 1,
         'disponibilidad': 0,
-        'fotos': {}
+        'fotos': mapImages
       };
 
       print("#############################################");
@@ -293,27 +321,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
       print(body);
       print("#############################################");
       print("#############################################");
-      List<String> images64_Base = [];
-      _images_to_base64() async{
-        print("# DE IMAGENES CARGADAS = ${imageFileList.length}");
-        for (int i = 0; i < imageFileList.length; i++){
-          List<int> imageBytes = await imageFileList[i].readAsBytes();
-          String img64 = base64Encode(imageBytes);
-          images64_Base.add(img64);
-        }
-        Map map = images64_Base.asMap();
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        print(map[0]);
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
-      }
-      await _images_to_base64();
-
-
+      setState(() => _saving = false);
 
     }else{
+      setState(() => _saving = false);
       print("Por favor, rellene el formulario correctamente");
     }
 

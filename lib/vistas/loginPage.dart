@@ -28,6 +28,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   bool _saving = false;
+  int statusCode;
   final myControllerEmail = TextEditingController();
   final myControllerPassword = TextEditingController();
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
@@ -131,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-  int statusCode;
+
   Future sendData(var correo) async {
 
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -147,8 +148,8 @@ class _LoginPageState extends State<LoginPage> {
     print("#################### 1 response: ${statusCode}");
     print("#################### 2 response: ${resp}");
     return statusCode;
-  }
 
+  }
 
   showAlertDialog(BuildContext context, var message, var correo) {
     Widget continueButton = FlatButton(
