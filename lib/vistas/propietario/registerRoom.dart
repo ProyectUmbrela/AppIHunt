@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+//import 'dart:js_util/js_util_wasm.dart';
 import 'dart:ui';
 //import 'package:carousel_slider/carousel_slider.dart';
 ///import 'package:flutter/gestures.dart';
@@ -60,9 +61,20 @@ class _RegisterRoomState extends State<RegisterRoom> {
   String estado;
 
 
+  User currentUser;
+  String id_usuario;
+  String nombre;
 
+  void setData() async{
+    setState(() {
+      currentUser = FirebaseAuth.instance.currentUser;
+    });
+  }
 
-
+  @override
+  void initState(){
+    setData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,8 +139,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
           onPressed: () {
             setState(() => _saving = true);
             registerNewRoom();
-
-
           },
           child: Text("Registrar",
               textAlign: TextAlign.center,
@@ -146,7 +156,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         height: 150,
         decoration: BoxDecoration(
           color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(5.0),
         ),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -214,41 +224,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
                             /***********************/
                             //SizedBox(height: 35,),
                             /***********************/
-                            SizedBox(height: 5,),
+                            SizedBox(height: 15,),
                             /***********************/
                             addingPhotos,
 
-                            /*InkWell(
-                              onTap: () {
-                                selectImages();
-                              },
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.symmetric(horizontal: 20),
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    padding: EdgeInsets.symmetric(vertical: 5),
-                                    itemCount: imageFileList.length,
-                                    itemBuilder: (context, index) => Container(
-                                      height: 100,
-                                      width: 120,
-                                      margin: EdgeInsets.only(left: 3.0, right: 3.0),
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: FileImage(File(imageFileList[index].path)),
-                                            fit: BoxFit.cover
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ),
-                            ),*/
-                            SizedBox(height: 15,),
+                            SizedBox(height: 35,),
                             registrarRoom,
                           ],
                       ),
@@ -258,6 +238,46 @@ class _RegisterRoomState extends State<RegisterRoom> {
               inAsyncCall: _saving,
             ),
     ));
+  }
+
+
+  Future insertIntoFireBase(_uid, a_document, imagenes) async{
+    print("111111111111111111111111111111111111111111111111111");
+
+    var coleccion = "habitaciones_prueba";
+
+    if (imagenes.isNotEmpty){
+
+      for (int i = 0; i < imagenes.length; i++){
+        a_document['fotos'][i.toString()] = imagenes[i];
+      }
+
+      print("##############################################");
+      print("##############################################");
+      print(a_document);
+      print("##############################################");
+      print("##############################################");
+
+      var a_document_user = FirebaseFirestore.instance
+          .collection('habitaciones_prueba')
+          .doc(_uid);
+
+
+      await a_document_user.collection('habitaciones')
+      .doc('cinco4').set(a_document,
+          SetOptions(merge: true)
+      ).then((value) => print("User with CustomID added"))
+          .catchError((error) => print("Failed to add user: $error"));
+
+
+
+
+
+    }else{
+      print("No incluye fotos");
+    }
+
+
   }
 
 
@@ -272,10 +292,13 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   // ENVIAR DATOS PARA REGISTRAR HABITACION
   Future registerNewRoom() async{
+
     final form = formKey.currentState;
 
     if (form.validate()) {
       form.save();
+      //final now = new DateTime.now();
+      //String date = DateFormat('yMd').format(now);
 
       List<String> images64_Base = [];
       _images_to_base64() async{
@@ -289,18 +312,13 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
       // generando las imagenes en base64
       await _images_to_base64();
-      Map mapImages = images64_Base.asMap();
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      print(mapImages[0]);
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      /////////////////////Map mapImages = images64_Base.asMap();
 
 
       // generando las coordenadas sobre la direccion proporcionada
 
 
-      var body = {
+      /*var body = {
         "idhabitacion": roomidCtrl.text,
         "idpropietario": "00000000000000",//_id,
         "direccion": '',
@@ -313,14 +331,44 @@ class _RegisterRoomState extends State<RegisterRoom> {
         "longitud": "lngt",
         'publicar': 1,
         'disponibilidad': 0,
-        'fotos': mapImages
+        'fotos': {}
+      };*/
+
+      var snapShoot = await FirebaseFirestore
+          .instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+      var _uid = snapShoot['usuario'];
+      var _name = snapShoot['nombre'];
+      String tokenAuth = await currentUser.getIdToken();
+
+      print("**************************************************");
+      print("**************************************************");
+      print(_uid);
+      print(_name);
+      print("**************************************************");
+      print("**************************************************");
+
+
+
+      var a_document = {
+        'check_images': 1,
+        'coords': new GeoPoint(18.906712, -98.9705753),
+        'costo': priceCtrl.text,
+        'creado': DateTime.now().toString(),//date,
+        'detalles': descriptionCtrl.text,
+        'direccion': "avenida de los 50 metros",
+        'fotos': {},
+        'habitaciones': 1,
+        'publicar': 1,
+        'servicios': servicesCtrl.text,
+        'titular': _name.toString()
       };
 
-      print("#############################################");
-      print("#############################################");
-      print(body);
-      print("#############################################");
-      print("#############################################");
+
+
+      await insertIntoFireBase(currentUser.uid, a_document, images64_Base);
 
       setState(() => _saving = false);
 
@@ -328,52 +376,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
       setState(() => _saving = false);
       print("Por favor, rellene el formulario correctamente");
     }
-
-
   }
 
-  /*
-  Future getMultiImages() async {
-    final List<XFile> selectedImages = await multiPicker.pickMultiImage();
-    setState(() {
-      if (selectedImages.isNotEmpty) {
-        images.addAll(selectedImages);
-      } else {
-        print('No Images Selected ');
-      }
-    });
-  }*/
-
-  /*
-  // OBTENER IMAGENES DE LA GALERIA
-  Future _imgFromGallery() async {
-
-    //var images = await _picker.pickMultiImage();
-
-    final List<XFile> selectedImages = await _picker.pickMultiImage();
-
-    print("********************** Total: ${_imagesFieldList.length.toString()}");
-    print("********************** Total: ${_imagesFieldList[0].path.toString()}");
-    setState(() {
-      if(selectedImages.isNotEmpty){
-        _imagesFieldList.addAll(selectedImages);
-      }else{
-        print("No images was selected");
-      }
-
-    });
-
-    /*
-    List<File> imageFileList = [];
-    final ImagePicker _picker = ImagePicker();
-    var images = await _picker.pickMultiImage();
-    images.forEach((image) {
-      setState(() {
-        imageFileList.add(File(image.path));
-      });
-    });*/
-
-  }*/
 
 
 
