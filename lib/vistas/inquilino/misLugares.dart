@@ -78,10 +78,7 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
     'usuario': idUsuario
   });
 
-
-  //print("${tokenAuth}");
   var response = await _api.GetHabitaciones(body, tokenAuth);
-
 
   List<Habitacion> habitaciones = [];
   int statusCode = response.statusCode;
@@ -163,7 +160,6 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
 class _MisLugares extends State<Lugares> {
 
   User _currentUser;
-  //String _idUsuario;
 
   @override
   void initState() {

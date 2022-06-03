@@ -59,6 +59,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   TextEditingController termsCtrl = new TextEditingController();
   String _roomid, _cpInput, _colonia, _dimensions, _services, _description, _price, _terms;
   String estado;
+  int maxImages = 8;
 
 
   User currentUser;
@@ -107,8 +108,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       autofocus: false,
       controller: descriptionCtrl,
       onSaved: (value) => _description = value,
-      decoration:
-      buildInputDecoration("Descripción", Icons.description),
+      decoration: buildInputDecoration("Descripción", Icons.description),
     );
 
     final price = TextFormField(
@@ -123,8 +123,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       autofocus: false,
       controller: termsCtrl,
       onSaved: (value) => _terms = value,
-      decoration:
-      buildInputDecoration("Términos", Icons.add_alert),
+      decoration: buildInputDecoration("Términos", Icons.add_alert),
     );
 
 
@@ -166,12 +165,26 @@ class _RegisterRoomState extends State<RegisterRoom> {
             height: 100,
             width: 120,
             margin: EdgeInsets.only(left: 3.0, right: 3.0),
-            decoration: BoxDecoration(
+            child: imageFileList.length > 0 ?
+            Container(
+                decoration:
+                BoxDecoration(
+                  image: DecorationImage(
+                      image: FileImage(File(imageFileList[index].path)),
+                      fit: BoxFit.cover
+                  ),
+                ),
+            ):
+            Icon(
+              CupertinoIcons.camera,
+              color: Colors.black,//.withOpacity(0.5),
+            ),
+            /*decoration: BoxDecoration(
               image: DecorationImage(
                   image: FileImage(File(imageFileList[index].path)),
                   fit: BoxFit.cover
               ),
-            ),
+            ),*/
           ),
         ),
       ),
@@ -241,12 +254,14 @@ class _RegisterRoomState extends State<RegisterRoom> {
   }
 
 
-  Future insertIntoFireBase(_uid, a_document, imagenes) async{
+  Future insertIntoFireBase(_idroom, _uid, a_document, imagenes) async{
     print("111111111111111111111111111111111111111111111111111");
 
     var coleccion = "habitaciones_prueba";
+    var subcolleccion = 'habitaciones';
 
     if (imagenes.isNotEmpty){
+
 
       for (int i = 0; i < imagenes.length; i++){
         a_document['fotos'][i.toString()] = imagenes[i];
@@ -259,27 +274,54 @@ class _RegisterRoomState extends State<RegisterRoom> {
       print("##############################################");
 
       var a_document_user = FirebaseFirestore.instance
-          .collection('habitaciones_prueba')
+          .collection(coleccion)
           .doc(_uid);
 
-
-      await a_document_user.collection('habitaciones')
-      .doc('cinco4').set(a_document,
+      await a_document_user.collection(subcolleccion)
+      .doc(_idroom).set(a_document,
           SetOptions(merge: true)
-      ).then((value) => print("User with CustomID added"))
-          .catchError((error) => print("Failed to add user: $error"));
-
-
-
-
+      ).then((value) =>  _showDialog(2, "Habitación registrada"))
+          .catchError((error) => _showDialog(2, "Error al registrar"));
 
     }else{
-      print("No incluye fotos");
-    }
+      print("********************** No incluye fotos **************************");
+      print("##############################################");
+      print("##############################################");
+      print(a_document);
+      print("##############################################");
+      print("##############################################");
 
+      // No images
+      a_document['check_images'] = 0;
+
+      var a_document_user = FirebaseFirestore.instance
+          .collection(coleccion)
+          .doc(_uid);
+
+      await a_document_user.collection(subcolleccion)
+          .doc(_idroom).set(a_document,
+          SetOptions(merge: true)
+      ).then((value) => _showDialog(2, "Habitación registrada"))
+          .catchError((error) => _showDialog(2, "Error al registrar"));
+    }
 
   }
 
+  Future insertIntoMysql(a_document, tokenAuth) async{
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    Api _api = Api();
+    final body = jsonEncode(a_document);
+    print(a_document);
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+    var response = await _api.RegisterRoomPost(body, tokenAuth);
+    print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+    var resp = json.decode(response.body);
+
+    print("************ RESPUESTA GENERADA: ${resp}");
+
+    return response.statusCode;
+
+  }
 
   void selectImages() async {
     final List<XFile> selectedImages = await imagePicker.pickMultiImage();
@@ -296,82 +338,140 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final form = formKey.currentState;
 
     if (form.validate()) {
-      form.save();
-      //final now = new DateTime.now();
-      //String date = DateFormat('yMd').format(now);
+      if (imageFileList.length <= maxImages){
+        form.save();
 
-      List<String> images64_Base = [];
-      _images_to_base64() async{
-        print("# DE IMAGENES CARGADAS = ${imageFileList.length}");
-        for (int i = 0; i < imageFileList.length; i++){
-          List<int> imageBytes = await imageFileList[i].readAsBytes();
-          String img64 = base64Encode(imageBytes);
-          images64_Base.add(img64);
+        List<String> images64_Base = [];
+        _images_to_base64() async {
+          print("# DE IMAGENES CARGADAS = ${imageFileList.length}");
+          for (int i = 0; i < imageFileList.length; i++) {
+            List<int> imageBytes = await imageFileList[i].readAsBytes();
+            String img64 = base64Encode(imageBytes);
+            images64_Base.add(img64);
+          }
         }
+
+        // generando las imagenes en base64
+        await _images_to_base64();
+
+        // generando las coordenadas sobre la direccion proporcionada
+
+        var snapShoot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        var _iduser = snapShoot['usuario'];
+        var _name = snapShoot['nombre'];
+        String tokenAuth = await currentUser.getIdToken();
+
+        print("**************************************************");
+        print("**************************************************");
+        print(_iduser);
+        print(_name);
+        print("**************************************************");
+        print("**************************************************");
+
+
+        var generalDocument = {
+          'idhabitacion': roomidCtrl.text,
+          'idpropietario': _iduser,
+          'direccion': 'avenida de los 50 metros',
+          'dimension': dimensionsCtrl.text,
+          'servicios': servicesCtrl.text,
+          'descripcion': descriptionCtrl.text,
+          'precio': priceCtrl.text,
+          'terminos': termsCtrl.text,
+          'latitud': 18.906712,
+          'longitud': -98.9705753,
+          'publicar': 1,
+          'disponibilidad': 1,
+          'fotos': {},
+          'check_images': 1
+        };
+
+        if(images64_Base.isNotEmpty) {
+          for (int i = 0; i < images64_Base.length; i++) {
+            generalDocument['fotos'][i.toString()] = images64_Base[i];
+          }
+        }
+
+        print(generalDocument);
+
+        var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
+        print("1 ************ RESPUESTA: ${responseCode}");
+
+        if(responseCode == 201){
+          setState(() => _saving = false);
+          print("Habitacion registrada");
+          _showDialog(2, "Habitación registrada");
+          //form.reset();
+        }
+        else if(responseCode == 438){
+          setState(() => _saving = false);
+          print("La habitacion ya existe");
+          _showDialog(2, "Ya existe la habitación");
+        }
+        else if(responseCode == 432){
+          setState(() => _saving = false);
+          print("Propietario no encontrado");
+          _showDialog(2, "No se localiza el usuario");
+        }
+        else if(responseCode == 422){
+          setState(() => _saving = false);
+          print("Datos invalidos");
+          _showDialog(2, "Datos incorectos");
+        }
+        else{
+          setState(() => _saving = false);
+          print("Ocurrio un error con la solicitud");
+          _showDialog(2, "Ocurrio un error con la solicitud");
+        }
+
+
+        /*
+        // FIREBASE DOCUMENT
+        var a_document = {
+          'check_images': 1,
+          'coords': new GeoPoint(18.906712, -98.9705753),
+          'costo': priceCtrl.text,
+          'creado': DateTime.now().toString(), //date,
+          'detalles': descriptionCtrl.text,
+          'direccion': "avenida de los 50 metros",
+          'fotos': {},
+          'habitaciones': 1,
+          'publicar': 1,
+          'servicios': servicesCtrl.text,
+          'titular': _name
+        };*/
+
+        /*
+        // MYSQL DOCUMENT
+        var api_document = {
+          "idhabitacion": roomidCtrl.text,
+          "idpropietario": _iduser,
+          "direccion": "avenida de los 50 metros",
+          "dimension": dimensionsCtrl.text,
+          "servicios": servicesCtrl.text,
+          "descripcion": descriptionCtrl.text,
+          "precio": priceCtrl.text,
+          "terminos": termsCtrl.text
+        };
+        var response = await insertIntoMysql(api_document, tokenAuth);*/
+
+
+
+        /* REGISTRAR EN FIREBASE
+        await insertIntoFireBase(
+            roomidCtrl.text, currentUser.uid, a_document, images64_Base);
+
+        */
+
+
       }
-
-      // generando las imagenes en base64
-      await _images_to_base64();
-      /////////////////////Map mapImages = images64_Base.asMap();
-
-
-      // generando las coordenadas sobre la direccion proporcionada
-
-
-      /*var body = {
-        "idhabitacion": roomidCtrl.text,
-        "idpropietario": "00000000000000",//_id,
-        "direccion": '',
-        "dimension": dimensionsCtrl.text,
-        "servicios": servicesCtrl.text,
-        "descripcion": descriptionCtrl.text,
-        "precio": double.parse(priceCtrl.text),
-        "terminos": termsCtrl.text,
-        'latitud' : "lat",
-        "longitud": "lngt",
-        'publicar': 1,
-        'disponibilidad': 0,
-        'fotos': {}
-      };*/
-
-      var snapShoot = await FirebaseFirestore
-          .instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get();
-      var _uid = snapShoot['usuario'];
-      var _name = snapShoot['nombre'];
-      String tokenAuth = await currentUser.getIdToken();
-
-      print("**************************************************");
-      print("**************************************************");
-      print(_uid);
-      print(_name);
-      print("**************************************************");
-      print("**************************************************");
-
-
-
-      var a_document = {
-        'check_images': 1,
-        'coords': new GeoPoint(18.906712, -98.9705753),
-        'costo': priceCtrl.text,
-        'creado': DateTime.now().toString(),//date,
-        'detalles': descriptionCtrl.text,
-        'direccion': "avenida de los 50 metros",
-        'fotos': {},
-        'habitaciones': 1,
-        'publicar': 1,
-        'servicios': servicesCtrl.text,
-        'titular': _name.toString()
-      };
-
-
-
-      await insertIntoFireBase(currentUser.uid, a_document, images64_Base);
-
-      setState(() => _saving = false);
-
+      else {
+        setState(() => _saving = false);
+        _showDialog(2, "Máximo ocho imagénes");
+      }
     }else{
       setState(() => _saving = false);
       print("Por favor, rellene el formulario correctamente");
@@ -379,8 +479,19 @@ class _RegisterRoomState extends State<RegisterRoom> {
   }
 
 
+  void _showDialog(seconds, message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext builderContext) {
+        Future.delayed(Duration(seconds: seconds), () {
 
-
+        });
+        return AlertDialog(
+          content: Text(message),
+        );
+      },
+    );
+  }
 
 
   // STEPPER PARA OBTENER LA DIRECCION

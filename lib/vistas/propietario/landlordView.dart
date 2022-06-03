@@ -121,8 +121,9 @@ class _LandlordState extends State<Landlord>
                           key: UniqueKey(),),
                         height: AdmobHelper.getBannerAd().size.height.toDouble(),
                         width: AdmobHelper.getBannerAd().size.width.toDouble()
-                    )
-                )),
+                    ),
+                ),
+            ),
             /*
              Container(
                child: Icon(Icons.person ,
@@ -147,11 +148,9 @@ class _LandlordState extends State<Landlord>
         return widgetHome(); //first page
       case 1:
         return Rooms(); // second page
-
-
       case 2:
-        return Home();
-        ////////////////////////////////////return Tenants(); // third page
+      ////////////////////////////////////return Home();
+        return Tenants(); // third page
       case 3:
         return Invitations(); // fourth page
     }
@@ -286,225 +285,5 @@ class _LandlordState extends State<Landlord>
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-/*##############################################################*/
-
-/*
-class Landlord extends StatefulWidget {
-  @override
-  _LandlordState createState() => _LandlordState();
-}
-
-class _LandlordState extends State<Landlord>
-    with SingleTickerProviderStateMixin {
-
-  // VARIABLES DE SESION
-  User _currentUser;
-  String _nombre;
-  int _currentIndex = 0;
-
-
-  @override
-  void initState(){
-    setData();
-  }
-
-  void setData() async{
-    _currentUser = FirebaseAuth.instance.currentUser;
-
-    var snapShoot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_currentUser.uid)
-        .get();
-
-    setState(() {
-      _nombre = snapShoot['nombre'];
-      //_idUsuario = snapShoot['usuario'];
-    });
-  }
-
-  Future<void> saveTokenToDatabase(String token) async {
-    // upsert, insert if not exists or add anew one if already exists
-    var _current = await _currentUser.uid;
-
-    await FirebaseFirestore.instance.collection('users').doc(_current).set(
-        {'updatedOn': FieldValue.serverTimestamp(), 'token': token},
-        SetOptions(merge: true));
-  }
-
-  Future<void> _logout() async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.of(context).pushReplacementNamed('/login');
-  }
-
-  Widget widgetHome() {
-    return Scaffold(
-      body: Container(
-        margin: const EdgeInsets.all(0.5),
-        padding: const EdgeInsets.all(0.5),
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.bottomRight,
-                end: Alignment.topLeft,
-                stops: [0, 1],
-                colors: [Colors.blue[100], Colors.blue[200]],
-                tileMode: TileMode.repeated),
-            borderRadius: BorderRadius.circular(10.0)),
-        alignment: FractionalOffset.center,
-        child: Column(
-          children: <Widget>[
-            Align(
-                alignment: FractionalOffset.topCenter,
-                child: Padding(
-                    padding: EdgeInsets.only(top: 2.0),
-                    //child: projectWidgetAd(),
-                    child: Container(
-                        child: AdWidget(
-                          ad: AdmobHelper.getBannerAd()..load(),
-                          key: UniqueKey(),),
-                        height: AdmobHelper.getBannerAd().size.height.toDouble(),
-                        width: AdmobHelper.getBannerAd().size.width.toDouble()
-                    )
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _getView(int index) {
-    switch (index) {
-      case 0:
-        return widgetHome(); //first page
-      case 1:
-        return Rooms(); // second page
-      case 2:
-        return Tenants(); // third page
-      case 3:
-        return Invitations(); // fourth page
-    }
-
-    return Center(child: Text("There is no page builder for this index."),);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Scaffold(
-      body: Center(
-          child: _getView(_currentIndex)
-      ),
-      appBar: AppBar(
-        actions: <Widget>[
-          PopupMenuButton(
-            // add icon, by default "3 dot" icon
-              icon: Icon(Icons.menu),
-              itemBuilder: (context){
-                return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Mi cuenta"),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: Text("Salir"),
-                  ),
-                ];
-              },
-              onSelected:(value){
-                if(value == 0){
-                  print("My account menu is selected.");
-                }else if(value == 1){
-                  _logout();
-                  print("Settings menu is selected.");
-                }
-              }
-          ),
-        ],
-        title: Text(
-          'Hola ${_nombre}',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-          ),
-        ),
-        //backgroundColor: colorScheme.primary,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        backgroundColor: colorScheme.primary,
-        selectedItemColor: Colors.white,
-        onTap: (value) {
-          // Si el index es distinto a la vista actual
-          if(_currentIndex != value){
-            setState(() => _currentIndex = value);
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-            title: Text(
-              'Principal',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.home,
-              color:Colors.white,),),
-          BottomNavigationBarItem(
-            title: Text(
-              'Hbitaciones',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.airline_seat_individual_suite,
-              color:Colors.white,),
-          ),
-          BottomNavigationBarItem(
-            title: Text(
-              'Inquilinos',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.person,
-              color:Colors.white,),
-          ),
-          BottomNavigationBarItem(
-            title: Text(
-              'Invitaciones',
-              style: TextStyle(
-                color: Colors.white,),),
-            icon: Icon(Icons.library_books,
-              color:Colors.white,),
-          ),
-        ],
-      ),
-    );
-  }
-
-}*/
 
 
