@@ -231,7 +231,7 @@ class _DetailRoomState extends State<DetailRoom> {
     return SafeArea(
         child: Scaffold(
           body: Container(
-            padding: EdgeInsets.all(40.0),
+            padding: EdgeInsets.all(20.0),
             child: Form(
                 key: formKey,
                 child: SingleChildScrollView(

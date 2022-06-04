@@ -54,7 +54,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
   TextEditingController termsCtrl;
 
   // VARIABLE DE IMAGENES
-  List<File> image_files = new List();
+  List<File> image_files = []; //new List();
+  TextStyle style = TextStyle(fontSize: 18);
 
   @override
   void initState(){
@@ -94,14 +95,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
     // OBTENER IMAGENES
     _imgFromGallery() async {
-      /*
-      File image = await ImagePicker.pickImage(
-          source: ImageSource.gallery);
 
-      setState(() {
-        image_files.add(image);
-        //print("######################################## LOGITUD DE LISTA ${image_files.length}");
-      });*/
+
     }
     _images_to_base64() async{
       var dicc = {
@@ -114,6 +109,72 @@ class _UpdateRoomState extends State<UpdateRoom> {
       }
     }
 
+    Future submit() async {
+      final form = formKey.currentState;
+
+      if (form.validate()) {
+        form.save();
+        Api _api = Api();
+
+        var snapShoot = await FirebaseFirestore
+            .instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        var _id = snapShoot['usuario'];
+        var name = snapShoot['nombre'];
+        String tokenAuth = await currentUser.getIdToken();
+
+        final msg = jsonEncode({
+          "idhabitacion_anterior": widget.room['idhabitacion'],
+          "idhabitacion": roomidCtrl.text,
+          "idpropietario": _id,
+          "direccion": adressCtrl.text,
+          "dimension": dimensionsCtrl.text,
+          "servicios": servicesCtrl.text,
+          "descripcion": descriptionCtrl.text,
+          "precio": double.parse(priceCtrl.text),
+          "terminos": termsCtrl.text
+        });
+
+        await getLocation(adressCtrl.text);
+
+        print("body actualizar habitacion ${msg}");
+        //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
+
+        var response = await _api.UpdateRoom(msg, tokenAuth);
+        Map data = jsonDecode(response.body);
+
+        if (response.statusCode == 201) {
+          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+          debugPrint("ACTUALIZACION HABITACION EXITOSA!");
+          Navigator.pop(context);
+        } else {
+          if (Platform.isAndroid) {
+            //_materialAlertDialog(context, data['message'], 'Notificación');
+            print(response.statusCode);
+          } else if (Platform.isIOS) {
+            print(response.statusCode);
+            //_cupertinoDialog(context, data['message'], 'Notificación');
+          }
+        }
+      } else {
+        if (Platform.isAndroid) {
+          print("A error");
+         /* _materialAlertDialog(
+              context,
+              "Por favor, rellene el formulario correctamente",
+              "Formulario inválido");*/
+        } else if (Platform.isIOS) {
+          print("B error");
+          /*_cupertinoDialog(
+              context,
+              "Por favor, rellene el formulario correctamente",
+              "Formulario inválido");*/
+        }
+      }
+    }
+    /*
     void addDocument(latitude, longitude, price, description, address, services, name) async{
       final now = new DateTime.now();
       String date = DateFormat('yMd').format(now);// 28/03/2020
@@ -136,17 +197,12 @@ class _UpdateRoomState extends State<UpdateRoom> {
         document['fotos'][i.toString()] = img64;
       }
 
-      //print("#########################################################################");
-      //print(document);
-
-      /*FirebaseFirestore.instance.collection("habitaciones").add(document).then((value) => print('User Added'))
-          .catchError((error) => print('Failed to add user: ${error}'));*/
-    }
+    }*/
 
     final roomId = TextFormField(
       autofocus: false,
       controller: roomidCtrl,
-      enabled: true,
+      enabled: false,
       validator: (value) => value.isEmpty ? "Your roomId is required" : null,
       onSaved: (value) => _roomid = value,
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
@@ -207,6 +263,25 @@ class _UpdateRoomState extends State<UpdateRoom> {
       buildInputDecoration("Términos", Icons.add_alert),
     );
 
+    final actualizarRoom = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          onPressed: () {
+            //setState(() => _saving = true);
+            //registerNewRoom();
+            submit();
+          },
+          child: Text("Actualizar",
+              textAlign: TextAlign.center,
+              style: style.copyWith(color: Colors.white)),
+        )
+    );
+
+    /*
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
     Widget _buildActionButton(String title, Color color) {
       return FlatButton(
@@ -260,9 +335,10 @@ class _UpdateRoomState extends State<UpdateRoom> {
         context: context,
         builder: (_) => _showMaterialDialog(texto, noty),
       );
-    }
+    }*/
     /***************************************************************************/
 
+    /*
     var canceled = () async {
       Navigator.pop(context);
       /*Navigator.push(
@@ -271,101 +347,30 @@ class _UpdateRoomState extends State<UpdateRoom> {
           builder: (context) => new Landlord(),
         ),
       );*/
-    };
+    };*/
 
-    Future submit() async {
-      final form = formKey.currentState;
 
-      if (form.validate()) {
-        form.save();
-        Api _api = Api();
-
-        var snapShoot = await FirebaseFirestore
-            .instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .get();
-        var _id = snapShoot['usuario'];
-        var name = snapShoot['nombre'];
-        String tokenAuth = await currentUser.getIdToken();
-
-        final msg = jsonEncode({
-          "idhabitacion_anterior": widget.room['idhabitacion'],
-          "idhabitacion": roomidCtrl.text,
-          "idpropietario": _id,
-          "direccion": adressCtrl.text,
-          "dimension": dimensionsCtrl.text,
-          "servicios": servicesCtrl.text,
-          "descripcion": descriptionCtrl.text,
-          "precio": double.parse(priceCtrl.text),
-          "terminos": termsCtrl.text
-        });
-
-        await getLocation(adressCtrl.text);
-
-        print("body actualizar habitacion ${msg}");
-        //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
-
-        var response = await _api.UpdateRoom(msg, tokenAuth);
-        Map data = jsonDecode(response.body);
-
-        if (response.statusCode == 201) {
-          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("ACTUALIZACION HABITACION EXITOSA!");
-          Navigator.pop(context);
-          /*Navigator.push(context, new MaterialPageRoute(
-              builder: (context) => new Landlord())
-          );*/
-        } else {
-          if (Platform.isAndroid) {
-            _materialAlertDialog(context, data['message'], 'Notificación');
-            print(response.statusCode);
-          } else if (Platform.isIOS) {
-            _cupertinoDialog(context, data['message'], 'Notificación');
-          }
-        }
-      } else {
-        if (Platform.isAndroid) {
-          _materialAlertDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
-        } else if (Platform.isIOS) {
-          _cupertinoDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
-        }
-      }
-    }
-
-    ;
 
     return SafeArea(
         child: Scaffold(
           body: Container(
-            padding: EdgeInsets.all(40.0),
+            padding: EdgeInsets.all(20.0),
             child: Form(
                 key: formKey,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //logo,
 
                       label("Id habitación"),
                       SizedBox(height: 5),
                       roomId,
-                      SizedBox(
-                        height: 15,
-                      ),
+                      SizedBox(height: 15,),
 
                       label("Dirección"),
                       SizedBox(height: 5),
                       adress,
-                      SizedBox(
-                        height: 15,
-                      ),
+                      SizedBox(height: 15,),
 
                       label("Dimensión de la habitación"),
                       SizedBox(height: 5.0),
@@ -382,7 +387,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
                       description,
                       SizedBox(height: 15.0),
 
-                      label("Precio por mes"),
+                      label("Costo mensual"),
                       SizedBox(height: 10.0),
                       price,
                       SizedBox(height: 15.0),
@@ -391,9 +396,10 @@ class _UpdateRoomState extends State<UpdateRoom> {
                       SizedBox(height: 10.0),
                       terms,
 
-                      SizedBox(height: 15.0),
+                      SizedBox(height: 45.0),
                       //longButtons("Registrar", submit),
-                      Row(
+                      actualizarRoom,
+                      /*Row(
                         children: <Widget>[
                           Expanded(
                               child: Container(
@@ -406,8 +412,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
                                 alignment: Alignment.centerRight,
                               )),
                         ],
-                      ),
+                      ),*/
 
+                    /*
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -423,14 +430,17 @@ class _UpdateRoomState extends State<UpdateRoom> {
                                   "selccionar imagen",
                                   style: TextStyle(color: Colors.white),
                                 ),
-                              ))
+                              ),
+                          ),
                         ],
-                      )
+                      ),*/
                     ],
                   ),
-                )),
+                ),
+            ),
           ),
-        ));
+        ),
+    );
   }
 
 }
