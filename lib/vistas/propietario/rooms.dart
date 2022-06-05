@@ -241,10 +241,13 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                           child: Card(
                             shadowColor: Colors.deepPurpleAccent,
                             clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                             child: Material(
                               color: Colors.black12,
                               shadowColor: Colors.deepPurpleAccent,
-                              borderRadius: BorderRadius.circular(30.0),
+                              //borderRadius: BorderRadius.circular(10.0),
                               child: Column(
                                 children: [
                                   ListTile(
@@ -365,7 +368,36 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           ),
                                         ]),
                                   ),
-                                  ButtonBar(
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      ButtonBar(
+                                        alignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Publicar: ',
+                                            style: TextStyle(
+                                                color: Colors.black.withOpacity(0.6),
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Switch(
+                                            value: values_publ[snapshot.data[index].idhabitacion],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                values_publ[snapshot.data[index].idhabitacion] = value;
+                                              });
+                                              var collection = FirebaseFirestore.instance.collection('habitaciones');
+                                              collection.doc(snapshot.data[index].idhabitacion)
+                                                  .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
+                                                  .then((_) => print('#################### Success'))
+                                                  .catchError((error) => print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  /*ButtonBar(
                                     alignment: MainAxisAlignment.center,
                                     children: [
                                       /*
@@ -407,9 +439,9 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                               .then((_) => print('#################### Success'))
                                               .catchError((error) => print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
                                         },
-                                      )
+                                      ),
                                     ],
-                                  ),
+                                  ),*/
                                   //Image.asset('assets/card-sample-image.jpg'),
                                   //Image.asset('assets/card-sample-image-2.jpg'),
                                 ],

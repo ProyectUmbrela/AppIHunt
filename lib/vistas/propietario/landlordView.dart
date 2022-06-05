@@ -253,6 +253,8 @@ class _LandlordState extends State<Landlord>
       ),
       endDrawer: menuOptions(),
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: colorScheme.primary,

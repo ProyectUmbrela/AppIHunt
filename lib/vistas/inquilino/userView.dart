@@ -250,6 +250,8 @@ class _UserState extends State<UserView> {
       ),
       endDrawer: menuOptions(),
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         backgroundColor: colorScheme.primary,
