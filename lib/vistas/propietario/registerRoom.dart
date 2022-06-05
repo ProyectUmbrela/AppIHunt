@@ -52,13 +52,15 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   TextEditingController roomidCtrl = new TextEditingController();
   TextEditingController cpCtrl = new TextEditingController();
+  TextEditingController addressCtrl = new TextEditingController();
   TextEditingController dimensionsCtrl = new TextEditingController();
   TextEditingController servicesCtrl = new TextEditingController();
   TextEditingController descriptionCtrl = new TextEditingController();
   TextEditingController priceCtrl = new TextEditingController();
   TextEditingController termsCtrl = new TextEditingController();
-  String _roomid, _cpInput, _colonia, _dimensions, _services, _description, _price, _terms;
-  String estado;
+  String _roomid, _cpInput, _colonia, _dimensions, _services, _description, _price, _terms, _addressInput;
+  String _stateSelected;
+  String _municipioSelected;
   int maxImages = 8;
 
 
@@ -83,7 +85,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final roomId = TextFormField(
       autofocus: false,
       controller: roomidCtrl,
-      validator: (value) => value.isEmpty ? "ID de habitación incorrecto" : null,
+      validator: (value) => value.isEmpty ? "ID de habitación requerido" : null,
       onSaved: (value) => _roomid = value,
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
     );
@@ -91,7 +93,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final dimensions = TextFormField(
       autofocus: false,
       controller: dimensionsCtrl,
-      validator: (value) => value.isEmpty ? "La dimensión de la habitacón es requerida" : null,
+      validator: (value) => value.isEmpty ? "La dimensión es requerida" : null,
       onSaved: (value) => _dimensions = value,
       decoration: buildInputDecoration("Dimensión", Icons.menu),
     );
@@ -234,9 +236,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
                             label("Términos de renta"),
                             SizedBox(height: 5,),
                             terms,
-                            /***********************/
-                            //SizedBox(height: 35,),
-                            /***********************/
                             SizedBox(height: 15,),
                             /***********************/
                             addingPhotos,
@@ -255,8 +254,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
 
   Future insertIntoFireBase(_idroom, _uid, a_document, imagenes) async{
-    print("111111111111111111111111111111111111111111111111111");
 
+    print("111111111111111111111111111111111111111111111111111");
+    /*
     var coleccion = "habitaciones_prueba";
     var subcolleccion = 'habitaciones';
 
@@ -304,7 +304,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       ).then((value) => _showDialog(2, "Habitación registrada"))
           .catchError((error) => _showDialog(2, "Error al registrar"));
     }
-
+    */
   }
 
   Future insertIntoMysql(a_document, tokenAuth) async{
@@ -338,9 +338,26 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final form = formKey.currentState;
 
     if (form.validate()) {
+
+
+      setState(() => _saving = false);
+
+
+      //var coordinates = await getLocation(fullAddress);
+      /*if (coordinates != null){
+        print("======================> ${coordinates.longitude}");
+        print("======================> ${coordinates.latitude}");
+      }else{
+        print("*************** No se encuentra la dirección");
+      }*/
+
+
+      var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
+      print("*****************************| ${fullAddress} |**********************");
       if (imageFileList.length <= maxImages){
         form.save();
 
+        // preparando imagenes para codificar
         List<String> images64_Base = [];
         _images_to_base64() async {
           print("# DE IMAGENES CARGADAS = ${imageFileList.length}");
@@ -355,118 +372,84 @@ class _RegisterRoomState extends State<RegisterRoom> {
         await _images_to_base64();
 
         // generando las coordenadas sobre la direccion proporcionada
+        var coordinates = await getLocation(fullAddress);
+        if (coordinates != null){
+          print("======================> ${coordinates.longitude}");
+          print("======================> ${coordinates.latitude}");
+          var snapShoot = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser.uid)
+              .get();
+          var _iduser = snapShoot['usuario'];
+          var _name = snapShoot['nombre'];
+          String tokenAuth = await currentUser.getIdToken();
 
-        var snapShoot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .get();
-        var _iduser = snapShoot['usuario'];
-        var _name = snapShoot['nombre'];
-        String tokenAuth = await currentUser.getIdToken();
-
-        print("**************************************************");
-        print("**************************************************");
-        print(_iduser);
-        print(_name);
-        print("**************************************************");
-        print("**************************************************");
+          print("**************************************************");
+          print("**************************************************");
+          print(_iduser);
+          print(_name);
+          print("**************************************************");
+          print("**************************************************");
 
 
-        var generalDocument = {
-          'idhabitacion': roomidCtrl.text,
-          'idpropietario': _iduser,
-          'direccion': 'avenida de los 50 metros',
-          'dimension': dimensionsCtrl.text,
-          'servicios': servicesCtrl.text,
-          'descripcion': descriptionCtrl.text,
-          'precio': priceCtrl.text,
-          'terminos': termsCtrl.text,
-          'latitud': 18.906712,
-          'longitud': -98.9705753,
-          'publicar': 1,
-          'disponibilidad': 1,
-          'fotos': {},
-          'check_images': 1
-        };
+          var generalDocument = {
+            'idhabitacion': roomidCtrl.text,
+            'idpropietario': _iduser,
+            'direccion': fullAddress,
+            'dimension': dimensionsCtrl.text,
+            'servicios': servicesCtrl.text,
+            'descripcion': descriptionCtrl.text,
+            'precio': priceCtrl.text,
+            'terminos': termsCtrl.text,
+            'latitud': coordinates.latitude,
+            'longitud': coordinates.longitude,
+            'publicar': 1,
+            'disponibilidad': 1,
+            'fotos': {},
+            'check_images': 1
+          };
 
-        if(images64_Base.isNotEmpty) {
-          for (int i = 0; i < images64_Base.length; i++) {
-            generalDocument['fotos'][i.toString()] = images64_Base[i];
+          if(images64_Base.isNotEmpty) {
+            for (int i = 0; i < images64_Base.length; i++) {
+              generalDocument['fotos'][i.toString()] = images64_Base[i];
+            }
           }
+
+          print(generalDocument);
+
+          var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
+          print("1 ************ RESPUESTA: ${responseCode}");
+
+          if(responseCode == 201){
+            setState(() => _saving = false);
+            print("Habitacion registrada");
+            _showDialog(2, "Habitación registrada");
+            //form.reset();
+          }
+          else if(responseCode == 438){
+            setState(() => _saving = false);
+            print("La habitacion ya existe");
+            _showDialog(2, "Ya existe la habitación");
+          }
+          else if(responseCode == 432){
+            setState(() => _saving = false);
+            print("Propietario no encontrado");
+            _showDialog(2, "No se localiza el usuario");
+          }
+          else if(responseCode == 422){
+            setState(() => _saving = false);
+            print("Datos invalidos");
+            _showDialog(2, "Datos incorectos");
+          }
+          else{
+            setState(() => _saving = false);
+            print("Ocurrio un error con la solicitud");
+            _showDialog(2, "Ocurrio un error con la solicitud");
+          }
+        }else{
+          print("*************** No se encuentra la dirección");
+          _showDialog(2, "No se encuentra la dirección");
         }
-
-        print(generalDocument);
-
-        var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
-        print("1 ************ RESPUESTA: ${responseCode}");
-
-        if(responseCode == 201){
-          setState(() => _saving = false);
-          print("Habitacion registrada");
-          _showDialog(2, "Habitación registrada");
-          //form.reset();
-        }
-        else if(responseCode == 438){
-          setState(() => _saving = false);
-          print("La habitacion ya existe");
-          _showDialog(2, "Ya existe la habitación");
-        }
-        else if(responseCode == 432){
-          setState(() => _saving = false);
-          print("Propietario no encontrado");
-          _showDialog(2, "No se localiza el usuario");
-        }
-        else if(responseCode == 422){
-          setState(() => _saving = false);
-          print("Datos invalidos");
-          _showDialog(2, "Datos incorectos");
-        }
-        else{
-          setState(() => _saving = false);
-          print("Ocurrio un error con la solicitud");
-          _showDialog(2, "Ocurrio un error con la solicitud");
-        }
-
-
-        /*
-        // FIREBASE DOCUMENT
-        var a_document = {
-          'check_images': 1,
-          'coords': new GeoPoint(18.906712, -98.9705753),
-          'costo': priceCtrl.text,
-          'creado': DateTime.now().toString(), //date,
-          'detalles': descriptionCtrl.text,
-          'direccion': "avenida de los 50 metros",
-          'fotos': {},
-          'habitaciones': 1,
-          'publicar': 1,
-          'servicios': servicesCtrl.text,
-          'titular': _name
-        };*/
-
-        /*
-        // MYSQL DOCUMENT
-        var api_document = {
-          "idhabitacion": roomidCtrl.text,
-          "idpropietario": _iduser,
-          "direccion": "avenida de los 50 metros",
-          "dimension": dimensionsCtrl.text,
-          "servicios": servicesCtrl.text,
-          "descripcion": descriptionCtrl.text,
-          "precio": priceCtrl.text,
-          "terminos": termsCtrl.text
-        };
-        var response = await insertIntoMysql(api_document, tokenAuth);*/
-
-
-
-        /* REGISTRAR EN FIREBASE
-        await insertIntoFireBase(
-            roomidCtrl.text, currentUser.uid, a_document, images64_Base);
-
-        */
-
-
       }
       else {
         setState(() => _saving = false);
@@ -566,6 +549,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       if (statusCode == 201) {
         var data = jsonDecode(response.body);
         var estado = jsonDecode(data['Direcciones']);
+        //
         estado.forEach((key, value) {
           var newresult = estado['municipios'][0];
           for (var asentamiento in newresult['asentamientos']) {
@@ -631,7 +615,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
         "Bellavista",
         "Árbol de la Vida"
       ];*/
-
+        _stateSelected = estado['estado'];
+        _municipioSelected = estado['municipios'][0]['municipio'];
+        print("+++++++++++++++++++++++++++++++++ Estado: ${_stateSelected}");
+        print("+++++++++++++++++++++++++++++++++ Municipio: ${_municipioSelected}");
         listAsentamientosCustom.sort();
         return listAsentamientosCustom;
 
@@ -739,6 +726,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
       Step(
           title: Text(_currentstep == 2 ? 'Calle': ''),
           content: TextFormField(
+            controller: addressCtrl,
+            onSaved: (value) => _addressInput = value,
             decoration: InputDecoration(
               hintText: 'Calle y num',
               border: OutlineInputBorder(),
@@ -750,6 +739,20 @@ class _RegisterRoomState extends State<RegisterRoom> {
     ];
 
     return _steps;
+  }
+
+  Future getLocation(address) async{
+    try {
+      var locations = await locationFromAddress(address);
+      //lat = locations[0].latitude;
+      //lngt = locations[0].longitude;
+      return locations[0];
+    } catch(err){
+      print("+++++++++++++++++++ Error: ${err}");
+      return null;
+      //lat = 46.8597000;
+      //lngt = -97.2212000;
+    }
   }
 
 
