@@ -114,7 +114,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      Text('Cargando...'),
+                      //Text('Cargando...'),
                     ]
                 ),
               );

@@ -186,7 +186,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      Text('Cargando...'),
+                      //Text('Cargando...'),
                     ]
                 ),
               );

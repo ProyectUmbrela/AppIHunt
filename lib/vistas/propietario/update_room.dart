@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'landlordView.dart';
 
@@ -27,6 +28,7 @@ class UpdateRoom extends StatefulWidget {
 
 
 class _UpdateRoomState extends State<UpdateRoom> {
+
   void setData() async{
 
     setState(() {
@@ -38,6 +40,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
       descriptionCtrl = new TextEditingController(text: widget.room['descripcion']);
       priceCtrl = new TextEditingController(text: widget.room['precio'].toString());
       termsCtrl = new TextEditingController(text: widget.room['terminos']);
+      //statusCtrl = new TextEditingController(text: widget.room['status']);
     });
   }
 
@@ -52,10 +55,13 @@ class _UpdateRoomState extends State<UpdateRoom> {
   TextEditingController descriptionCtrl;
   TextEditingController priceCtrl;
   TextEditingController termsCtrl;
+  //TextEditingController statusCtrl;
 
   // VARIABLE DE IMAGENES
   List<File> image_files = []; //new List();
   TextStyle style = TextStyle(fontSize: 18);
+  bool _saving = false;
+
 
   @override
   void initState(){
@@ -73,7 +79,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   TextEditingController priceCtrl = new TextEditingController();
   TextEditingController termsCtrl = new TextEditingController();*/
 
-  String _roomid, _adress, _dimensions, _services, _description, _price, _terms;
+  String _roomid, _adress, _dimensions, _services, _description, _price, _terms, _status;
 
   // VARIABLES PARA COORDENADAS
   double lat;
@@ -82,7 +88,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   @override
   Widget build(BuildContext context) {
     // OBTENER LATITUD Y LONGITUD
-    void getLocation(address) async{
+    /*void getLocation(address) async{
       try {
         var locations = await locationFromAddress(address);
         lat = locations[0].latitude;
@@ -91,8 +97,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
         lat = 46.8597000;
         lngt = -97.2212000;
       }
-    }
+    }*/
 
+    /*
     // OBTENER IMAGENES
     _imgFromGallery() async {
 
@@ -107,9 +114,11 @@ class _UpdateRoomState extends State<UpdateRoom> {
         String img64 = base64Encode(bytes);
         dicc[i] = img64;
       }
-    }
+    }*/
+
 
     Future submit() async {
+      setState(() => _saving = true);
       final form = formKey.currentState;
 
       if (form.validate()) {
@@ -121,14 +130,15 @@ class _UpdateRoomState extends State<UpdateRoom> {
             .collection('users')
             .doc(currentUser.uid)
             .get();
-        var _id = snapShoot['usuario'];
+
+        var _userid = snapShoot['usuario'];
         var name = snapShoot['nombre'];
         String tokenAuth = await currentUser.getIdToken();
 
         final msg = jsonEncode({
           "idhabitacion_anterior": widget.room['idhabitacion'],
           "idhabitacion": roomidCtrl.text,
-          "idpropietario": _id,
+          "idpropietario": _userid,
           "direccion": adressCtrl.text,
           "dimension": dimensionsCtrl.text,
           "servicios": servicesCtrl.text,
@@ -137,29 +147,49 @@ class _UpdateRoomState extends State<UpdateRoom> {
           "terminos": termsCtrl.text
         });
 
-        await getLocation(adressCtrl.text);
+        //////////await getLocation(adressCtrl.text);
 
         print("body actualizar habitacion ${msg}");
         //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
 
         var response = await _api.UpdateRoom(msg, tokenAuth);
         Map data = jsonDecode(response.body);
+        print("#################################################");
+        print("#################################################");
+        print(data);
+        print("#################################################");
+        print("#################################################");
 
-        if (response.statusCode == 201) {
+
+        if (response.statusCode  == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("ACTUALIZACION HABITACION EXITOSA!");
-          Navigator.pop(context);
-        } else {
-          if (Platform.isAndroid) {
+          //debugPrint("ACTUALIZACION HABITACION EXITOSA!");
+          setState(() => _saving = false);
+          _showDialog(2, "Se actualizo la habitación");
+          //Navigator.pop(context);
+        }
+        else if (response.statusCode  == 433){
+          setState(() => _saving = false);
+          _showDialog(2, "Datos incorrectos");
+        }
+        else if (response.statusCode  == 501){
+          setState(() => _saving = false);
+          _showDialog(2, "Error al actualizar los datos");
+        }
+        else {
+          setState(() => _saving = false);
+          _showDialog(2, "Ocurrio un error con la solicitud");
+          /*if (Platform.isAndroid) {
             //_materialAlertDialog(context, data['message'], 'Notificación');
             print(response.statusCode);
           } else if (Platform.isIOS) {
             print(response.statusCode);
             //_cupertinoDialog(context, data['message'], 'Notificación');
-          }
+          }*/
         }
       } else {
-        if (Platform.isAndroid) {
+
+        /*if (Platform.isAndroid) {
           print("A error");
          /* _materialAlertDialog(
               context,
@@ -171,7 +201,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
               context,
               "Por favor, rellene el formulario correctamente",
               "Formulario inválido");*/
-        }
+        }*/
       }
     }
     /*
@@ -202,8 +232,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final roomId = TextFormField(
       autofocus: false,
       controller: roomidCtrl,
-      enabled: false,
-      validator: (value) => value.isEmpty ? "Your roomId is required" : null,
+      enabled: true,
+      validator: (value) => value.isEmpty ? "ID de habitación requerido" : null,
       onSaved: (value) => _roomid = value,
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
     );
@@ -211,8 +241,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final adress = TextFormField(
       autofocus: false,
       controller: adressCtrl,
-      enabled: widget.room['status']==1? false: true,
-      validator: (value) => value.isEmpty ? "La dirección de la habitación es requerida" : null,
+      enabled: widget.room['status'] == 1 ? false : true,
+      validator: (value) => value.isEmpty ? "La dirección es requerida" : null,
       onSaved: (value) => _adress = value,
       decoration:
       buildInputDecoration("Dirección", Icons.map),
@@ -230,7 +260,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final services = TextFormField(
       autofocus: false,
       controller: servicesCtrl,
-      enabled: widget.room['status']==1? false: true,
+      enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _services = value,
       decoration: buildInputDecoration("Servicios", Icons.local_laundry_service),
     );
@@ -238,7 +268,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final description = TextFormField(
       autofocus: false,
       controller: descriptionCtrl,
-      enabled: widget.room['status']==1? false: true,
+      enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _description = value,
       decoration:
       buildInputDecoration("Descripción", Icons.description),
@@ -248,7 +278,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
       autofocus: false,
       controller: priceCtrl,
       validator: numberValidator,
-      enabled: widget.room['status']==1? false: true,
+      enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _price = value,
       decoration:
       buildInputDecoration("Precio", Icons.monetization_on),
@@ -257,7 +287,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final terms = TextFormField(
       autofocus: false,
       controller: termsCtrl,
-      enabled: widget.room['status']==1? false: true,
+      enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _terms = value,
       decoration:
       buildInputDecoration("Términos", Icons.add_alert),
@@ -268,8 +298,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
         borderRadius: BorderRadius.circular(5),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          minWidth: 110.0,//MediaQuery.of(context).size.width/5,
+          height: 45.0,
+          //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
             //setState(() => _saving = true);
             //registerNewRoom();
@@ -280,6 +311,25 @@ class _UpdateRoomState extends State<UpdateRoom> {
               style: style.copyWith(color: Colors.white)),
         )
     );
+
+    final eliminarRoom = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: 110.0,//MediaQuery.of(context).size.width/5,
+          height: 45.0,
+          //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          onPressed: () {
+            setState(() => _saving = true);
+            deleteRoom(id_usuario, roomidCtrl.text);
+          },
+          child: Text("Eliminar",
+              textAlign: TextAlign.center,
+              style: style.copyWith(color: Colors.white)),
+        )
+    );
+
 
     /*
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
@@ -353,9 +403,10 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
     return SafeArea(
         child: Scaffold(
-          body: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Form(
+          body: ModalProgressHUD(
+            child: Container(
+              padding: EdgeInsets.all(20.0),
+              child: Form(
                 key: formKey,
                 child: SingleChildScrollView(
                   child: Column(
@@ -398,23 +449,24 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
                       SizedBox(height: 45.0),
                       //longButtons("Registrar", submit),
-                      actualizarRoom,
-                      /*Row(
+                      //actualizarRoom,
+                      Row(
                         children: <Widget>[
                           Expanded(
                               child: Container(
-                                child: longButtons("Aceptar", submit),
+                                child: actualizarRoom,
                                 alignment: Alignment.centerLeft,
                               )),
                           Expanded(
                               child: Container(
-                                child: longButtons("Cancelar", canceled),
+                                child: eliminarRoom,
                                 alignment: Alignment.centerRight,
                               )),
                         ],
-                      ),*/
+                      ),
+                      SizedBox(height: 25.0),
 
-                    /*
+                      /*
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -437,10 +489,97 @@ class _UpdateRoomState extends State<UpdateRoom> {
                     ],
                   ),
                 ),
+              ),
             ),
+            inAsyncCall: _saving,
           ),
         ),
     );
   }
+
+  void _showDialog(seconds, message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext builderContext) {
+        Future.delayed(Duration(seconds: seconds), () {
+        });
+        return AlertDialog(
+          content: Text(message),
+        );
+      },
+    );
+  }
+
+  Future deleteRoom(id_usuario, idhabitacion) async{
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${widget.room['status']}");
+
+    /*
+    if (widget.room['status'] == 1){
+      print("************************** Habitacion rentada actualmente");
+      setState(() => _saving = false);
+
+      _showDialog(2, "La habitación se encuentra ocupada");
+    }
+    else if(widget.room['status'] == 0){
+      print("************************** Habitacion no ocupada");
+      setState(() => _saving = false);
+      _showDialog(2, "Se elimino la habitación");
+    }*/
+
+
+    Api _api = Api();
+
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    var _id = snapShoot['usuario'];
+    String tokenAuth = await currentUser.getIdToken();
+
+    final msg = jsonEncode({
+      "usuario": _id,
+      "idhabitacion": idhabitacion
+    });
+
+    var response = await _api.DeleteRoomPost(msg, tokenAuth);
+    var data = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      // CREAR UN REFRESH EN LA PAGINA
+      //debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE DE FIRESTORE Y MYSQL");
+      setState(() => _saving = false);
+      _showDialog(2, "Se elimino la habitación");
+
+      /*Navigator.push(
+          context,
+          new MaterialPageRoute(
+            builder: (context) => new Landlord(),
+          ),
+        );*/
+      //Navigator.of(context).pop();
+    }
+    else if (response.statusCode == 433) {
+      setState(() => _saving = false);
+      _showDialog(2, "Datos incorrectos");
+    }
+    else if (response.statusCode == 425) {
+      setState(() => _saving = false);
+      _showDialog(2, "La habitación está ocupada");
+    }
+    else if (response.statusCode == 504){
+      setState(() => _saving = false);
+      _showDialog(2, "Error al intentar eliminar");
+    }
+    else {
+      setState(() => _saving = false);
+      _showDialog(2, "Ocurrio un error en la solicitud");
+    }
+
+  }
+
+
+
+
 
 }

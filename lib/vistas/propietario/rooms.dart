@@ -69,6 +69,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   User currentUser;
   String id;
   String nombre;
+
   @override
   void initState(){
     setData();
@@ -77,6 +78,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   Map values_publ = {};
 
   Future getSpecie(String id_room) async {
+
     int check = await FirebaseFirestore.instance
         .collection('habitaciones')
         .doc(id_room)
@@ -91,6 +93,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     if (check == 0){
       values_publ[id_room] = false;
     }
+
   }
 
   Future getRooms(id) async {
@@ -134,7 +137,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         ));
 
       });
-      print('A ############ ${values_publ}');
+      print('aaaaaaaaaaaaaaaaaA ############ ${values_publ}');
       return _rooms;
 
     } else {
@@ -156,7 +159,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       body: FutureBuilder(
           future: getRooms(id),
           builder: (context, snapshot) {
-
             if(!snapshot.hasData){
               // Esperando la respuesta de la API
               return Center(
@@ -165,7 +167,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      Text('Cargando...'),
+                      //Text('Cargando...'),
                     ]
                 ),
               );
@@ -193,7 +195,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            /*Navigator.push(
                               context,
                               new MaterialPageRoute(
                                 builder: (context) =>
@@ -211,7 +213,30 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                 }
                                 ),
                               ),
+                            );*/
+
+
+
+                            Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                builder: (context) =>
+                                new UpdateRoom(room:
+                                {
+                                  'idhabitacion': snapshot.data[index].idhabitacion,
+                                  'descripcion': snapshot.data[index].descripcion,
+                                  'dimension': snapshot.data[index].dimension,
+                                  'direccion': snapshot.data[index].direccion,
+                                  'idpropietario': snapshot.data[index].idpropietario,
+                                  'precio': snapshot.data[index].precio,
+                                  'servicios': snapshot.data[index].servicios,
+                                  'status': snapshot.data[index].status,
+                                  'terminos': snapshot.data[index].terminos,
+                                }
+                                ),
+                              ),
                             );
+
                           },
                           child: Card(
                             shadowColor: Colors.deepPurpleAccent,
@@ -227,8 +252,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                     title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(
                                       'Inquilino: ${
-                                          snapshot.data[index].idusuario==null?
-                                          '':snapshot.data[index].idusuario
+                                          snapshot.data[index].idusuario == null ? '' : snapshot.data[index].idusuario
                                       }',
                                       style:
                                       TextStyle(color: Colors.black.withOpacity(0.6)),
@@ -284,7 +308,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                           fontWeight: FontWeight.normal)),
                                                     ],
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -304,7 +328,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                           fontWeight: FontWeight.normal)),
                                                     ],
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -344,6 +368,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                   ButtonBar(
                                     alignment: MainAxisAlignment.center,
                                     children: [
+                                      /*
                                       FlatButton(
                                         textColor: const Color(0xFF6200EE),
                                         onPressed: () {
@@ -368,7 +393,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           );
                                         },
                                         child: const Text('Editar'),
-                                      ),
+                                      ),*/
                                       Switch(
                                         value: values_publ[snapshot.data[index].idhabitacion],
                                         onChanged: (value) {
@@ -409,8 +434,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         },
         icon: Icon(Icons.add),
         label: Text("Habitación"),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.cyan,
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.blue//Color(0xff01A0C7),//Colors.cyan,
       ),
     );
   }
