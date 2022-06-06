@@ -129,7 +129,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data['habitaciones'].forEach((room) {
-        if (room['estatus']==0){
+        if (room['estatus'] == 0){
           rooms.add(room['idhabitacion']);
         }
 
@@ -173,7 +173,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    //String title = 'Lista de inquilinos';
+
     return Scaffold(
       body: FutureBuilder(
           future: getTenants(id),
@@ -214,6 +214,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
+                            /*
                             Navigator.push(
                               context,
                               new MaterialPageRoute(
@@ -231,15 +232,18 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                 }
                                 ),
                               ),
-                            );
+                            );*/
                           },
                           child: Card(
                             shadowColor: Colors.deepPurpleAccent,
                             clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                             child: Material(
                               color: Colors.black12,
                               shadowColor: Colors.deepPurpleAccent,
-                              borderRadius: BorderRadius.circular(20.0),
+                              //borderRadius: BorderRadius.circular(20.0),
                               child: Column(
                                 children: [
                                   ListTile(
@@ -265,7 +269,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                                 Text.rich(
                                                   TextSpan(
                                                     children: <TextSpan>[
-                                                      TextSpan(text: 'Fecha pago: ', style: TextStyle(
+                                                      TextSpan(text: 'Dia de pago: ', style: TextStyle(
                                                           color: Colors.black.withOpacity(0.6),
                                                           fontWeight: FontWeight.bold)),
                                                       TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechapago).day} c/mes' , style: TextStyle(
