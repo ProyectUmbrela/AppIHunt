@@ -37,7 +37,7 @@ class _RegisterState extends State<Register> {
       _password,
       _confirmPassword;
   String _chosenValue;
-
+  TextStyle style = TextStyle(fontSize: 18, color: Colors.white);
 
   @override
   Widget build(BuildContext context) {
@@ -179,16 +179,11 @@ class _RegisterState extends State<Register> {
       confirmPasswordCtrl.clear();
     }
 
-    Future submit() async {
+    Future registerNewUser() async {
 
       final form = formKey.currentState;
 
       if (form.validate()) {
-        /*setState(() {
-          _saving = true;
-        });*/
-
-
 
         form.save();
         Api _api = Api();
@@ -216,33 +211,23 @@ class _RegisterState extends State<Register> {
 
           _materialAlertDialog(context, 'Registro exitoso, revisa tu correo para completar tu registro', 'Notificación');
           clearForm();
-          //Navigator.pushReplacementNamed(context, '/login');
-
-
         }
         else if(data['message'] == 'El usuario ya existe'){
-          //print("El usuario ya existe");
           setState(() {
             _saving = false;
           });
-
           _materialAlertDialog(context, 'Ya existe una cuenta con este correo', 'Notificación');
-          //useridCtrl.clear();
         } else {
           if (Platform.isAndroid) {
             setState(() {
               _saving = false;
             });
             _materialAlertDialog(context, data['message'], 'Notificación');
-            //print(response.statusCode);
-            //print("Android platform ******************************************");
-
           } else if (Platform.isIOS) {
             setState(() {
               _saving = false;
             });
             _cupertinoDialog(context, data['message'], 'Notificación');
-            //print("IOS platform ******************************************");
 
           }
         }
@@ -265,8 +250,24 @@ class _RegisterState extends State<Register> {
     };
 
 
-    TextStyle style = TextStyle(fontSize: 15, color: Colors.white);
-    final registerbuton = Material(
+
+    final registerUser = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          onPressed: () {
+            setState(() => _saving = true);
+            registerNewUser();
+          },
+          child: Text("Registrar",
+              textAlign: TextAlign.center,
+              style: style.copyWith(color: Colors.white)),
+        )
+    );
+    /*final registerbuton = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(10),
         color: Color(0xff01A0C7),
@@ -282,9 +283,9 @@ class _RegisterState extends State<Register> {
                   textAlign: TextAlign.center,
                   style: style.copyWith())),
         )
-    );
+    );*/
 
-    final cancelbuton = Material(
+    /*final cancelbuton = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(10),
         color: Color(0xff01A0C7),
@@ -299,13 +300,13 @@ class _RegisterState extends State<Register> {
                   textAlign: TextAlign.center,
                   style: style.copyWith())),
         )
-    );
+    );*/
 
 
     return Scaffold(
         body: ModalProgressHUD(
             child: Container(
-              padding: EdgeInsets.all(40.0),
+              padding: EdgeInsets.all(20.0),
               child: Form(
                   key: formKey,
                   child: SingleChildScrollView(
@@ -350,32 +351,16 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: 15),
                         type,
 
-                        SizedBox(height: 15.0),
+                        SizedBox(height: 45.0),
                         //longButtons("Registrar", submit),
-                        Row(
+                        /*Row(
                           children: <Widget>[
                             registerbuton,
                             Spacer(),
                             cancelbuton
-                            /*
-                            Expanded(
-                                /*child: Container(
-                                  child: _loading ? CircularProgressIndicator() :
-                                  longButtons("Registrar", submit),
-                                  alignment: Alignment.centerLeft,
-                                )*/
-                                child: registerbuton
-                            ),
-                            Expanded(
-                                /*child: Container(
-                                  child: longButtons("Cancelar", canceled),
-                                  alignment: Alignment.centerRight,
-                                )*/
-                              child: cancelbuton,
-
-                            ),*/
                           ],
-                        ),
+                        ),*/
+                        registerUser,
                         SizedBox(height: 15),
                       ],
                     ),

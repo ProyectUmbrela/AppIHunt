@@ -464,7 +464,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
             ),
           );
         },
-        icon: Icon(Icons.add),
+        icon: Icon(Icons.airline_seat_individual_suite),
         label: Text("Habitación"),
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue//Color(0xff01A0C7),//Colors.cyan,

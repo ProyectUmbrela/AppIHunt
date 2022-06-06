@@ -128,8 +128,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
       decoration: buildInputDecoration("Términos", Icons.add_alert),
     );
 
-
-
     final registrarRoom = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(5),
@@ -242,6 +240,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
                             SizedBox(height: 35,),
                             registrarRoom,
+                            SizedBox(height: 10,),
                           ],
                       ),
                     ),

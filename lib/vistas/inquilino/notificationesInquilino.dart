@@ -204,8 +204,8 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
-                  Text('Cargando...'),
-                ]
+                  //Text('Cargando...'),
+                ],
             ),
           );
         }

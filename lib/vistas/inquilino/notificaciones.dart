@@ -79,8 +79,8 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                 color: Colors.white,
                 fontSize: 15.0,
               ),
-            )
-        )
+            ),
+        ),
     );
 
 
@@ -118,8 +118,8 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
           color: Colors.white,
             fontSize: 15.0,
           ),
-        )
-      )
+        ),
+      ),
     );
 
     // set up the AlertDialog
@@ -164,8 +164,8 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                 color: Colors.white,
                 fontSize: 15.0,
               ),
-            )
-        )
+            ),
+        ),
     );
 
     final rentarButton = Material(
@@ -187,8 +187,8 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                 color: Colors.white,
                 fontSize: 15.0,
               ),
-            )
-        )
+            ),
+        ),
     );
 
     FontWeight fontInfo = FontWeight.w500;
@@ -230,8 +230,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -248,7 +247,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -265,7 +264,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -282,7 +281,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -300,7 +299,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -317,7 +316,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -334,7 +333,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -351,7 +350,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -368,7 +367,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -385,7 +384,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -404,7 +403,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                   Row(
                                       children: <Widget>[
@@ -421,10 +420,10 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
-                                      ]
+                                      ],
                                   ),
                                 ],
-                              )
+                              ),
                           ),
                         ),
                       ),
@@ -452,12 +451,12 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                 ),
                               ),
                             ],
-                          )
-                      )
-                    ]
-                )
-              ]
-          )
+                          ),
+                      ),
+                    ],
+                ),
+              ],
+          ),
         ],
       ),
     );

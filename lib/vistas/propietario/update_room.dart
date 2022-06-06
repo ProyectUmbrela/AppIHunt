@@ -59,7 +59,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
   // VARIABLE DE IMAGENES
   List<File> image_files = []; //new List();
-  TextStyle style = TextStyle(fontSize: 18);
+  TextStyle style = TextStyle(fontSize: 15);
   bool _saving = false;
 
 
@@ -136,7 +136,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
         String tokenAuth = await currentUser.getIdToken();
 
         final msg = jsonEncode({
-          "idhabitacion_anterior": widget.room['idhabitacion'],
           "idhabitacion": roomidCtrl.text,
           "idpropietario": _userid,
           "direccion": adressCtrl.text,
@@ -232,7 +231,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final roomId = TextFormField(
       autofocus: false,
       controller: roomidCtrl,
-      enabled: true,
+      enabled: false,
       validator: (value) => value.isEmpty ? "ID de habitación requerido" : null,
       onSaved: (value) => _roomid = value,
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),

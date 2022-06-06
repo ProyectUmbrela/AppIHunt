@@ -249,7 +249,7 @@ class _MisLugares extends State<Lugares> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
-                  Text('Cargando...'),
+                  //Text('Cargando...'),
                 ]
             ),
           );

@@ -60,6 +60,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
   String _startdate = "";
   String _enddate = "";
   String _paydate = "";
+  TextStyle style = TextStyle(fontSize: 18);
 
   final dateFormat = DateFormat("dd-M-yyyy");
 
@@ -247,7 +248,10 @@ class _RegisterTenantState extends State<RegisterTenant> {
       buildInputDecoration("Términos", Icons.more_vert),
     );
 
+
+
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
+    /*
     Widget _buildActionButton(String title, Color color) {
       return FlatButton(
         child: Text(title),
@@ -300,20 +304,14 @@ class _RegisterTenantState extends State<RegisterTenant> {
         context: context,
         builder: (_) => _showMaterialDialog(texto, noty),
       );
-    }
+    }*/
     /***************************************************************************/
 
-    var canceled = () async {
+    /*var canceled = () async {
       Navigator.pop(context);
-      /*Navigator.push(
-        context,
-        new MaterialPageRoute(
-          builder: (context) => new Landlord(),
-        ),
-      );*/
-    };
+    };*/
 
-    Future submit() async {
+    Future registerNewTenant() async {
       final form = formKey.currentState;
 
       if (form.validate()) {
@@ -331,7 +329,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
           "idusuario": iduserCtrl.text,
           "idhabitacion": _room,
           "idpropietario": _id,
-          "contrato": _contrato=='Sí'? "1":"0",
+          "contrato": _contrato == 'Sí' ? "1" : "0",
           "meses": int.parse(monthsCtrl.text), // conversion a entero
           "fecha_inicio": _startdate.split(" ")[0],
           "fecha_fin": _enddate.split(" ")[0],
@@ -357,34 +355,49 @@ class _RegisterTenantState extends State<RegisterTenant> {
           );*/
         } else {
           if (Platform.isAndroid) {
-            _materialAlertDialog(context, data['message'], 'Notificación');
+            //_materialAlertDialog(context, data['message'], 'Notificación');
             print(response.statusCode);
           } else if (Platform.isIOS) {
-            _cupertinoDialog(context, data['message'], 'Notificación');
+           // _cupertinoDialog(context, data['message'], 'Notificación');
           }
         }
 
       } else {
         if (Platform.isAndroid) {
-          _materialAlertDialog(
+          /*_materialAlertDialog(
               context,
               "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
+              "Formulario inválido");*/
         } else if (Platform.isIOS) {
-          _cupertinoDialog(
+          /*_cupertinoDialog(
               context,
               "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
+              "Formulario inválido");*/
         }
       }
     }
 
-    ;
+    final registrarTenant = Material(
+        elevation: 5.0,
+        borderRadius: BorderRadius.circular(5),
+        color: Color(0xff01A0C7),
+        child: MaterialButton(
+          minWidth: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          onPressed: () {
+            //setState(() => _saving = true);
+            registerNewTenant();
+          },
+          child: Text("Registrar",
+              textAlign: TextAlign.center,
+              style: style.copyWith(color: Colors.white)),
+        )
+    );
 
     return SafeArea(
         child: Scaffold(
           body: Container(
-            padding: EdgeInsets.all(40.0),
+            padding: EdgeInsets.all(20.0),
             child: Form(
                 key: formKey,
                 child: SingleChildScrollView(
@@ -442,10 +455,11 @@ class _RegisterTenantState extends State<RegisterTenant> {
                       label("Detalles de contrato\\renta"),
                       SizedBox(height: 5.0),
                       Details,
-                      SizedBox(height: 15.0),
+                      SizedBox(height: 35.0),
 
+                      registrarTenant,
                       //longButtons("Registrar", submit),
-                      Row(
+                      /*Row(
                         children: <Widget>[
                           Expanded(
                               child: Container(
@@ -458,10 +472,12 @@ class _RegisterTenantState extends State<RegisterTenant> {
                                 alignment: Alignment.centerRight,
                               )),
                         ],
-                      ),
+                      ),*/
+                      SizedBox(height: 10,),
                     ],
                   ),
-                )),
+                ),
+            ),
           ),
         ));
   }
