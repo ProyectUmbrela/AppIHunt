@@ -18,7 +18,6 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
 
   bool _saving = false;
   final myControllerEmail = TextEditingController();
-  //final myControllerPassword = TextEditingController();
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
 
   Widget recuperarPass(){
@@ -37,7 +36,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
                   style: TextStyle(
                       fontSize: 14)),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -117,7 +116,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
           child: Text("Recuperar contraseña",
               textAlign: TextAlign.center,
               style: style.copyWith(color: Colors.white)),
-        )
+        ),
     );
 
 
@@ -162,7 +161,7 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
               ),
             ),
           ),
-          inAsyncCall: _saving
+          inAsyncCall: _saving,
       ),
     );
   }

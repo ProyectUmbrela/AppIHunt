@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/utils/validators.dart';
 
 import 'landlordView.dart';
@@ -60,6 +60,8 @@ class _RegisterTenantState extends State<RegisterTenant> {
   String _startdate = "";
   String _enddate = "";
   String _paydate = "";
+
+  bool _saving = false;
   TextStyle style = TextStyle(fontSize: 18);
 
   final dateFormat = DateFormat("dd-M-yyyy");
@@ -340,14 +342,24 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print(msg);
         Api _api = Api();
 
+        /*Future.delayed(Duration(seconds : 3), () {
+          // Do something
+          setState(() => _saving = false);
+          print(msg);
+
+        });*/
+
+
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
         Map data = jsonDecode(response.body);
 
-        print("################# ESTATUS CODE REGISTRO INQUILINO: ");
+        print("################# ESTATUS CODE REGISTRO INQUILINO: ${data}");
+
         print(response.statusCode);
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+          setState(() => _saving = false);
           debugPrint("Data posted successfully");
           Navigator.pop(context);
           /*Navigator.push(context, new MaterialPageRoute(
@@ -363,6 +375,8 @@ class _RegisterTenantState extends State<RegisterTenant> {
         }
 
       } else {
+        setState(() => _saving = false);
+        /*
         if (Platform.isAndroid) {
           /*_materialAlertDialog(
               context,
@@ -373,7 +387,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
               context,
               "Por favor, rellene el formulario correctamente",
               "Formulario inválido");*/
-        }
+        }*/
       }
     }
 
@@ -385,7 +399,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
           minWidth: MediaQuery.of(context).size.width,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-            //setState(() => _saving = true);
+            setState(() => _saving = true);
             registerNewTenant();
           },
           child: Text("Registrar",
@@ -396,9 +410,10 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
     return SafeArea(
         child: Scaffold(
-          body: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Form(
+          body: ModalProgressHUD(
+            child: Container(
+              padding: EdgeInsets.all(20.0),
+              child: Form(
                 key: formKey,
                 child: SingleChildScrollView(
                   child: Column(
@@ -427,27 +442,27 @@ class _RegisterTenantState extends State<RegisterTenant> {
                         height: 15,
                       ),
 
-                      label("Indique los meses del contrato"),
+                      label("Núm. de meses de contrato"),
                       SizedBox(height: 5.0),
                       months,
                       SizedBox(height: 15.0),
 
-                      label("Indique la fecha de inicio"),
+                      label("Fecha de inicio"),
                       SizedBox(height: 5.0),
                       startDate,
                       SizedBox(height: 15.0),
 
-                      label("Indique la fecha de fin"),
+                      label("Fecha de termino"),
                       SizedBox(height: 5.0),
                       endDate,
                       SizedBox(height: 15.0),
 
-                      label("Indique la fecha de pago (el dia es el tomado)"),
+                      label("Fecha de pago (el dia es el tomado)"),
                       SizedBox(height: 5.0),
                       payDate,
                       SizedBox(height: 15.0),
 
-                      label("Num. días de plazo para el pago"),
+                      label("Núm. días máximo de pago"),
                       SizedBox(height: 5.0),
                       Plazo,
                       SizedBox(height: 15.0),
@@ -477,9 +492,12 @@ class _RegisterTenantState extends State<RegisterTenant> {
                     ],
                   ),
                 ),
+              ),
             ),
+            inAsyncCall: _saving,
           ),
-        ));
+        ),
+    );
   }
 
 }

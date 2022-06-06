@@ -136,17 +136,21 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
             }
             else{
               return Stack(
-                  children: <Widget> [ ListView.builder(
+                  children: <Widget> [
+                    ListView.builder(
                       itemCount: snapshot.data.length,
                       padding: const EdgeInsets.all(5),
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           shadowColor: Colors.deepPurpleAccent,
                           clipBehavior: Clip.antiAlias,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
                           child: Material(
                             color: Colors.black12,
                             shadowColor: Colors.deepPurpleAccent,
-                            borderRadius: BorderRadius.circular(20.0),
+                            //borderRadius: BorderRadius.circular(20.0),
                             child: Column(
                               children: [
                                 ListTile(
