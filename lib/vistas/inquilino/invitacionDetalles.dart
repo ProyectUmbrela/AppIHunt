@@ -57,9 +57,15 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
   void _launchURL(URL) async {
 
-    if (!await launch(URL,
-        forceSafariVC: true,
-        forceWebView: true)) throw 'Could not launch ${URL}';
+    print("=================> ${URL}");
+    try{
+      if (!await launch(URL,
+          forceSafariVC: true,
+          forceWebView: true)) throw 'Could not launch ${URL}';
+    }catch (err){
+      print("Error: ${err}");
+    }
+
   }
 
   showAlertDialogRejected(BuildContext context) {

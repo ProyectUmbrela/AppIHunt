@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/api.dart';
-import 'package:ihunt/vistas/inquilino/notificaciones.dart';
+import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
 
-class NotificacionesInquilino extends StatefulWidget{
+class InvitacionesInquilino extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return NotificationesInquilinoState();
+    return InvitacionesState();
   }
 }
 
@@ -67,7 +67,7 @@ class Invitacion {
 
 }
 
-class NotificationesInquilinoState extends State<NotificacionesInquilino>{
+class InvitacionesState extends State<InvitacionesInquilino>{
 
   User _currentUser;
   //String _idUsuario;

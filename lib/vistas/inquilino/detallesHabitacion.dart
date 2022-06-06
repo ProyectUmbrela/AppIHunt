@@ -39,6 +39,8 @@ class DetallesHab extends StatefulWidget {
 
 class _DetallesHab extends State<DetallesHab> {
 
+  double sizeText = 16;
+
   Widget detallesPropietario() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -51,13 +53,13 @@ class _DetallesHab extends State<DetallesHab> {
             children: <Widget>[
               Row(
                   children: <Widget>[
-                    Text(widget.name.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 18))]
+                    Text('Titular: ' + widget.name.toString(),
+                        style: TextStyle(color: Colors.white, fontSize: sizeText))]
               ),
               Row(
                   children: <Widget>[
-                    Text(widget.telefono.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 16))]
+                    Text('Tel: ' + widget.telefono.toString(),
+                        style: TextStyle(color: Colors.white, fontSize: sizeText))]
             )
           ],
         ),)
@@ -77,27 +79,30 @@ class _DetallesHab extends State<DetallesHab> {
                 Row(
                     children: <Widget>[
                       Text("Costo de renta \$ " + widget.costoRenta.toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 18))]
+                      style: TextStyle(color: Colors.white, fontSize: sizeText))]
                 ),
                 Row(
                     children: <Widget>[
                       Text("Dias de pago: " + widget.fechaPago.toString() + " de cada mes",
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                          style: TextStyle(color: Colors.white, fontSize: sizeText))]
                 ),
                 Row(
                     children: <Widget>[
-                      Text(widget.periodo.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Text('Desde: ' + widget.periodo.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: sizeText))]
                 ),
                 Row(
                     children: <Widget>[
-                      Text(widget.tiempoRenta.toString() + " meses",
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Text('No. de Meses: ' + widget.tiempoRenta.toString() + " meses",
+                          style: TextStyle(color: Colors.white, fontSize: sizeText))]
                 ),
                 Row(
                     children: <Widget>[
-                      Text(widget.terminosRenta.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Expanded(
+                        child: Text('Términos de renta: ' + widget.terminosRenta.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: sizeText)),
+                      ),
+                    ]
                 )
               ],
             )
@@ -119,18 +124,23 @@ class _DetallesHab extends State<DetallesHab> {
               children: <Widget>[
                 Row(
                     children: <Widget>[
-                      Text(widget.direccion.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Expanded(
+                          child: Text('Dir: ' + widget.direccion.toString(),
+                              style: TextStyle(color: Colors.white, fontSize: sizeText))),
+                    ]
                 ),
                 Row(
                     children: <Widget>[
-                      Text(widget.servicios.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Text('Servicios: ' + widget.servicios.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: sizeText))]
                 ),
                 Row(
                     children: <Widget>[
-                      Text(widget.descripcion.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 18))]
+                      Expanded(
+                        child: Text('Detalles adicionales: ' + widget.descripcion.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: sizeText)),
+                      ),
+                    ]
                 )
               ],
             )

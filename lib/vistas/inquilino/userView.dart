@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
-import 'package:ihunt/vistas/inquilino/misLugares.dart';
+import 'package:ihunt/vistas/inquilino/misHabitaciones.dart';
 //import 'package:ihunt/vistas/inquilino/user_profile.dart';
-import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
+import 'package:ihunt/vistas/inquilino/invitaciones.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -146,9 +146,11 @@ class _UserState extends State<UserView> {
       case 1:
         return Lugares(); // second page
       case 2:
-        return MyMaps(); // third page
+        // third page
+        return InvitacionesInquilino();
       case 3:
-        return NotificacionesInquilino(); // fourth page
+      // fourth page
+        return MyMaps();
     }
 
     return Center(child: Text("No disponible"),);
@@ -272,12 +274,12 @@ class _UserState extends State<UserView> {
             label: 'Habitaciones',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on),
-            label: 'Lugares',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.library_books),
             label: 'Invitaciones',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            label: 'Lugares',
           ),
         ],
       ),

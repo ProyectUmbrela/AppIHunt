@@ -123,7 +123,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
 
     var response = await _api.GetRooms(msg, tokenAuth);
     var data = jsonDecode(response.body);
-    List<String> _rooms = [];
+
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA

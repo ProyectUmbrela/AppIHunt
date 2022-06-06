@@ -7,11 +7,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // Vistas de inquilino
 import 'package:ihunt/vistas/inquilino/userView.dart'; // principal usuario
-import 'package:ihunt/vistas/inquilino/misLugares.dart';
+import 'package:ihunt/vistas/inquilino/misHabitaciones.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
-import 'package:ihunt/vistas/inquilino/detallesHabitaciones.dart';
-import 'package:ihunt/vistas/inquilino/notificationesInquilino.dart';
-import 'package:ihunt/vistas/inquilino/notificaciones.dart';
+import 'package:ihunt/vistas/inquilino/detallesHabitacion.dart';
+import 'package:ihunt/vistas/inquilino/invitaciones.dart';
+import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
 
 
 // VISTA PROPIETARIO
@@ -192,7 +192,7 @@ class IHuntApp extends StatelessWidget {
         '/mapa': (context) => MyMaps(),
         '/detalles': (context) => DetallesHab(),
         '/notificationesPropietario': (context) => NotificacionesPropietario(),
-        '/notificacionesInquilino': (context) => NotificacionesInquilino(),
+        '/notificacionesInquilino': (context) => InvitacionesInquilino(),
         '/detallesInvitacion': (context) => DetallesInvitacion(),
         '/IHunt': (context) => MainScreen(),
         '/registeroom': (context) => RegisterRoom()
