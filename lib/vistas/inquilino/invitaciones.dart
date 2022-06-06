@@ -153,7 +153,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Card(
-        color: Colors.grey[800],
+        color: Colors.grey[700],
         child: InkWell(
           onTap: ()=> _DetallesInivitacion(invitacion, context),
           child: Padding(
@@ -182,7 +182,7 @@ class NotificationesInquilinoState extends State<NotificacionesInquilino>{
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )*/
                   ],
-                )
+                ),
               ],
             ),
           ),

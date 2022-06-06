@@ -142,8 +142,9 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
   @override
   Widget build(BuildContext context) {
-    double titlesSize = 25.0;
-    double textSize = 20.0;
+    double titlesSize = 18.0;
+    double textSize = 15.0;
+
 
     final rechazarButton = Material(
         borderRadius: BorderRadius.circular(5),
@@ -220,13 +221,13 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                         Padding(
                                           padding: EdgeInsets.only(left: 100.0),
                                           child: Align(
-                                            alignment: Alignment.bottomLeft,
+                                            alignment: Alignment.bottomCenter,
                                             child: Text('Disponible',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                     fontWeight: fontTitle,
                                                     color: Colors.black,
-                                                    fontSize: 40)
+                                                    fontSize: 30)
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),
@@ -238,7 +239,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                           padding: EdgeInsets.only(top: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.nombre.toString(), // NOMBRE
+                                            child: Text('Titular: ' + widget.nombre.toString(), // NOMBRE
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -255,7 +256,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                           padding: EdgeInsets.only(),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.telefono.toString(),  // TELEFONO
+                                            child: Text('Tel. contacto: ' + widget.telefono.toString(),  // TELEFONO
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -268,19 +269,28 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                   ),
                                   Row(
                                       children: <Widget>[
-                                        Padding(
+                                        //Expanded(child: Text(String.fromCharCodes(List.generate(100, (i) => 65)))),
+                                        Expanded(
+                                          child: Text('Dir: ' + widget.direccion.toString(), // DIRECCION
+                                            textAlign: TextAlign.left,style: TextStyle(
+                                                  fontWeight: fontInfo,
+                                                  color: Colors.black,
+                                                  fontSize: textSize)
+                                          ),
+                                        ),
+                                        /*Padding(
                                           padding: EdgeInsets.only(),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.direccion.toString(), // DIRECCION
+                                            child: Text('Dir: ' + widget.direccion.toString(), // DIRECCION
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
                                                     color: Colors.black,
                                                     fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
+                                            ),
                                           ),
-                                        ),
+                                        ),*/
                                       ],
                                   ),
                                   Row(
@@ -307,7 +317,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                           padding: EdgeInsets.only(top: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.precio.toString() + ' mensual', // PRECIO
+                                            child: Text('Costo: ' + widget.precio.toString() + ' mensual', // PRECIO
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -324,7 +334,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                           padding: EdgeInsets.only(left: 0),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.servicios.toString() + ' incluidos', // SERVICIOS
+                                            child: Text('Servicios: ' + widget.servicios.toString() + ' incluidos', // SERVICIOS
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -337,11 +347,37 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                   ),
                                   Row(
                                       children: <Widget>[
+                                        Expanded(
+                                          child: Text('Descripción: ' + widget.descripcion.toString(), // DESCRIPCION
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontInfo,
+                                                color: Colors.black,
+                                                fontSize: textSize)
+                                          ),
+                                        ),
+                                        /*Padding(
+                                          padding: EdgeInsets.only(left: 0),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text('Descripción: ' + widget.descripcion.toString(), // DESCRIPCION
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                    fontWeight: fontInfo,
+                                                    color: Colors.black,
+                                                    fontSize: textSize)
+                                            ),//Icon(Icons.camera_alt),),
+                                          ),
+                                        ),*/
+                                      ],
+                                  ),
+                                  Row(
+                                      children: <Widget>[
                                         Padding(
                                           padding: EdgeInsets.only(left: 0),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.descripcion.toString(), // DESCRIPCION
+                                            child: Text('Tamaño: ' + widget.dimension.toString() + ' de espacio', // DIMENSION
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -354,11 +390,20 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                   ),
                                   Row(
                                       children: <Widget>[
-                                        Padding(
+                                        Expanded(
+                                          child: Text('Detalles de contrato: ' + widget.detalles.toString(), // DETALLES
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontInfo,
+                                                color: Colors.black,
+                                                fontSize: textSize)
+                                          ),
+                                        ),
+                                        /*Padding(
                                           padding: EdgeInsets.only(left: 0),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.dimension.toString() + ' de espacio', // DIMENSION
+                                            child: Text('Detalles de contrato: ' + widget.detalles.toString(), // DETALLES
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -366,32 +411,14 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
                                           ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 0),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text(widget.detalles.toString(), // DETALLES
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
+                                        ),*/
                                       ],
                                   ),
                                   Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
-                                      //crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Padding(
-                                          padding: EdgeInsets.only(left: 0, top: 10),
+                                          padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text('Términos de renta',
@@ -407,11 +434,20 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                   ),
                                   Row(
                                       children: <Widget>[
-                                        Padding(
+                                        Expanded(
+                                          child: Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontInfo,
+                                                color: Colors.black,
+                                                fontSize: textSize)
+                                          ),
+                                        ),
+                                        /*Padding(
                                           padding: EdgeInsets.only(left: 0, top: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
-                                            child: Text(widget.terminos.toString(), //TERMINOS
+                                            child: Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     fontWeight: fontInfo,
@@ -419,7 +455,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                                     fontSize: textSize)
                                             ),//Icon(Icons.camera_alt),),
                                           ),
-                                        ),
+                                        ),*/
                                       ],
                                   ),
                                 ],
