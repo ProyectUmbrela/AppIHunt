@@ -15,9 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
 
-
-
-import 'package:ihunt/vistas/propietario/multiimages.dart';
+//import 'package:ihunt/vistas/propietario/multiimages.dart';
 
 
 

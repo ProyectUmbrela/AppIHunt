@@ -251,68 +251,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
     );
 
 
-
-    /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
-    /*
-    Widget _buildActionButton(String title, Color color) {
-      return FlatButton(
-        child: Text(title),
-        textColor: color,
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-    }
-
-    Widget _dialogTitle(String noty) {
-      return Text(noty);
-    }
-
-    List<Widget> _buildActions() {
-      return [_buildActionButton("Aceptar", Colors.blue)];
-    }
-
-    Widget _contentText(String texto) {
-      return Text(texto);
-    }
-
-    Widget _showCupertinoDialog(String texto, noty) {
-      return CupertinoAlertDialog(
-        title: _dialogTitle(noty),
-        content: _contentText(texto),
-        actions: _buildActions(),
-      );
-    }
-
-    Future<void> _cupertinoDialog(
-        BuildContext context, String texto, String noty) async {
-      return showCupertinoDialog<void>(
-        context: context,
-        builder: (_) => _showCupertinoDialog(texto, noty),
-      );
-    }
-
-    Widget _showMaterialDialog(String texto, String noty) {
-      return AlertDialog(
-        title: _dialogTitle(noty),
-        content: _contentText(texto),
-        actions: _buildActions(),
-      );
-    }
-
-    Future<void> _materialAlertDialog(
-        BuildContext context, String texto, String noty) async {
-      return showDialog<void>(
-        context: context,
-        builder: (_) => _showMaterialDialog(texto, noty),
-      );
-    }*/
-    /***************************************************************************/
-
-    /*var canceled = () async {
-      Navigator.pop(context);
-    };*/
-
     Future registerNewTenant() async {
       final form = formKey.currentState;
 
@@ -355,12 +293,12 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
         print("################# ESTATUS CODE REGISTRO INQUILINO: ${data}");
 
-        print(response.statusCode);
+        //print(response.statusCode);
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           setState(() => _saving = false);
-          debugPrint("Data posted successfully");
+          //debugPrint("Data posted successfully");
           Navigator.pop(context);
           /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())

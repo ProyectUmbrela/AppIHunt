@@ -153,7 +153,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    //String title = 'Lista de habitaciones';
 
     return Scaffold(
       body: FutureBuilder(
@@ -214,9 +213,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                 ),
                               ),
                             );*/
-
-
-
                             Navigator.push(
                               context,
                               new MaterialPageRoute(
@@ -236,7 +232,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                 ),
                               ),
                             );
-
                           },
                           child: Card(
                             shadowColor: Colors.deepPurpleAccent,
@@ -394,56 +389,9 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                             },
                                           ),
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                  /*ButtonBar(
-                                    alignment: MainAxisAlignment.center,
-                                    children: [
-                                      /*
-                                      FlatButton(
-                                        textColor: const Color(0xFF6200EE),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                              builder: (context) =>
-                                              new UpdateRoom(room:
-                                              {
-                                                'idhabitacion': snapshot.data[index].idhabitacion,
-                                                'descripcion': snapshot.data[index].descripcion,
-                                                'dimension': snapshot.data[index].dimension,
-                                                'direccion': snapshot.data[index].direccion,
-                                                'idpropietario': snapshot.data[index].idpropietario,
-                                                'precio': snapshot.data[index].precio,
-                                                'servicios': snapshot.data[index].servicios,
-                                                'status': snapshot.data[index].status,
-                                                'terminos': snapshot.data[index].terminos,
-                                              }
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: const Text('Editar'),
-                                      ),*/
-                                      Switch(
-                                        value: values_publ[snapshot.data[index].idhabitacion],
-                                        onChanged: (value) {
-                                          setState(() {
-                                            values_publ[snapshot.data[index].idhabitacion] = value;
-                                          });
-
-                                          var collection = FirebaseFirestore.instance.collection('habitaciones');
-                                          collection.doc(snapshot.data[index].idhabitacion)
-                                              .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
-                                              .then((_) => print('#################### Success'))
-                                              .catchError((error) => print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
-                                        },
                                       ),
                                     ],
-                                  ),*/
-                                  //Image.asset('assets/card-sample-image.jpg'),
-                                  //Image.asset('assets/card-sample-image-2.jpg'),
+                                  ),
                                 ],
                               ),
                             ),

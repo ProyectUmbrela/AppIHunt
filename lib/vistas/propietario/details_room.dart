@@ -1,3 +1,4 @@
+/*
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -15,7 +16,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'landlordView.dart';
 import 'rooms.dart';
+ */
 
+/*
 class DetailRoom extends StatefulWidget {
 
   const DetailRoom({Key key, this.room}) : super(key: key);
@@ -310,4 +313,4 @@ class _DetailRoomState extends State<DetailRoom> {
         ));
   }
 
-}
+}*/

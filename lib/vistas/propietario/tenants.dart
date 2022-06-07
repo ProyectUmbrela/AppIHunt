@@ -26,6 +26,7 @@ class Tenant{
   String idhabitacion;
   String idpropietario;
   String idusuario;
+  double precio;
 
   Tenant({
     this.fechafincontrato,
@@ -35,7 +36,8 @@ class Tenant{
     this.id,
     this.idhabitacion,
     this.idpropietario,
-    this.idusuario});
+    this.idusuario,
+    this.precio});
 }
 
 class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
@@ -72,12 +74,14 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
             id: tenant['id'],
             idhabitacion: tenant['idhabitacion'],
             idpropietario: tenant['idpropietario'],
-            idusuario: tenant['idusuario']
+            idusuario: tenant['idusuario'],
+            precio: tenant['precio']
         ));
       });
       return _tenants;
     }
-    if (response.statusCode == 403){ // este status es para caso sin inquilino
+    if (response.statusCode == 403){
+      // este status es para caso sin inquilino
       return _tenants;
     }else {
       if (Platform.isAndroid) {
@@ -208,7 +212,8 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
             }
             else{
               return Stack(
-                  children: <Widget> [ ListView.builder(
+                  children: <Widget> [
+                    ListView.builder(
                       itemCount: snapshot.data.length,
                       padding: const EdgeInsets.all(5),
                       itemBuilder: (BuildContext context, int index) {
@@ -289,10 +294,10 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                                 Text.rich(
                                                   TextSpan(
                                                     children: <TextSpan>[
-                                                      TextSpan(text: 'Pago: \$', style: TextStyle(
+                                                      TextSpan(text: 'Pago: \$ ', style: TextStyle(
                                                           color: Colors.black.withOpacity(0.6),
                                                           fontWeight: FontWeight.bold)),
-                                                      TextSpan(text: 'inserte' , style: TextStyle(
+                                                      TextSpan(text: snapshot.data[index].precio.toString(), style: TextStyle(
                                                           color: Colors.black.withOpacity(0.6),
                                                           fontWeight: FontWeight.normal)),
                                                     ],

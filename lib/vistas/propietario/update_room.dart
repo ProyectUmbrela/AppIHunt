@@ -79,6 +79,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   TextEditingController priceCtrl = new TextEditingController();
   TextEditingController termsCtrl = new TextEditingController();*/
 
+
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms, _status;
 
   // VARIABLES PARA COORDENADAS
@@ -87,37 +88,8 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
   @override
   Widget build(BuildContext context) {
-    // OBTENER LATITUD Y LONGITUD
-    /*void getLocation(address) async{
-      try {
-        var locations = await locationFromAddress(address);
-        lat = locations[0].latitude;
-        lngt = locations[0].longitude;
-      } catch(err){
-        lat = 46.8597000;
-        lngt = -97.2212000;
-      }
-    }*/
 
-    /*
-    // OBTENER IMAGENES
-    _imgFromGallery() async {
-
-
-    }
-    _images_to_base64() async{
-      var dicc = {
-
-      };
-      for (int i = 0; i < image_files.length; i++){
-        final bytes = image_files[i].readAsBytesSync();
-        String img64 = base64Encode(bytes);
-        dicc[i] = img64;
-      }
-    }*/
-
-
-    Future submit() async {
+    Future updateRoom() async {
       setState(() => _saving = true);
       final form = formKey.currentState;
 
@@ -302,8 +274,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
           //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
             //setState(() => _saving = true);
-            //registerNewRoom();
-            submit();
+            updateRoom();
           },
           child: Text("Actualizar",
               textAlign: TextAlign.center,
@@ -320,8 +291,11 @@ class _UpdateRoomState extends State<UpdateRoom> {
           height: 45.0,
           //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-            setState(() => _saving = true);
-            deleteRoom(id_usuario, roomidCtrl.text);
+            //setState(() => _saving = true);
+            //deleteRoom(id_usuario, roomidCtrl.text);
+            _displayDialog(context);
+
+
           },
           child: Text("Eliminar",
               textAlign: TextAlign.center,
@@ -463,7 +437,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
                               )),
                         ],
                       ),
-                      SizedBox(height: 25.0),
+                      SizedBox(height: 15.0),
 
                       /*
                       Row(
@@ -496,6 +470,26 @@ class _UpdateRoomState extends State<UpdateRoom> {
     );
   }
 
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('¿Seguro que deseas eliminar esta habitación?'),
+            actions: <Widget>[
+              new FlatButton(
+                child: Text('Eliminar'),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  setState(() => _saving = true);
+                  await deleteRoom(id_usuario, roomidCtrl.text);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   void _showDialog(seconds, message) {
     showDialog(
       context: context,
@@ -511,20 +505,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
   Future deleteRoom(id_usuario, idhabitacion) async{
     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${widget.room['status']}");
-
-    /*
-    if (widget.room['status'] == 1){
-      print("************************** Habitacion rentada actualmente");
-      setState(() => _saving = false);
-
-      _showDialog(2, "La habitación se encuentra ocupada");
-    }
-    else if(widget.room['status'] == 0){
-      print("************************** Habitacion no ocupada");
-      setState(() => _saving = false);
-      _showDialog(2, "Se elimino la habitación");
-    }*/
-
 
     Api _api = Api();
 
@@ -542,21 +522,13 @@ class _UpdateRoomState extends State<UpdateRoom> {
     });
 
     var response = await _api.DeleteRoomPost(msg, tokenAuth);
-    var data = jsonDecode(response.body);
+    //var data = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
       // CREAR UN REFRESH EN LA PAGINA
-      //debugPrint("################## HABITACION ELIMINADA CORRECTAMENTE DE FIRESTORE Y MYSQL");
       setState(() => _saving = false);
       _showDialog(2, "Se elimino la habitación");
 
-      /*Navigator.push(
-          context,
-          new MaterialPageRoute(
-            builder: (context) => new Landlord(),
-          ),
-        );*/
-      //Navigator.of(context).pop();
     }
     else if (response.statusCode == 433) {
       setState(() => _saving = false);
@@ -574,11 +546,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
       setState(() => _saving = false);
       _showDialog(2, "Ocurrio un error en la solicitud");
     }
-
   }
-
-
-
-
 
 }
