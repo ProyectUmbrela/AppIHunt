@@ -147,7 +147,6 @@ class _LandlordState extends State<Landlord>
       case 1:
         return Rooms(); // second page
       case 2:
-      ////////////////////////////////////return Home();
         return Tenants(); // third page
       case 3:
         return Invitations(); // fourth page

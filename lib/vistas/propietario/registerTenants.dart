@@ -262,13 +262,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
             .collection('users')
             .doc(currentUser.uid)
             .get();
-        var _id = snapShoot['usuario'];
+        var _userid = snapShoot['usuario'];
         String tokenAuth = await currentUser.getIdToken();
 
         final msg = jsonEncode({
           "idusuario": iduserCtrl.text,
           "idhabitacion": _room,
-          "idpropietario": _id,
+          "idpropietario": _userid,
           "contrato": _contrato == 'Sí' ? "1" : "0",
           "meses": int.parse(monthsCtrl.text), // conversion a entero
           "fecha_inicio": _startdate.split(" ")[0],
@@ -279,14 +279,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
         });
         print(msg);
         Api _api = Api();
-
-        /*Future.delayed(Duration(seconds : 3), () {
-          // Do something
-          setState(() => _saving = false);
-          print(msg);
-
-        });*/
-
 
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
         Map data = jsonDecode(response.body);

@@ -12,6 +12,7 @@ import 'package:ihunt/vistas/inquilino/googleMaps.dart';
 import 'package:ihunt/vistas/inquilino/detallesHabitacion.dart';
 import 'package:ihunt/vistas/inquilino/invitaciones.dart';
 import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
+import 'package:ihunt/vistas/propietario/rooms.dart';
 
 
 // VISTA PROPIETARIO
@@ -195,7 +196,8 @@ class IHuntApp extends StatelessWidget {
         '/notificacionesInquilino': (context) => InvitacionesInquilino(),
         '/detallesInvitacion': (context) => DetallesInvitacion(),
         '/IHunt': (context) => MainScreen(),
-        '/registeroom': (context) => RegisterRoom()
+        '/registeroom': (context) => RegisterRoom(),
+        '/rooms': (context) => Rooms()
       },
     );
   }

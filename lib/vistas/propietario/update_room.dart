@@ -1,21 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
-import 'package:ihunt/vistas/propietario/rooms.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/cupertino.dart';
+//import 'dart:ui';
+//import 'package:ihunt/vistas/propietario/rooms.dart';
+//import 'package:image_picker/image_picker.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
+//import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:ihunt/vistas/propietario/rooms.dart';
 
-import 'landlordView.dart';
+//import 'landlordView.dart';
 
 class UpdateRoom extends StatefulWidget {
 
@@ -55,13 +56,14 @@ class _UpdateRoomState extends State<UpdateRoom> {
   TextEditingController descriptionCtrl;
   TextEditingController priceCtrl;
   TextEditingController termsCtrl;
-  //TextEditingController statusCtrl;
+  double lat;
+  double lngt;
 
   // VARIABLE DE IMAGENES
   List<File> image_files = []; //new List();
   TextStyle style = TextStyle(fontSize: 15);
   bool _saving = false;
-
+  final formKey = new GlobalKey<FormState>();
 
   @override
   void initState(){
@@ -69,27 +71,19 @@ class _UpdateRoomState extends State<UpdateRoom> {
   }
 
 
-  final formKey = new GlobalKey<FormState>();
 
-  /*TextEditingController roomidCtrl = new TextEditingController();
-  TextEditingController adressCtrl = new TextEditingController();
-  TextEditingController dimensionsCtrl = new TextEditingController();
-  TextEditingController servicesCtrl = new TextEditingController();
-  TextEditingController descriptionCtrl = new TextEditingController();
-  TextEditingController priceCtrl = new TextEditingController();
-  TextEditingController termsCtrl = new TextEditingController();*/
+
 
 
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms, _status;
 
   // VARIABLES PARA COORDENADAS
-  double lat;
-  double lngt;
+
 
   @override
   Widget build(BuildContext context) {
 
-    Future updateRoom() async {
+    Future updateARoom() async {
       setState(() => _saving = true);
       final form = formKey.currentState;
 
@@ -118,7 +112,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
           "terminos": termsCtrl.text
         });
 
-        //////////await getLocation(adressCtrl.text);
 
         print("body actualizar habitacion ${msg}");
         //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
@@ -134,10 +127,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
         if (response.statusCode  == 201) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          //debugPrint("ACTUALIZACION HABITACION EXITOSA!");
           setState(() => _saving = false);
           _showDialog(2, "Se actualizo la habitación");
-          //Navigator.pop(context);
+
         }
         else if (response.statusCode  == 433){
           setState(() => _saving = false);
@@ -148,57 +140,12 @@ class _UpdateRoomState extends State<UpdateRoom> {
           _showDialog(2, "Error al actualizar los datos");
         }
         else {
-          setState(() => _saving = false);
           _showDialog(2, "Ocurrio un error con la solicitud");
-          /*if (Platform.isAndroid) {
-            //_materialAlertDialog(context, data['message'], 'Notificación');
-            print(response.statusCode);
-          } else if (Platform.isIOS) {
-            print(response.statusCode);
-            //_cupertinoDialog(context, data['message'], 'Notificación');
-          }*/
         }
       } else {
-
-        /*if (Platform.isAndroid) {
-          print("A error");
-         /* _materialAlertDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");*/
-        } else if (Platform.isIOS) {
-          print("B error");
-          /*_cupertinoDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");*/
-        }*/
+        setState(() => _saving = false);
       }
     }
-    /*
-    void addDocument(latitude, longitude, price, description, address, services, name) async{
-      final now = new DateTime.now();
-      String date = DateFormat('yMd').format(now);// 28/03/2020
-
-      var document = {
-        'coords' : new GeoPoint(latitude=latitude, longitude=longitude),
-        'costo': price,
-        'detalles': description,
-        'direccion': address,
-        'fotos': {},
-        'habitaciones': 1,
-        'servicios': services,
-        'titular': name
-      };
-
-      // AGREGAR IMAGENES STR
-      for (int i = 0; i < image_files.length; i++){
-        final bytes = image_files[i].readAsBytesSync();
-        String img64 = base64Encode(bytes);
-        document['fotos'][i.toString()] = img64;
-      }
-
-    }*/
 
     final roomId = TextFormField(
       autofocus: false,
@@ -215,8 +162,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
       enabled: widget.room['status'] == 1 ? false : true,
       validator: (value) => value.isEmpty ? "La dirección es requerida" : null,
       onSaved: (value) => _adress = value,
-      decoration:
-      buildInputDecoration("Dirección", Icons.map),
+      decoration: buildInputDecoration("Dirección", Icons.map),
     );
 
     final dimensions = TextFormField(
@@ -241,8 +187,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
       controller: descriptionCtrl,
       enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _description = value,
-      decoration:
-      buildInputDecoration("Descripción", Icons.description),
+      decoration: buildInputDecoration("Descripción", Icons.description),
     );
 
     final price = TextFormField(
@@ -251,8 +196,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
       validator: numberValidator,
       enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _price = value,
-      decoration:
-      buildInputDecoration("Precio", Icons.monetization_on),
+      decoration: buildInputDecoration("Precio", Icons.monetization_on),
     );
 
     final terms = TextFormField(
@@ -260,8 +204,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
       controller: termsCtrl,
       enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _terms = value,
-      decoration:
-      buildInputDecoration("Términos", Icons.add_alert),
+      decoration: buildInputDecoration("Términos", Icons.add_alert),
     );
 
     final actualizarRoom = Material(
@@ -269,17 +212,15 @@ class _UpdateRoomState extends State<UpdateRoom> {
         borderRadius: BorderRadius.circular(5),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: 110.0,//MediaQuery.of(context).size.width/5,
+          minWidth: 110.0,
           height: 45.0,
-          //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-            //setState(() => _saving = true);
-            updateRoom();
+            updateARoom();
           },
           child: Text("Actualizar",
               textAlign: TextAlign.center,
               style: style.copyWith(color: Colors.white)),
-        )
+        ),
     );
 
     final eliminarRoom = Material(
@@ -287,91 +228,16 @@ class _UpdateRoomState extends State<UpdateRoom> {
         borderRadius: BorderRadius.circular(5),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: 110.0,//MediaQuery.of(context).size.width/5,
+          minWidth: 110.0,
           height: 45.0,
-          //padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
-            //setState(() => _saving = true);
-            //deleteRoom(id_usuario, roomidCtrl.text);
-            _displayDialog(context);
-
-
+            _displayDialogForDelete(context);
           },
           child: Text("Eliminar",
               textAlign: TextAlign.center,
               style: style.copyWith(color: Colors.white)),
-        )
-    );
-
-
-    /*
-    /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
-    Widget _buildActionButton(String title, Color color) {
-      return FlatButton(
-        child: Text(title),
-        textColor: color,
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      );
-    }
-
-    Widget _dialogTitle(String noty) {
-      return Text(noty);
-    }
-
-    List<Widget> _buildActions() {
-      return [_buildActionButton("Aceptar", Colors.blue)];
-    }
-
-    Widget _contentText(String texto) {
-      return Text(texto);
-    }
-
-    Widget _showCupertinoDialog(String texto, noty) {
-      return CupertinoAlertDialog(
-        title: _dialogTitle(noty),
-        content: _contentText(texto),
-        actions: _buildActions(),
-      );
-    }
-
-    Future<void> _cupertinoDialog(
-        BuildContext context, String texto, String noty) async {
-      return showCupertinoDialog<void>(
-        context: context,
-        builder: (_) => _showCupertinoDialog(texto, noty),
-      );
-    }
-
-    Widget _showMaterialDialog(String texto, String noty) {
-      return AlertDialog(
-        title: _dialogTitle(noty),
-        content: _contentText(texto),
-        actions: _buildActions(),
-      );
-    }
-
-    Future<void> _materialAlertDialog(
-        BuildContext context, String texto, String noty) async {
-      return showDialog<void>(
-        context: context,
-        builder: (_) => _showMaterialDialog(texto, noty),
-      );
-    }*/
-    /***************************************************************************/
-
-    /*
-    var canceled = () async {
-      Navigator.pop(context);
-      /*Navigator.push(
-        context,
-        new MaterialPageRoute(
-          builder: (context) => new Landlord(),
         ),
-      );*/
-    };*/
-
+    );
 
 
     return SafeArea(
@@ -438,27 +304,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
                         ],
                       ),
                       SizedBox(height: 15.0),
-
-                      /*
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: MaterialButton(
-                                color: Colors.blue,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                ),
-                                onPressed: () {
-                                  _imgFromGallery();
-                                },
-                                child: Text(
-                                  "selccionar imagen",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                          ),
-                        ],
-                      ),*/
                     ],
                   ),
                 ),
@@ -470,7 +315,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
     );
   }
 
-  _displayDialog(BuildContext context) async {
+  _displayDialogForDelete(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -504,7 +349,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   }
 
   Future deleteRoom(id_usuario, idhabitacion) async{
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${widget.room['status']}");
+    //print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${widget.room['status']}");
 
     Api _api = Api();
 
