@@ -37,7 +37,7 @@ class Room{
   String servicios;
   int status;
   String terminos;
-  int publicar;
+  bool publicar;
   String foto;
 
   Room({
@@ -82,6 +82,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         .doc(id_room)
         .get()
         .then((value) {
+          //print("############ ${value['publicar']}");
           return value['publicar']; //
           });
 
@@ -89,9 +90,10 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       //values_publ[id_room] = true;
    // }
     //else if (check == 0){
-      values_publ[id_room] = false;
+      //values_publ[id_room] = false;
     //}
-
+    ////print('###################### CHECK: ${check}');
+    return check;
   }
 
   Future getRooms() async {
@@ -113,13 +115,31 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     var response = await _api.GetRooms(msg, tokenAuth);
     var data = jsonDecode(response.body);
     List<Room> _rooms = [];
+
+    print("#########################################################");
+    print("#########################################################");
+    print(data);
+    print("${response.statusCode }");
+    print("#########################################################");
+    print("#########################################################");
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
+      Map<String, bool> newcontent = {};
 
-      data['habitaciones'].forEach((room) async {
+      getValue() async{
+        for(int i = 0; i < data['habitaciones'].length; i++){
+          var document = data['habitaciones'][i]['idhabitacion'] + '_${data['habitaciones'][i]['idpropietario']}';
+          int result = await getSpecie(document);
+          newcontent["${data['habitaciones'][i]['idhabitacion']}"] = result == 1 ? true : false;
+        }
+      }
+      // getting status of room
+      await getValue();
 
-        ///////////////////////////////////////////////////////////getSpecie(room['idhabitacion']+'_${_userid}');
+      data['habitaciones'].forEach((room) {
         _rooms.add(Room(
+            publicar: newcontent[room['idhabitacion']],
             descripcion: room['descripcion'],
             dimension: room['dimension'],
             direccion: room['direccion'],
@@ -265,7 +285,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                     title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(
                                       'Inquilino: ${
-                                          snapshot.data[index].idusuario == null ? '' : snapshot.data[index].idusuario
+                                          snapshot.data[index].idusuario == null ? 'No' : snapshot.data[index].idusuario
                                       }',
                                       style:
                                       TextStyle(color: Colors.black.withOpacity(0.6)),
@@ -291,18 +311,18 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [ snapshot.data[index].status == 1 ?
-                                            Text(
-                                              ' Sí',
-                                              style: TextStyle(
-                                                  color: Colors.black.withOpacity(0.6),
-                                                  fontWeight: FontWeight.normal),
-                                            ):
-                                            Text(
-                                              ' No',
-                                              style: TextStyle(
-                                                  color: Colors.black.withOpacity(0.6),
-                                                  fontWeight: FontWeight.normal),
-                                            ),
+                                              Text(
+                                                ' Sí',
+                                                style: TextStyle(
+                                                    color: Colors.black.withOpacity(0.6),
+                                                    fontWeight: FontWeight.normal),
+                                              ):
+                                              Text(
+                                                ' No',
+                                                style: TextStyle(
+                                                    color: Colors.black.withOpacity(0.6),
+                                                    fontWeight: FontWeight.normal),
+                                              ),
                                             ],
                                           ),
                                           Container(
@@ -351,7 +371,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 2, horizontal: 10),
                                     child: Row(
-                                      //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
                                           Column(
@@ -376,7 +395,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                               ),
                                             ],
                                           ),
-                                        ]),
+                                        ],
+                                    ),
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -391,16 +411,16 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Switch(
-                                            value: false,//values_publ[snapshot.data[index].idhabitacion],
+                                            value: snapshot.data[index].publicar,//values_publ[snapshot.data[index].idhabitacion],
                                             onChanged: (value) {
                                               setState(() {
-                                                values_publ[snapshot.data[index].idhabitacion] = value;
+                                                //values_publ[snapshot.data[index].idhabitacion] = value;
                                               });
                                               var collection = FirebaseFirestore.instance.collection('habitaciones');
                                               collection.doc(snapshot.data[index].idhabitacion + '_${snapshot.data[index].idpropietario}')
                                                   .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
                                                   .then((_) => _showDialog(2, 'Publicación pausada') )
-                                                  .catchError((error) => _showDialog(22, 'Ocurrio un error'));//print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
+                                                  .catchError((error) => _showDialog(22, 'Ocurrio un error'));
                                             },
                                           ),
                                         ],
@@ -412,7 +432,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                             ),
                           ),
                         );
-                      }),
+                      },
+                    ),
                   ],
               );
             }

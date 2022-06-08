@@ -108,8 +108,8 @@ class IHuntApp extends StatelessWidget {
           else if(snapshot.hasData) {
 
             try{
-              print("  ======>     ${snapshot.hasData}  ");
-              print("1 ELSE CONDITIION");
+              //print("  ======>     ${snapshot.hasData}  ");
+              //print("1 ELSE CONDITIION");
               print("#######################################################");
               print("#######################################################");
               print("A ${snapshot.data['tipo']}");
@@ -118,7 +118,7 @@ class IHuntApp extends StatelessWidget {
               print("#######################################################");
             }catch (error){
               if(error.toString().contains('Bad state')){
-                print("#################error: $error");
+                //print("#################error: $error");
                 return LoginPage();
               }else{
                 return MainScreen();
@@ -157,7 +157,7 @@ class IHuntApp extends StatelessWidget {
             return getViewWidget();
           }
           else {
-            print("user is not logged in");
+            //print("user is not logged in");
             return MainScreen();
           }
         },

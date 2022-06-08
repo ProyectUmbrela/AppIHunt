@@ -22,6 +22,7 @@ class Invitation{
   String fecha_envio;
   int estatus;
   String telefono;
+  String nombre;
 
   Invitation({
     this.idusuario,
@@ -29,7 +30,9 @@ class Invitation{
     this.num_invitacion,
     this.fecha_envio,
     this.estatus,
-    this.telefono});
+    this.telefono,
+    this.nombre
+  });
 }
 
 class _InvitationsState extends State<Invitations> with SingleTickerProviderStateMixin {
@@ -50,7 +53,12 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
 
     var response = await _api.GetInvitations(msg, tokenAuth);
     var data = jsonDecode(response.body);
+    print("###########################################################");
+    print("###########################################################");
     print(data);
+    print("###########################################################");
+    print("###########################################################");
+
     List<Invitation> _invitations = [];
 
     if (response.statusCode == 201) {
@@ -63,7 +71,8 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
             num_invitacion: invitation['num_invitacion'],
             fecha_envio: invitation['fecha_envio'],
             estatus: invitation['estatus'],
-            telefono: invitation['telefono']
+            telefono: invitation['telefono'],
+            nombre: invitation['nombre']
         ));
       });
       return _invitations;
@@ -100,7 +109,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    String title = 'Lista de invitaciones';
+    //String title = 'Lista de invitaciones';
 
     return Scaffold(
       body: FutureBuilder(
@@ -155,13 +164,23 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                               children: [
                                 ListTile(
                                   leading: Icon(Icons.airline_seat_individual_suite),
+                                  title: Text('Nombre: ${snapshot.data[index].nombre}'),
+                                  subtitle: Text(
+                                    'Usuario: ${snapshot.data[index].idusuario}',
+                                    style:
+                                    TextStyle(color: Colors.black.withOpacity(0.6)),
+                                  ),
+                                ),
+                                /*ListTile(
+                                  leading: Icon(Icons.airline_seat_individual_suite),
                                   title: Text('Usuario: ${snapshot.data[index].idusuario}'),
                                   subtitle: Text(
                                     'No. Invitacion: ${snapshot.data[index].num_invitacion}',
                                     style:
                                     TextStyle(color: Colors.black.withOpacity(0.6)),
                                   ),
-                                ),
+
+                                ),*/
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 2, horizontal: 10),
@@ -188,7 +207,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                               style: TextStyle(
                                                   color: Colors.black.withOpacity(0.6),
                                                   fontWeight: FontWeight.normal),
-                                            )
+                                            ),
                                           ],
                                         ),
                                         Container(
@@ -199,7 +218,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                               Text.rich(
                                                 TextSpan(
                                                   children: <TextSpan>[
-                                                    TextSpan(text: 'Estatus: ', style: TextStyle(
+                                                    TextSpan(text: 'Estado: ', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)
                                                     ),
@@ -211,7 +230,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                                     ),
                                                   ],
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -253,7 +272,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                               Text.rich(
                                                 TextSpan(
                                                   children: <TextSpan>[
-                                                    TextSpan(text: 'Telefono: ', style: TextStyle(
+                                                    TextSpan(text: 'Tel. contacto: ', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)
                                                     ),
@@ -265,12 +284,12 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                                     ),
                                                   ],
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
-                                        )
+                                        ),
                                       ]),
-                                )
+                                ),
                                 //Image.asset('assets/card-sample-image.jpg'),
                                 //Image.asset('assets/card-sample-image-2.jpg'),
                               ],
@@ -278,7 +297,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                           ),
                         );
                       }),
-                  ]
+                  ],
               );
             }
 

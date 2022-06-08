@@ -71,21 +71,17 @@ class FireAuth {
       message = 'ok';
 
     } on FirebaseAuthException catch (e) {
-      //print("*********************************************** ${e.code}");
       if (e.code == 'user-not-fund') {
         user = null;
         message = e.code;
-        //print('No se encontró un usuario con el correo.');
 
       } else if (e.code == 'wrong-password') {
         user = null;
         message = e.code;
-        //print('Contraseña incorrecta.');
 
       } else if (e.code == 'user-disabled') {
         user = null;
         message = e.code;
-        //print('Cuenta desactivada.');
       }
     }
 
