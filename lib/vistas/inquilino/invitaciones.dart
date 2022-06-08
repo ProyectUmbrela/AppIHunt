@@ -72,7 +72,6 @@ class InvitacionesState extends State<InvitacionesInquilino>{
   User _currentUser;
   //String _idUsuario;
 
-
   @override
   void initState() {
     setData();

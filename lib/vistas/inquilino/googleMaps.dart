@@ -233,8 +233,6 @@ class MapsPage extends State<MyMaps> {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-
-
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     Position position = await Geolocator.getCurrentPosition(
@@ -242,8 +240,6 @@ class MapsPage extends State<MyMaps> {
                                             timeLimit: const Duration (seconds: 1));
 
     // Latitude: 37.4219983, Longitude: -122.084
-
-    //print("#=======================> ${position} <==============================");
 
     return position;
   }
@@ -268,7 +264,6 @@ class MapsPage extends State<MyMaps> {
   Future searchPlace() async {
     try{
       if(_controllerSearch.text.length != 0){
-        //print("#################################### ${_controllerSearch.text}");
 
         var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
         var first = results.first;
@@ -278,7 +273,7 @@ class MapsPage extends State<MyMaps> {
             CameraUpdate.newLatLngZoom(
                 latLng,
                 zoomView
-            )
+            ),
         );
       }
     }
@@ -292,7 +287,6 @@ class MapsPage extends State<MyMaps> {
     return FutureBuilder(
         future: _getGeoLocationPosition(),
         builder: (context, snapshot) {
-          //print("B =======================================> ${snapshot}");
           if (snapshot.connectionState == ConnectionState.done) {
             LatLng Currentposition;
 
@@ -367,8 +361,8 @@ class MapsPage extends State<MyMaps> {
                   ),
                 ],
               ),
-            )
-          ]
+            ),
+          ],
         ),
       ) ,//FloatAppBar(_controller),
         body: SafeArea(
@@ -386,8 +380,6 @@ class MapsPage extends State<MyMaps> {
                   int hasImage = snapshot.data.docs[i]['check_images'];
                   int publicar = snapshot.data.docs[i]['publicar'];
 
-
-                  //print("AAAAAAAAAAAAAAAAA==============================================> ${}");
                   // Si tiene imagenes y se quiere publicar
                   if (hasImage == 1 && publicar == 1){
                       var rawFotos = snapshot.data.docs[i]['fotos'];
@@ -414,8 +406,6 @@ class MapsPage extends State<MyMaps> {
                       continue;
                     }
                   }
-                  //print("A ############################### ${snapshot.data.docs[i]['coords']['latitud']}");
-                  //toStrin
 
                   double latitude = snapshot.data.docs[i]['coords'].latitude;
                   double longitude = snapshot.data.docs[i]['coords'].longitude;
@@ -448,7 +438,7 @@ class MapsPage extends State<MyMaps> {
               );
             },
           ),
-        )
+        ),
     );
   }
 

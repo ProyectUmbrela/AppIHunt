@@ -60,9 +60,10 @@ class _DetallesHab extends State<DetallesHab> {
                   children: <Widget>[
                     Text('Tel: ' + widget.telefono.toString(),
                         style: TextStyle(color: Colors.white, fontSize: sizeText))]
-            )
-          ],
-        ),)
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

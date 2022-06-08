@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+//import 'package:flutter/rendering.dart';
 import 'package:ihunt/vistas/inquilino/detallesHabitacion.dart';
 
 //permissions
@@ -86,17 +86,15 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
   var resp = json.decode(response.body);
 
   if (statusCode == 201) {
-    //print("###################################");
     List actual = resp['habitacion_rentada'];
     if (actual.length > 0){
-      //print("HABITACION ACTUAL");
+
       for (int i=0; i < actual.length; i++){
         var habitacion = actual[i];
 
         var timeInit =  HttpDate.parse(habitacion['fechainicontrato']);
         final periodo = "${meses[timeInit.month]} ${timeInit.year} - Actual";
         var diasPago =  HttpDate.parse(habitacion['fechapago']);
-
         final date2 = DateTime.now();
 
         var currentMonths = (date2.difference(timeInit).inDays)/30;
@@ -116,15 +114,12 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
             descripcion: habitacion['descripcion'],
             fechaPago: diasPago.day.toString()
         ));
-        //print("HABITACION ACTUAL AGREGADA A LA LISTA");
       }
     }
 
     List historial = resp['historial'];
     if (historial.length > 0){
-      //print("HISTORIAL DE HABITACIONES");
       for (int j=0; j < historial.length; j++){
-        //print("leng: ${historial.length}");
         var habitacion = historial[j];
 
           var timeInit =  HttpDate.parse(habitacion['fechacontratoinit']);
@@ -170,7 +165,6 @@ class _MisLugares extends State<Lugares> {
   void setData() async{
 
     _currentUser = FirebaseAuth.instance.currentUser;
-   // print("****************************************** ${_currentUser.uid}");
 
   }
 
@@ -208,7 +202,7 @@ class _MisLugares extends State<Lugares> {
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     )
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -227,14 +221,12 @@ class _MisLugares extends State<Lugares> {
         .get();
 
     var _idUsuarioLive = snapShoot['usuario'];
-    //print("############################### ${_idUsuarioLive} ##############################");
     String tokenAuth = await _currentUser.getIdToken();
 
     var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
     return result;
 
   }
-
 
   Widget projectWidget() {
 

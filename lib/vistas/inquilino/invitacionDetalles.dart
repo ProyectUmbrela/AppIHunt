@@ -57,9 +57,9 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
   void _launchURL(URL) async {
 
-    print("=================> ${URL}");
+    print("=================> ${URL.replaceAll('http', 'https')}");
     try{
-      if (!await launch(URL,
+      if (!await launch(URL.replaceAll('http', 'https'),
           forceSafariVC: true,
           forceWebView: true)) throw 'Could not launch ${URL}';
     }catch (err){
