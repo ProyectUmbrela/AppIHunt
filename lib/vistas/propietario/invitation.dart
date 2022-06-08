@@ -2,13 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:ihunt/providers/api.dart';
-import 'registerTenants.dart';
 
 class Invitations extends StatefulWidget {
   @override
@@ -44,11 +40,11 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
         .collection('users')
         .doc(currentUser.uid)
         .get();
-    var _id = snapShoot['usuario'];
+    var _userid = snapShoot['usuario'];
     String tokenAuth = await currentUser.getIdToken();
 
     final msg = jsonEncode({
-      "usuario": _id
+      "usuario": _userid
     });
 
     var response = await _api.GetInvitations(msg, tokenAuth);
@@ -300,153 +296,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                   ],
               );
             }
-
-            /*
-            return snapshot.hasData ?
-            Stack(
-                children: <Widget> [ ListView.builder(
-                    itemCount: snapshot.data.length,
-                    padding: const EdgeInsets.all(5),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        shadowColor: Colors.deepPurpleAccent,
-                        clipBehavior: Clip.antiAlias,
-                        child: Material(
-                          color: Colors.black12,
-                          shadowColor: Colors.deepPurpleAccent,
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: Icon(Icons.airline_seat_individual_suite),
-                                title: Text('Usuario: ${snapshot.data[index].idusuario}'),
-                                subtitle: Text(
-                                  'No. Invitacion: ${snapshot.data[index].num_invitacion}',
-                                  style:
-                                  TextStyle(color: Colors.black.withOpacity(0.6)),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 10),
-                                child: Row(
-                                  //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            'Habitación: ',
-                                            style: TextStyle(
-                                                color: Colors.black.withOpacity(0.6),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            snapshot.data[index].idhabitacion,
-                                            style: TextStyle(
-                                                color: Colors.black.withOpacity(0.6),
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  TextSpan(text: 'Estatus: ', style: TextStyle(
-                                                      color: Colors.black.withOpacity(0.6),
-                                                      fontWeight: FontWeight.bold)
-                                                  ),
-                                                  TextSpan(text: status_map(snapshot.data[index].estatus) ,
-                                                      style:
-                                                      TextStyle(
-                                                          color: Colors.black.withOpacity(0.6),
-                                                          fontWeight: FontWeight.normal)
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ]),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 10),
-                                child: Row(
-                                  //padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            'Enviada: ',
-                                            style: TextStyle(
-                                                color: Colors.black.withOpacity(0.6),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text('${HttpDate.parse(snapshot.data[index].fecha_envio).day}/${HttpDate.parse(snapshot.data[index].fecha_envio).month}/${HttpDate.parse(snapshot.data[index].fecha_envio).year}',
-                                            style: TextStyle(
-                                                color: Colors.black.withOpacity(0.6),
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 40),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: [
-                                            Text.rich(
-                                              TextSpan(
-                                                children: <TextSpan>[
-                                                  TextSpan(text: 'Telefono: ', style: TextStyle(
-                                                      color: Colors.black.withOpacity(0.6),
-                                                      fontWeight: FontWeight.bold)
-                                                  ),
-                                                  TextSpan(text: snapshot.data[index].telefono ,
-                                                      style:
-                                                      TextStyle(
-                                                          color: Colors.black.withOpacity(0.6),
-                                                          fontWeight: FontWeight.normal)
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ]),
-                              )
-                              //Image.asset('assets/card-sample-image.jpg'),
-                              //Image.asset('assets/card-sample-image-2.jpg'),
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
-                ]
-            )
-                : Center(
-              child: CircularProgressIndicator(),
-            );*/
           }
       ),
     );

@@ -1,4 +1,4 @@
-import 'dart:convert';
+/*import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:date_field/date_field.dart';
@@ -15,8 +15,9 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'landlordView.dart';
+import 'landlordView.dart';*/
 
+/*
 class DetailTenant extends StatefulWidget {
 
   const DetailTenant({Key key, this.tenant}) : super(key: key);
@@ -344,4 +345,4 @@ class _DetailTenantState extends State<DetailTenant> {
         ));
   }
 
-}
+}*/

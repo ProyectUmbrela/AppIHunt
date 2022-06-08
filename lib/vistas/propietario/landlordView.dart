@@ -1,23 +1,15 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-
+//import 'package:flutter/rendering.dart';
+//import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import 'rooms.dart';
 import 'tenants.dart';
 import 'invitation.dart';
-
-//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
-
-//import 'package:ihunt/vistas/propietario/multiimages.dart';
-
-
 
 class Landlord extends StatefulWidget {
   @override

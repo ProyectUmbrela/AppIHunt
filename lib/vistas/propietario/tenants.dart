@@ -2,14 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:ihunt/providers/api.dart';
-import 'details_tenant.dart';
-import 'landlordView.dart';
 import 'registerTenants.dart';
 
 class Tenants extends StatefulWidget {

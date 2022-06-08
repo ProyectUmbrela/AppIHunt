@@ -1,22 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-//import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ihunt/providers/api.dart';
 import 'registerRoom.dart';
 import 'update_room.dart';
-//import 'details_room.dart';
-//import 'landlordView.dart';
-
-//import 'package:custom_switch/custom_switch.dart';
 
 class Rooms extends StatefulWidget {
   @override
@@ -60,7 +51,7 @@ class Room{
 class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
   void setData() async{
-    var sharedPreferences = await SharedPreferences.getInstance();
+    //var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       currentUser = FirebaseAuth.instance.currentUser;
     });
@@ -73,26 +64,16 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     setData();
   }
 
-  Map values_publ = {};
 
   Future getSpecie(String id_room) async {
 
-    int check = await FirebaseFirestore.instance
+    var check = await FirebaseFirestore.instance
         .collection('habitaciones')
         .doc(id_room)
         .get()
         .then((value) {
-          //print("############ ${value['publicar']}");
-          return value['publicar']; //
-          });
-
-    //if (check == 1){
-      //values_publ[id_room] = true;
-   // }
-    //else if (check == 0){
-      //values_publ[id_room] = false;
-    //}
-    ////print('###################### CHECK: ${check}');
+          return value;
+        });
     return check;
   }
 
@@ -119,19 +100,25 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     print("#########################################################");
     print("#########################################################");
     print(data);
-    print("${response.statusCode }");
+    //print("${response.statusCode }");
     print("#########################################################");
     print("#########################################################");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
-      Map<String, bool> newcontent = {};
+      Map<String, bool> statusMap = {};
+      Map<String, String> fotosMap = {};
 
       getValue() async{
         for(int i = 0; i < data['habitaciones'].length; i++){
           var document = data['habitaciones'][i]['idhabitacion'] + '_${data['habitaciones'][i]['idpropietario']}';
-          int result = await getSpecie(document);
-          newcontent["${data['habitaciones'][i]['idhabitacion']}"] = result == 1 ? true : false;
+          var result = await getSpecie(document);
+          //print("############ ${result.data()}");
+          int publicar = result.data()['publicar'];
+          String foto = result.data()['fotos']['0'];
+          //print("# KEY VALUE: ${"${data['habitaciones'][i]['idhabitacion']}"}");
+          statusMap["${data['habitaciones'][i]['idhabitacion']}"] = publicar == 1 ? true : false;
+          fotosMap["${data['habitaciones'][i]['idhabitacion']}"] = foto;
         }
       }
       // getting status of room
@@ -139,7 +126,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
       data['habitaciones'].forEach((room) {
         _rooms.add(Room(
-            publicar: newcontent[room['idhabitacion']],
+            publicar: statusMap[room['idhabitacion']],
+            foto: fotosMap[room['idhabitacion']],
             descripcion: room['descripcion'],
             dimension: room['dimension'],
             direccion: room['direccion'],
@@ -276,12 +264,12 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                               child: Column(
                                 children: [
                                   ListTile(
-                                    leading: Icon(Icons.airline_seat_individual_suite),
-                                    /*leading: SizedBox(
-                                      //height: 100.0,
-                                      //width: 100.0,
-                                      child: Image.memory(Base64Decoder().convert(snapshot.data[index].foto), fit: BoxFit.cover),
-                                    ),*/
+                                    //leading: Icon(Icons.airline_seat_individual_suite),
+                                    leading: SizedBox(
+                                      height: 100.0,
+                                      width: 100.0,
+                                      child: snapshot.data[index].foto.isEmpty ? Icon(Icons.airline_seat_individual_suite) : Image.memory(Base64Decoder().convert(snapshot.data[index].foto), fit: BoxFit.cover),
+                                    ),
                                     title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(
                                       'Inquilino: ${
@@ -365,7 +353,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                               ],
                                             ),
                                           ),
-                                        ]),
+                                        ],
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -411,16 +400,16 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Switch(
-                                            value: snapshot.data[index].publicar,//values_publ[snapshot.data[index].idhabitacion],
+                                            value: snapshot.data[index].publicar,
                                             onChanged: (value) {
                                               setState(() {
-                                                //values_publ[snapshot.data[index].idhabitacion] = value;
+                                                snapshot.data[index].publicar = value;
                                               });
                                               var collection = FirebaseFirestore.instance.collection('habitaciones');
                                               collection.doc(snapshot.data[index].idhabitacion + '_${snapshot.data[index].idpropietario}')
                                                   .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
-                                                  .then((_) => _showDialog(2, 'Publicación pausada') )
-                                                  .catchError((error) => _showDialog(22, 'Ocurrio un error'));
+                                                  .then((_) => value == true ? _showDialog(2, 'Publicación activada') : _showDialog(2, 'Publicación pausada'))
+                                                  .catchError((error) => _showDialog(2, 'Ocurrio un error'));
                                             },
                                           ),
                                         ],

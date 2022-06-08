@@ -4,16 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/widgets.dart';
-
 import 'package:date_field/date_field.dart';
 import 'package:intl/intl.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/utils/validators.dart';
-
-import 'landlordView.dart';
 
 class RegisterTenant extends StatefulWidget {
 
@@ -29,7 +25,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
   void setData() async{
     setState(() {
       currentUser = FirebaseAuth.instance.currentUser;
-      //list_rooms = getRooms(id_prop) as List<String>;
     });
   }
 
@@ -179,6 +174,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       onSaved: (value) => _startdate = value.toString()
     );
 
+    /*
     final payDate2 = DateTimeFormField(
         decoration: const InputDecoration(
           hintStyle: TextStyle(color: Colors.black45),
@@ -195,7 +191,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
           print(value);
         },
         onSaved: (value) => _paydate = value.toString()
-    );
+    );*/
 
     final endDate = DateTimeFormField(
         decoration: const InputDecoration(
@@ -283,19 +279,19 @@ class _RegisterTenantState extends State<RegisterTenant> {
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
         Map data = jsonDecode(response.body);
 
-        print("################# ESTATUS CODE REGISTRO INQUILINO: ${data}");
+        //print("################# ESTATUS CODE REGISTRO INQUILINO: ${data}");
 
         //print(response.statusCode);
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           setState(() => _saving = false);
-          //debugPrint("Data posted successfully");
           Navigator.pop(context);
           /*Navigator.push(context, new MaterialPageRoute(
               builder: (context) => new Landlord())
           );*/
         } else {
+          setState(() => _saving = false);
           if (Platform.isAndroid) {
             //_materialAlertDialog(context, data['message'], 'Notificación');
             print(response.statusCode);
@@ -306,18 +302,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
       } else {
         setState(() => _saving = false);
-        /*
-        if (Platform.isAndroid) {
-          /*_materialAlertDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");*/
-        } else if (Platform.isIOS) {
-          /*_cupertinoDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");*/
-        }*/
       }
     }
 
@@ -403,21 +387,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
                       SizedBox(height: 35.0),
 
                       registrarTenant,
-                      //longButtons("Registrar", submit),
-                      /*Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: Container(
-                                child: longButtons("Aceptar", submit),
-                                alignment: Alignment.centerLeft,
-                              )),
-                          Expanded(
-                              child: Container(
-                                child: longButtons("Cancelar", canceled),
-                                alignment: Alignment.centerRight,
-                              )),
-                        ],
-                      ),*/
+
                       SizedBox(height: 10,),
                     ],
                   ),

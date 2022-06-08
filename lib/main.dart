@@ -192,7 +192,7 @@ class IHuntApp extends StatelessWidget {
         '/lugares': (context) => Lugares(),
         '/mapa': (context) => MyMaps(),
         '/detalles': (context) => DetallesHab(),
-        '/notificationesPropietario': (context) => NotificacionesPropietario(),
+        //'/notificationesPropietario': (context) => NotificacionesPropietario(),
         '/notificacionesInquilino': (context) => InvitacionesInquilino(),
         '/detallesInvitacion': (context) => DetallesInvitacion(),
         '/IHunt': (context) => MainScreen(),

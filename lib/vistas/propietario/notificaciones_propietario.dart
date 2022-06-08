@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-
-
-/*class NotificacionesPropietario extends StatefulWidget{
-  NotificacionesProp createState()=> NotificacionesProp();
-}*/
+/*import 'package:flutter/material.dart';
 
 
 class NotificacionesPropietario extends StatefulWidget{
@@ -17,11 +12,7 @@ class NotificacionesPropietario extends StatefulWidget{
 
 
 
-
-
 class NotificacionesPropState extends State<NotificacionesPropietario> {
-  //const NotificacionesPropietario({Key key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
 
@@ -57,3 +48,4 @@ class NotificacionesPropState extends State<NotificacionesPropietario> {
     );
   }
 }
+*/

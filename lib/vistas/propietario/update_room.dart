@@ -1,22 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-//import 'dart:ui';
-//import 'package:ihunt/vistas/propietario/rooms.dart';
-//import 'package:image_picker/image_picker.dart';
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
-//import 'package:intl/intl.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:ihunt/vistas/propietario/rooms.dart';
 
-//import 'landlordView.dart';
 
 class UpdateRoom extends StatefulWidget {
 
@@ -41,7 +32,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
       descriptionCtrl = new TextEditingController(text: widget.room['descripcion']);
       priceCtrl = new TextEditingController(text: widget.room['precio'].toString());
       termsCtrl = new TextEditingController(text: widget.room['terminos']);
-      //statusCtrl = new TextEditingController(text: widget.room['status']);
     });
   }
 
@@ -72,9 +62,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
 
 
-
-
-
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms, _status;
 
   // VARIABLES PARA COORDENADAS
@@ -98,7 +85,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
             .get();
 
         var _userid = snapShoot['usuario'];
-        var name = snapShoot['nombre'];
+        //var name = snapShoot['nombre'];
         String tokenAuth = await currentUser.getIdToken();
 
         final msg = jsonEncode({
@@ -348,7 +335,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   }
 
   Future deleteRoom(id_usuario, idhabitacion) async{
-    //print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA ${widget.room['status']}");
+
 
     Api _api = Api();
 

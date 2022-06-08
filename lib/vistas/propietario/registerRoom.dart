@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-//import 'dart:ui';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -258,7 +257,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     if (form.validate()) {
 
       var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
-      print("*****************************| ${fullAddress} |**********************");
+      //print("*****************************| ${fullAddress} |**********************");
       if (imageFileList.length <= maxImages){
         form.save();
 
@@ -443,21 +442,16 @@ class _RegisterRoomState extends State<RegisterRoom> {
           }
         });
 
-        //print("========> ${listAsentamientosCustom}");
         _stateSelected = estado['estado'];
         _municipioSelected = estado['municipios'][0]['municipio'];
-        //print("+++++++++++++++++++++++++++++++++ Estado: ${_stateSelected}");
-        //print("+++++++++++++++++++++++++++++++++ Municipio: ${_municipioSelected}");
         listAsentamientosCustom.sort();
         return listAsentamientosCustom;
 
       } else {
-        //print("############ ERROR GENERADO CODIGO POSTAL NO VALIDO: ${response}");
         return [];
       }
 
     }else{
-      //print("####################### ERROR CON EL CODIGO POSTAL: ${cp_value}");
       return [];
     }
   }
