@@ -1,22 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ihunt/providers/api.dart';
 import 'registerRoom.dart';
 import 'update_room.dart';
-import 'details_room.dart';
-import 'landlordView.dart';
+//import 'details_room.dart';
+//import 'landlordView.dart';
 
-import 'package:custom_switch/custom_switch.dart';
+//import 'package:custom_switch/custom_switch.dart';
 
 class Rooms extends StatefulWidget {
   @override
@@ -24,6 +24,7 @@ class Rooms extends StatefulWidget {
 }
 
 class Room{
+
   String descripcion;
   String dimension;
   String direccion;
@@ -37,8 +38,10 @@ class Room{
   int status;
   String terminos;
   int publicar;
+  String foto;
 
   Room({
+    this.foto,
     this.descripcion,
     this.dimension,
     this.direccion,
@@ -60,15 +63,10 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     var sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       currentUser = FirebaseAuth.instance.currentUser;
-      nombre = sharedPreferences.getString("nombre") ?? "Error";
-      id = sharedPreferences.getString("idusuario") ?? "Error";
     });
   }
-
   // VARIABLES DE SESION
   User currentUser;
-  String id;
-  String nombre;
 
   @override
   void initState(){
@@ -84,19 +82,19 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         .doc(id_room)
         .get()
         .then((value) {
-          return value['publicar']; // Access your after your get the data
+          return value['publicar']; //
           });
 
-    if (check == 1){
-      values_publ[id_room] = true;
-    }
-    if (check == 0){
+    //if (check == 1){
+      //values_publ[id_room] = true;
+   // }
+    //else if (check == 0){
       values_publ[id_room] = false;
-    }
+    //}
 
   }
 
-  Future getRooms(id) async {
+  Future getRooms() async {
     Api _api = Api();
 
     var snapShoot = await FirebaseFirestore
@@ -104,13 +102,13 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         .collection('users')
         .doc(currentUser.uid)
         .get();
-    var _id = snapShoot['usuario'];
+    var _userid = snapShoot['usuario'];
     String tokenAuth = await currentUser.getIdToken();
 
     final msg = jsonEncode({
-      "usuario": _id
+      "usuario": _userid
     });
-    print('---------${msg}');
+
 
     var response = await _api.GetRooms(msg, tokenAuth);
     var data = jsonDecode(response.body);
@@ -119,8 +117,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
 
       data['habitaciones'].forEach((room) async {
-        //***********************************************************************
-        getSpecie(room['idhabitacion']+'_fredy2030');
+
+        ///////////////////////////////////////////////////////////getSpecie(room['idhabitacion']+'_${_userid}');
         _rooms.add(Room(
             descripcion: room['descripcion'],
             dimension: room['dimension'],
@@ -135,9 +133,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
             status: room['estatus'],
             terminos: room['terminos']
         ));
-
       });
-      print('aaaaaaaaaaaaaaaaaA ############ ${values_publ}');
+
       return _rooms;
 
     } else {
@@ -151,12 +148,24 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future getAnImage(idhabitacion) async {
+
+    var snapShoot = await FirebaseFirestore
+        .instance
+        .collection('habitaciones')
+        .doc(idhabitacion)
+        .get();
+
+    return snapShoot.data();
+
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       body: FutureBuilder(
-          future: getRooms(id),
+          future: getRooms(),
           builder: (context, snapshot) {
             if(!snapshot.hasData){
               // Esperando la respuesta de la API
@@ -218,17 +227,18 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                               new MaterialPageRoute(
                                 builder: (context) =>
                                 new UpdateRoom(room:
-                                {
-                                  'idhabitacion': snapshot.data[index].idhabitacion,
-                                  'descripcion': snapshot.data[index].descripcion,
-                                  'dimension': snapshot.data[index].dimension,
-                                  'direccion': snapshot.data[index].direccion,
-                                  'idpropietario': snapshot.data[index].idpropietario,
-                                  'precio': snapshot.data[index].precio,
-                                  'servicios': snapshot.data[index].servicios,
-                                  'status': snapshot.data[index].status,
-                                  'terminos': snapshot.data[index].terminos,
-                                }
+                                  {
+                                    'foto': snapshot.data[index].foto,
+                                    'idhabitacion': snapshot.data[index].idhabitacion,
+                                    'descripcion': snapshot.data[index].descripcion,
+                                    'dimension': snapshot.data[index].dimension,
+                                    'direccion': snapshot.data[index].direccion,
+                                    'idpropietario': snapshot.data[index].idpropietario,
+                                    'precio': snapshot.data[index].precio,
+                                    'servicios': snapshot.data[index].servicios,
+                                    'status': snapshot.data[index].status,
+                                    'terminos': snapshot.data[index].terminos,
+                                  }
                                 ),
                               ),
                             );
@@ -247,6 +257,11 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                 children: [
                                   ListTile(
                                     leading: Icon(Icons.airline_seat_individual_suite),
+                                    /*leading: SizedBox(
+                                      //height: 100.0,
+                                      //width: 100.0,
+                                      child: Image.memory(Base64Decoder().convert(snapshot.data[index].foto), fit: BoxFit.cover),
+                                    ),*/
                                     title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(
                                       'Inquilino: ${
@@ -275,7 +290,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                           ),
                                           Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [ snapshot.data[index].status==1?
+                                            children: [ snapshot.data[index].status == 1 ?
                                             Text(
                                               ' Sí',
                                               style: TextStyle(
@@ -376,16 +391,16 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Switch(
-                                            value: values_publ[snapshot.data[index].idhabitacion],
+                                            value: false,//values_publ[snapshot.data[index].idhabitacion],
                                             onChanged: (value) {
                                               setState(() {
                                                 values_publ[snapshot.data[index].idhabitacion] = value;
                                               });
                                               var collection = FirebaseFirestore.instance.collection('habitaciones');
-                                              collection.doc(snapshot.data[index].idhabitacion)
+                                              collection.doc(snapshot.data[index].idhabitacion + '_${snapshot.data[index].idpropietario}')
                                                   .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
-                                                  .then((_) => print('#################### Success'))
-                                                  .catchError((error) => print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
+                                                  .then((_) => _showDialog(2, 'Publicación pausada') )
+                                                  .catchError((error) => _showDialog(22, 'Ocurrio un error'));//print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Failed: $error'));
                                             },
                                           ),
                                         ],
@@ -417,6 +432,19 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue//Color(0xff01A0C7),//Colors.cyan,
       ),
+    );
+  }
+
+  void _showDialog(seconds, message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext builderContext) {
+        Future.delayed(Duration(seconds: seconds), () {
+        });
+        return AlertDialog(
+          content: Text(message),
+        );
+      },
     );
   }
 

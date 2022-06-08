@@ -251,7 +251,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       label("Id habitación"),
                       SizedBox(height: 5),
                       roomId,

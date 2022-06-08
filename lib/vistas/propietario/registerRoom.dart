@@ -233,16 +233,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
   }
 
   Future insertIntoMysql(a_document, tokenAuth) async{
-    //print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     Api _api = Api();
     final body = jsonEncode(a_document);
-    //print(a_document);
-    //print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
     var response = await _api.RegisterRoomPost(body, tokenAuth);
-    //print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
-    var resp = json.decode(response.body);
 
-    //print("************ RESPUESTA GENERADA: ${resp}");
 
     return response.statusCode;
 
@@ -253,7 +247,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
     if (selectedImages.isNotEmpty) {
       imageFileList.addAll(selectedImages);
     }
-    //print("Image List Length:" + imageFileList.length.toString());
     setState((){});
   }
 
@@ -264,7 +257,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
     if (form.validate()) {
 
-
       var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
       print("*****************************| ${fullAddress} |**********************");
       if (imageFileList.length <= maxImages){
@@ -273,7 +265,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
         // preparando imagenes para codificar
         List<String> images64_Base = [];
         _images_to_base64() async {
-          //print("# DE IMAGENES CARGADAS = ${imageFileList.length}");
           for (int i = 0; i < imageFileList.length; i++) {
             List<int> imageBytes = await imageFileList[i].readAsBytes();
             String img64 = base64Encode(imageBytes);
@@ -287,22 +278,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
         // generando las coordenadas sobre la direccion proporcionada
         var coordinates = await getLocation(fullAddress);
         if (coordinates != null){
-          //print("======================> ${coordinates.longitude}");
-          //print("======================> ${coordinates.latitude}");
           var snapShoot = await FirebaseFirestore.instance
               .collection('users')
               .doc(currentUser.uid)
               .get();
           var _iduser = snapShoot['usuario'];
-          var _name = snapShoot['nombre'];
           String tokenAuth = await currentUser.getIdToken();
-
-          //print("**************************************************");
-          //print("**************************************************");
-          //print(_iduser);
-          //print(_name);
-          //print("**************************************************");
-          //print("**************************************************");
 
 
           var generalDocument = {
@@ -329,37 +310,29 @@ class _RegisterRoomState extends State<RegisterRoom> {
           }
 
           var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
-          //print("1 ************ RESPUESTA: ${responseCode}");
 
           if(responseCode == 201){
             setState(() => _saving = false);
-           //print("Habitacion registrada");
             _showDialog(2, "Habitación registrada");
-            //form.reset();
           }
           else if(responseCode == 438){
             setState(() => _saving = false);
-            //print("La habitacion ya existe");
             _showDialog(2, "Ya existe la habitación");
           }
           else if(responseCode == 432){
             setState(() => _saving = false);
-            //print("Propietario no encontrado");
             _showDialog(2, "No se localiza el usuario");
           }
           else if(responseCode == 422){
             setState(() => _saving = false);
-            //print("Datos invalidos");
             _showDialog(2, "Datos incorectos");
           }
           else{
             setState(() => _saving = false);
-            //print("Ocurrio un error con la solicitud");
             _showDialog(2, "Ocurrio un error con la solicitud");
           }
         }else{
           setState(() => _saving = false);
-          //print("*************** No se encuentra la dirección");
           _showDialog(2, "No se encuentra la dirección");
         }
       }
@@ -369,7 +342,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
       }
     }else{
       setState(() => _saving = false);
-      //print("Por favor, rellene el formulario correctamente");
     }
   }
 
@@ -379,7 +351,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
       context: context,
       builder: (BuildContext builderContext) {
         Future.delayed(Duration(seconds: seconds), () {
-
         });
         return AlertDialog(
           content: Text(message),
