@@ -159,7 +159,11 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                             child: Column(
                               children: [
                                 ListTile(
-                                  leading: Icon(Icons.airline_seat_individual_suite),
+                                  leading: SizedBox(
+                                    height: 60.0,
+                                    width: 60.0,
+                                    child: Center(child: Icon(Icons.people)),
+                                  ),
                                   title: Text('Nombre: ${snapshot.data[index].nombre}'),
                                   subtitle: Text(
                                     'Usuario: ${snapshot.data[index].idusuario}',
@@ -284,7 +288,8 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                             ],
                                           ),
                                         ),
-                                      ]),
+                                      ],
+                                  ),
                                 ),
                                 //Image.asset('assets/card-sample-image.jpg'),
                                 //Image.asset('assets/card-sample-image-2.jpg'),

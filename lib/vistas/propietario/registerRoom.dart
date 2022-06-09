@@ -257,7 +257,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     if (form.validate()) {
 
       var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
-      //print("*****************************| ${fullAddress} |**********************");
+
       if (imageFileList.length <= maxImages){
         form.save();
 
@@ -419,7 +419,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     if ((cp_value.isNotEmpty) && (cp_value.length == 5)){
       List<String> listAsentamientosCustom = [];
 
-      //print("******************************* A VALUE HAS BEEN RECEIVED: ${cp_value}");
+      print("******************************* A VALUE HAS BEEN RECEIVED: ${cp_value}");
       final msg = jsonEncode({
         "cp": cp_value //cpCtrl.text
       });
@@ -447,11 +447,17 @@ class _RegisterRoomState extends State<RegisterRoom> {
         listAsentamientosCustom.sort();
         return listAsentamientosCustom;
 
-      } else {
+      }
+      else if (statusCode == 412){
+        _showDialog(2, 'Código postal inválido');
+        return [];
+      } else{
+        _showDialog(2, 'Datos incorrectos');
         return [];
       }
 
-    }else{
+    }
+    else{
       return [];
     }
   }
@@ -463,22 +469,16 @@ class _RegisterRoomState extends State<RegisterRoom> {
     return FutureBuilder(
       future: getCp(),
       builder: (context, snapshot) {
-        if(!snapshot.hasData){
+        //if(!snapshot.hasData){
+        if(!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting){
           // Esperando la respuesta de la API
-          return SizedBox(
-            width: 60,
-            height: 60,
-            child: CircularProgressIndicator(),
+          return Center(
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: CircularProgressIndicator(),
+              ),
           );
-          /*return Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                ]
-            ),
-          );*/
         }
         else if(snapshot.hasData && snapshot.data.isEmpty) {
           // Informacion obtenida de la API pero esta vacio el response
@@ -494,7 +494,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
         else  {
           // Informacion obtenida y con datos en el response
           return DropdownButtonFormField(
-            //decoration: new InputDecoration(icon: Icon(Icons.language)),
             hint: Text("Colonia o asentamiento"),
             value: selectedCountry,
               decoration: InputDecoration(
@@ -506,6 +505,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
                 ),
                 filled: true,
               ),
+            validator: (String value) {
+              if (value == null || value.isEmpty) {
+                return 'Localidad requerido';
+              }
+              return null;
+            },
             items: snapshot.data.map<DropdownMenuItem<String>>((String country) {
               return  DropdownMenuItem(
                 value: country,
@@ -535,6 +540,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
               hintText: 'Código postal',
               border: OutlineInputBorder(),
             ),
+              validator: (value) {
+                if (value == null || value.isEmpty || value.length != 5) {
+                  return 'Código postal requerido';
+                }
+                return null;
+              }
           ),
           isActive: _currentstep >= 0,
           state: _currentstep == 0 ? StepState.editing: StepState.complete
@@ -554,6 +565,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
               hintText: 'Calle y num',
               border: OutlineInputBorder(),
             ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Calle y Núm requerido';
+                }
+                return null;
+              }
           ),
           isActive: _currentstep >= 2,
           state: _currentstep == 2 ? StepState.editing: StepState.complete
