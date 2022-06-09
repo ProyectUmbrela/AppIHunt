@@ -268,7 +268,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                     leading: SizedBox(
                                       height: 100.0,
                                       width: 100.0,
-                                      child: snapshot.data[index].foto.isEmpty ? Icon(Icons.airline_seat_individual_suite) : Image.memory(Base64Decoder().convert(snapshot.data[index].foto), fit: BoxFit.cover),
+                                      child: snapshot.data[index].foto == null ? Icon(Icons.airline_seat_individual_suite) : Image.memory(Base64Decoder().convert(snapshot.data[index].foto), fit: BoxFit.cover),
                                     ),
                                     title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(

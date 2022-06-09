@@ -57,7 +57,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
   void _launchURL(URL) async {
 
-    print("=================> ${URL.replaceAll('http', 'https')}");
+    print("=================> ${URL}");
     try{
       if (!await launch(URL.replaceAll('http', 'https'),
           forceSafariVC: true,
@@ -441,7 +441,13 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                   Row(
                                       children: <Widget>[
                                         Expanded(
-                                          child: Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
+                                          child: widget.terminos.toString() == '' ? Text('Términos de contrato: No', //TERMINOS
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                  fontWeight: fontInfo,
+                                                  color: Colors.black,
+                                                  fontSize: textSize)
+                                          ): Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontWeight: fontInfo,
