@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+//import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
@@ -58,10 +58,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
   bool _saving = false;
   TextStyle style = TextStyle(fontSize: 18);
-
   final dateFormat = DateFormat("dd-M-yyyy");
 
-  Future getRooms(id) async{
+  /*Future getRooms(id) async{
     Api _api = Api();
 
     var snapShoot = await FirebaseFirestore
@@ -99,7 +98,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         //_cupertinoDialog(context, data['message'], 'Notificación');
       }
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -107,37 +106,20 @@ class _RegisterTenantState extends State<RegisterTenant> {
     final userId = TextFormField(
       autofocus: false,
       controller: iduserCtrl,
-      validator: (value) => value.isEmpty ? "Ingrese el id del usuario a registrar" : null,
+      validator: (value) => value.isEmpty ? "Ingresa el usuario que deseas registrar" : null,
       onSaved: (value) => _iduser = value,
       decoration: buildInputDecoration("iduser", Icons.person_add),
     );
 
 
-    final contrato = DropdownButtonFormField<String>(
-      value: _contrato,
-      hint: Text(
-        'Indique si existe contrato por meses',
-      ),
-      onChanged: (value) =>
-          setState(() => _contrato = value),
-      validator: (value) => value == null ? 'Por favor elija una opción' : null,
-      items:
-      ['Sí', 'No'].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-
     final room = DropdownButtonFormField<String>(
       value: _room,
       hint: Text(
-        'Seleccione la habitación',
+        'Habitación',
       ),
       onChanged: (value) =>
           setState(() => _room = value),
-      validator: (value) => value == null ? 'Por favor elija una opción' : null,
+      validator: (value) => value == null ? 'Elije una opción' : null,
       items:
       widget.rooms['rooms'].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
@@ -147,7 +129,24 @@ class _RegisterTenantState extends State<RegisterTenant> {
       }).toList(),
     );
 
+    final contrato = DropdownButtonFormField<String>(
+      value: _contrato,
+      hint: Text(
+        'Indica si existe contrato por meses',
+      ),
+      onChanged: (value) =>
+          setState(() => _contrato = value),
+      validator: (value) => value == null ? 'Elije una opción' : null,
+      items: ['Sí', 'No'].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+
     final months = TextFormField(
+      enabled: _contrato == 'Sí' ? true : false,
       autofocus: false,
       controller: monthsCtrl,
       validator: numberValidator,
@@ -162,14 +161,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
         errorStyle: TextStyle(color: Colors.redAccent),
         border: OutlineInputBorder(),
         suffixIcon: Icon(Icons.event_note),
-        //labelText: 'Only time',
       ),
       dateFormat: DateFormat.yMMMMd('es'),
       mode: DateTimeFieldPickerMode.date,
       autovalidateMode: AutovalidateMode.always,
-      validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+      validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
       onDateSelected: (DateTime value) {
-        print(value);
+        ////////////////////////////////////////print(value);
       },
       onSaved: (value) => _startdate = value.toString()
     );
@@ -204,9 +202,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
         dateFormat: DateFormat.yMMMMd('es'),
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
-        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
         onDateSelected: (DateTime value) {
-          print(value);
+          ////////////////////////print(value);
         },
         onSaved: (value) => _enddate = value.toString()
     );
@@ -222,9 +220,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
         dateFormat: DateFormat.yMMMMd('es'),
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
-        validator: (e) => (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+        validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
         onDateSelected: (DateTime value) {
-          print(value);
+          //////////////////////////////////////////////print(value);
         },
         onSaved: (value) => _paydate = value.toString()
     );
@@ -234,16 +232,14 @@ class _RegisterTenantState extends State<RegisterTenant> {
       controller: plazoCtrl,
       validator: numberValidator,
       onSaved: (value) => _plazo = value,
-      decoration:
-      buildInputDecoration("Detalles", Icons.more_vert),
+      decoration: buildInputDecoration("Detalles", Icons.more_vert),
     );
 
     final Details = TextFormField(
       autofocus: false,
       controller: detailsCtrl,
       onSaved: (value) => _details = value,
-      decoration:
-      buildInputDecoration("Términos", Icons.more_vert),
+      decoration: buildInputDecoration("Términos", Icons.more_vert),
     );
 
 
@@ -251,6 +247,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       final form = formKey.currentState;
 
       if (form.validate()) {
+
         form.save();
 
         var snapShoot = await FirebaseFirestore
@@ -277,30 +274,39 @@ class _RegisterTenantState extends State<RegisterTenant> {
         Api _api = Api();
 
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
-        Map data = jsonDecode(response.body);
-
-        //print("################# ESTATUS CODE REGISTRO INQUILINO: ${data}");
-
-        //print(response.statusCode);
-
+        //Map data = jsonDecode(response.body);
+        print("RESPUESTA: ${response.statusCode}");
         if (response.statusCode == 201 || response.statusCode == 200) {
+
+          print("############################################################# A ");
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
           setState(() => _saving = false);
-          Navigator.pop(context);
-          /*Navigator.push(context, new MaterialPageRoute(
-              builder: (context) => new Landlord())
-          );*/
-        } else {
+          //Navigator.pop(context);
+          _showDialog(2, 'Invitación enviada');
+        }
+        else if (response.statusCode == 425){
           setState(() => _saving = false);
-          if (Platform.isAndroid) {
-            //_materialAlertDialog(context, data['message'], 'Notificación');
-            print(response.statusCode);
-          } else if (Platform.isIOS) {
-           // _cupertinoDialog(context, data['message'], 'Notificación');
-          }
+          _showDialog(2, 'Usuario inválido');
+        }
+        else if (response.statusCode == 430){
+          setState(() => _saving = false);
+          _showDialog(2, 'No existe la habitación');
+        }
+        else if (response.statusCode == 402){
+          setState(() => _saving = false);
+          _showDialog(2, 'Límite de registros superado');
+        }
+        else if (response.statusCode == 408){
+          setState(() => _saving = false);
+          _showDialog(2, 'La habitación ya se encuentra ocupada');
+        }
+        else {
+          setState(() => _saving = false);
+          _showDialog(2, 'Ocurrio un error en tu solicitud');
         }
 
       } else {
+        print("*-************************************** B");
         setState(() => _saving = false);
       }
     }
@@ -335,7 +341,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
                     children: [
                       //logo,
 
-                      label("Ingrese el id del usuario"),
+                      label("ID de usuario"),
                       SizedBox(height: 5),
                       userId,
                       SizedBox(
@@ -349,7 +355,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
                         height: 15,
                       ),
 
-                      label("Indique si hay contrato"),
+                      label("Indica si hay contrato"),
                       SizedBox(height: 5),
                       contrato,
                       SizedBox(
@@ -397,6 +403,19 @@ class _RegisterTenantState extends State<RegisterTenant> {
             inAsyncCall: _saving,
           ),
         ),
+    );
+  }
+
+  void _showDialog(seconds, message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext builderContext) {
+        Future.delayed(Duration(seconds: seconds), () {
+        });
+        return AlertDialog(
+          content: Text(message),
+        );
+      },
     );
   }
 

@@ -179,7 +179,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                     style:
                                     TextStyle(color: Colors.black.withOpacity(0.6)),
                                   ),
-
                                 ),*/
                                 Padding(
                                   padding: const EdgeInsets.symmetric(

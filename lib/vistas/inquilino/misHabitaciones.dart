@@ -73,6 +73,7 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
                             10:"Octubre",
                             11:"Noviembre",
                             12:"Diciembre"};
+
   Api _api = Api();
   final body = jsonEncode({
     'usuario': idUsuario
@@ -84,8 +85,8 @@ Future getListaHabitaciones(idUsuario, tokenAuth) async {
   int statusCode = response.statusCode;
 
   var resp = json.decode(response.body);
-
-  if (statusCode == 201) {
+  print("################: ${statusCode}");
+  if (statusCode == 201 || statusCode == 200) {
     List actual = resp['habitacion_rentada'];
     if (actual.length > 0){
 

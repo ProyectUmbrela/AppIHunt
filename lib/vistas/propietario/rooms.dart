@@ -264,7 +264,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                               child: Column(
                                 children: [
                                   ListTile(
-                                    //leading: Icon(Icons.airline_seat_individual_suite),
                                     leading: SizedBox(
                                       height: 100.0,
                                       width: 100.0,
@@ -321,7 +320,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                 Text.rich(
                                                   TextSpan(
                                                     children: <TextSpan>[
-                                                      TextSpan(text: 'Precio: \$', style: TextStyle(
+                                                      TextSpan(text: 'Costo: \$', style: TextStyle(
                                                           color: Colors.black.withOpacity(0.6),
                                                           fontWeight: FontWeight.bold)),
                                                       TextSpan(text: '${snapshot.data[index].precio}' , style: TextStyle(
@@ -341,7 +340,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                 Text.rich(
                                                   TextSpan(
                                                     children: <TextSpan>[
-                                                      TextSpan(text: 'Fecha Act: ', style: TextStyle(
+                                                      TextSpan(text: 'Registro: ', style: TextStyle(
                                                           color: Colors.black.withOpacity(0.6),
                                                           fontWeight: FontWeight.bold)),
                                                       TextSpan(text: '${HttpDate.parse(snapshot.data[index].fechaupdate).day}/${HttpDate.parse(snapshot.data[index].fechaupdate).month}/${HttpDate.parse(snapshot.data[index].fechaupdate).year}' , style: TextStyle(

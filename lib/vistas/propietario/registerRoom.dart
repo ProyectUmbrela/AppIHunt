@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 
 class RegisterRoom extends StatefulWidget {
@@ -160,16 +161,20 @@ class _RegisterRoomState extends State<RegisterRoom> {
                       fit: BoxFit.cover
                   ),
                 ),
-            ):
-            Icon(
+            ): Icon(
+                  Icons.camera,
+                  color: Colors.blue,
+                ),
+            /*Icon(
               CupertinoIcons.camera,
-              color: Colors.black,//.withOpacity(0.5),
-            ),
+              color: Colors.blue,
+              //.withOpacity(0.5),
+            ),*/
           ),
         ),
       ),
     );
-
+    //print("=============> ${imageFileList.length}");
     return SafeArea(
         child: Scaffold(
             body: ModalProgressHUD(
@@ -217,8 +222,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
                             SizedBox(height: 15,),
                             /***********************/
                             addingPhotos,
-
+                            /***********************/
+                            Center(child: Text("Adjuntar imagénes"),),
                             SizedBox(height: 35,),
+                            /***********************/
                             registrarRoom,
                             SizedBox(height: 15,),
                           ],
@@ -231,11 +238,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
     ));
   }
 
+
   Future insertIntoMysql(a_document, tokenAuth) async{
+
     Api _api = Api();
     final body = jsonEncode(a_document);
     var response = await _api.RegisterRoomPost(body, tokenAuth);
-
 
     return response.statusCode;
 
@@ -455,7 +463,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
         _showDialog(2, 'Datos incorrectos');
         return [];
       }
-
     }
     else{
       return [];
