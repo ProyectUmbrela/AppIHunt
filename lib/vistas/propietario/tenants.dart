@@ -372,6 +372,15 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
         onPressed: () {
           Navigator.push(
             context,
+            MaterialPageRoute(
+                builder: (context) => RegisterTenant(rooms:{
+                  'rooms': rooms
+                }),
+                settings: RouteSettings(name: '/tenants')),
+          );
+
+          /*Navigator.push(
+            context,
             new MaterialPageRoute(
               builder: (context) =>
               new RegisterTenant(rooms:{
@@ -379,7 +388,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                             }
               ),
             ),
-          );
+          );*/
         },
         icon: Icon(Icons.person),
         label: Text("Inquilino"),

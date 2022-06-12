@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:date_field/date_field.dart';
+import 'package:ihunt/vistas/propietario/tenants.dart';
+//import 'package:ihunt/vistas/propietario/rooms.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -166,7 +168,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         dateFormat: DateFormat.yMMMMd('es'),
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
-        validator: (value) => validateDates(value, DateTime.parse(startdateCtrl.text)),///EndDateValidator,s
+        validator: (value) => validateDates(value, startdateCtrl.text),///EndDateValidator,s
         //validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
         onDateSelected: (DateTime value) {
 
@@ -212,19 +214,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
     Future registerNewTenant() async {
       final form = formKey.currentState;
 
+      if (form.validate()) {
 
-      //print("###################################### A ${_startdate}"); enddateCtrl
-      //print("startdateCtrl ************************** ${startdateCtrl.text}");
-      //print("enddateCtrl ************************** ${enddateCtrl.text} : value= ${enddateCtrl.text.isEmpty}");
-
-
-      if(startdateCtrl.text.isEmpty || enddateCtrl.text.isEmpty){
-        setState(() => _saving = false);
-        _showDialog(2, 'Añade una fecha de inicio y término');
-      }
-
-      else if (form.validate()) {
-        setState(() => _saving = false);
+        //setState(() => _saving = false);
+        /*if(startdateCtrl.text.isEmpty || enddateCtrl.text.isEmpty){
+          setState(() => _saving = false);
+          _showDialog(2, 'Añade una fecha de inicio y término');
+        }*/
 
         form.save();
 
@@ -242,13 +238,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
           "idpropietario": _userid,
           "contrato": _contrato == 'Sí' ? "1" : "0",
           "meses": monthsCtrl.text == null ? int.parse(monthsCtrl.text) : 0, // conversion a entero
-          "fecha_inicio": _startdate.split(" ")[0],
-          "fecha_fin": _enddate.split(" ")[0],
+          "fecha_inicio": startdateCtrl.text.split(" ")[0],
+          "fecha_fin": enddateCtrl.text.split(" ")[0],
           "fecha_pago": _paydate == null ? _paydate.split(" ")[0] : null,
           "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
-        ///////////////////////////////////////print(msg);
+        print(msg);
         Api _api = Api();
 
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
@@ -259,10 +255,12 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
           print("############################################################# A ");
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+
+          form.reset();
+          clearForm();
           setState(() => _saving = false);
-          //Navigator.pop(context);
           _showDialog(2, 'Invitación enviada');
-        }
+          }
         else if (response.statusCode == 425){
           setState(() => _saving = false);
           _showDialog(2, 'Usuario inválido');
@@ -383,6 +381,15 @@ class _RegisterTenantState extends State<RegisterTenant> {
           ),
         ),
     );
+  }
+  void clearForm() {
+
+    _room = null;
+    _contrato = null;
+    iduserCtrl.clear();
+    monthsCtrl.clear();
+    plazoCtrl.clear();
+    detailsCtrl.clear();
   }
 
   void _showDialog(seconds, message) {

@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 String validateEmail(String value) {
   String _msg;
   RegExp regex = new RegExp(
@@ -57,9 +59,9 @@ String numberValidator(String value) {
 
 String StartDateValidator(DateTime a_date) {
 
-  print("********** FROM VALIDATOR FUNCTION: ${a_date}");
+  //print("********** FROM VALIDATOR FUNCTION: ${a_date}");
   // inicio de formulario, la fecha es null por tal regresamos null como mensaje
-  print("############# ${DateTime.now()} #################### ${a_date}");
+  //print("############# ${DateTime.now()} #################### ${a_date}");
   if(a_date == null) {
     return null;
   }
@@ -87,8 +89,9 @@ String EndDateValidator(DateTime a_date) {
 }*/
 
 
-String validateDates(DateTime firstDate, DateTime secondDate){
+String validateDates(DateTime firstDate, String secondDate){
 
+  //print(${DateFormat('MM').parse('02')});
 
   if(firstDate == null) {
     return null;
@@ -97,7 +100,7 @@ String validateDates(DateTime firstDate, DateTime secondDate){
   else if(firstDate.isBefore(DateTime.now())){
     return 'Fecha inválida';
   }
-  else if(firstDate.compareTo(secondDate) == -1){
+  else if(firstDate.compareTo(DateTime.parse(secondDate)) == -1){
     return 'Fecha inválida';
   }
 
