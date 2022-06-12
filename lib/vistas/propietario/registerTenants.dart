@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:date_field/date_field.dart';
-import 'package:ihunt/vistas/propietario/tenants.dart';
+//import 'package:ihunt/vistas/propietario/tenants.dart';
 //import 'package:ihunt/vistas/propietario/rooms.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,12 +52,8 @@ class _RegisterTenantState extends State<RegisterTenant> {
   TextEditingController plazoCtrl = new TextEditingController();
   TextEditingController detailsCtrl = new TextEditingController();
 
-  //final myController = TextEditingController();
-  //DateTime selectedDate = DateTime.now();
 
-  String _iduser, _room, _contrato, _months, _plazo, _details ;
-  String _startdate = "";
-  String _enddate = "";
+  String _iduser, _room, _contrato, _months, _plazo, _details;
   String _paydate = "";
 
   bool _saving = false;
@@ -252,15 +248,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
         print("RESPUESTA: ${response.statusCode}");
 
         if (response.statusCode == 201 || response.statusCode == 200) {
-
-          print("############################################################# A ");
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
           form.reset();
           clearForm();
           setState(() => _saving = false);
           _showDialog(2, 'Invitación enviada');
-          }
+        }
         else if (response.statusCode == 425){
           setState(() => _saving = false);
           _showDialog(2, 'Usuario inválido');
@@ -297,7 +291,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
           onPressed: () {
             setState(() => _saving = true);
             registerNewTenant();
-
           },
           child: Text("Registrar",
               textAlign: TextAlign.center,

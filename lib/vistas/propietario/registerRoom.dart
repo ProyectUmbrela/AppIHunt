@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+//import 'package:ihunt/vistas/propietario/rooms.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +114,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       controller: termsCtrl,
       onSaved: (value) => _terms = value,
       decoration: buildInputDecoration("Términos", Icons.add_alert),
+
     );
 
     final registrarRoom = Material(
@@ -268,7 +270,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
       if (imageFileList.length <= maxImages){
         form.save();
-
         // preparando imagenes para codificar
         List<String> images64_Base = [];
         _images_to_base64() async {
@@ -317,10 +318,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
           }
 
           var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
-
+          print("######### RESPONSE: ${responseCode}");
           if(responseCode == 201){
+            clearForm();
             setState(() => _saving = false);
-            _showDialog(2, "Habitación registrada");
+            _showDialog(2, "A Habitación registrada");
           }
           else if(responseCode == 438){
             setState(() => _saving = false);
@@ -477,7 +479,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       future: getCp(),
       builder: (context, snapshot) {
         //if(!snapshot.hasData){
-        if(!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting){
+        if(!snapshot.hasData){// || snapshot.connectionState == ConnectionState.waiting){
           // Esperando la respuesta de la API
           return Center(
               child: SizedBox(
@@ -595,5 +597,19 @@ class _RegisterRoomState extends State<RegisterRoom> {
       return null;
     }
   }
+
+  void clearForm() {
+
+    roomidCtrl.clear();
+    cpCtrl.clear();
+    addressCtrl.clear();
+    dimensionsCtrl.clear();
+    servicesCtrl.clear();
+    descriptionCtrl.clear();
+    priceCtrl.clear();
+    termsCtrl.clear();
+  }
+
+
 
 }
