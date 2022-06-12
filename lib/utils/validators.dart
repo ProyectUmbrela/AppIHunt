@@ -54,3 +54,54 @@ String numberValidator(String value) {
   }
   return null;
 }
+
+String StartDateValidator(DateTime a_date) {
+
+  print("********** FROM VALIDATOR FUNCTION: ${a_date}");
+  // inicio de formulario, la fecha es null por tal regresamos null como mensaje
+  print("############# ${DateTime.now()} #################### ${a_date}");
+  if(a_date == null) {
+    return null;
+  }
+  // fecha de inicio debera de ser mayor o igual a la fecha actual
+
+  else if(a_date.add(const Duration(days: 1)).isBefore(DateTime.now())){
+    return 'Fecha inválida';
+  }
+
+}
+
+/*
+String EndDateValidator(DateTime a_date) {
+
+  print("********** FROM VALIDATOR FUNCTION: ${a_date}");
+  // inicio de formulario, la fecha es null por tal regresamos null como mensaje
+  if(a_date == null) {
+    return null;
+  }
+  // fecha de termino debera de ser mayor a la fecha actual
+  else if(a_date.isBefore(DateTime.now())){
+    return 'Fecha inválida';
+  }
+
+}*/
+
+
+String validateDates(DateTime firstDate, DateTime secondDate){
+
+
+  if(firstDate == null) {
+    return null;
+  }
+  // fecha de termino debera de ser mayor a la fecha actual
+  else if(firstDate.isBefore(DateTime.now())){
+    return 'Fecha inválida';
+  }
+  else if(firstDate.compareTo(secondDate) == -1){
+    return 'Fecha inválida';
+  }
+
+}
+
+
+

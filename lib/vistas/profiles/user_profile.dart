@@ -55,7 +55,7 @@ class _Profile extends State<UserProfile> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
-                  Text('Cargando...'),
+                  //Text('Cargando...'),
                 ]
             ),
           );

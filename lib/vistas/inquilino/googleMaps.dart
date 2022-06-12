@@ -60,7 +60,7 @@ class MapsPage extends State<MyMaps> {
 
     final MarkerId markerId = MarkerId(specifyId);
     infoHabitacion info = habitacion;
-
+    var fontWords = FontWeight.w500;
     double sizeText = 14;
 
     final Marker marker = new Marker(
@@ -118,7 +118,7 @@ class MapsPage extends State<MyMaps> {
                                                   "\$ ${info.costo} mensual",
                                                   style: TextStyle(
                                                     color: Colors.black,
-                                                    fontWeight: FontWeight.w800,
+                                                    fontWeight: fontWords,
                                                     fontFamily: 'Roboto',
                                                     letterSpacing: 0.5,
                                                     fontSize: sizeText,
@@ -129,7 +129,7 @@ class MapsPage extends State<MyMaps> {
                                             Padding(
                                               padding: const EdgeInsets.all(10.0),
                                             ),
-                                            Column(
+                                            /*Column(
                                               children: <Widget>[
                                                 Text(
                                                   "Titular: ${info.titular}",
@@ -142,15 +142,24 @@ class MapsPage extends State<MyMaps> {
                                                   ),
                                                 ),
                                               ],
-                                            ),
+                                            ),*/
                                           ],
                                         ),
-
+                                        Text(
+                                          "Titular: ${info.titular}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: fontWords,
+                                            fontFamily: 'Roboto',
+                                            letterSpacing: 0.5,
+                                            fontSize: sizeText,
+                                          ),
+                                        ),
                                         Text(
                                           "Incluye: ${info.servicios}",
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: fontWords,
                                             fontFamily: 'Roboto',
                                             letterSpacing: 0.5,
                                             fontSize: sizeText,
@@ -160,7 +169,7 @@ class MapsPage extends State<MyMaps> {
                                           "Detalles: ${info.detalles}",
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: fontWords,
                                             fontFamily: 'Roboto',
                                             letterSpacing: 0.5,
                                             fontSize: sizeText,
@@ -170,7 +179,7 @@ class MapsPage extends State<MyMaps> {
                                           "Dirección: ${info.direccion}",
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: fontWords,
                                             fontFamily: 'Roboto',
                                             letterSpacing: 0.5,
                                             fontSize: sizeText,

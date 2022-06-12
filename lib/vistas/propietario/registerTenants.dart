@@ -50,6 +50,8 @@ class _RegisterTenantState extends State<RegisterTenant> {
   TextEditingController plazoCtrl = new TextEditingController();
   TextEditingController detailsCtrl = new TextEditingController();
 
+  //final myController = TextEditingController();
+  //DateTime selectedDate = DateTime.now();
 
   String _iduser, _room, _contrato, _months, _plazo, _details ;
   String _startdate = "";
@@ -60,45 +62,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
   TextStyle style = TextStyle(fontSize: 18);
   final dateFormat = DateFormat("dd-M-yyyy");
 
-  /*Future getRooms(id) async{
-    Api _api = Api();
-
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
-    var _id = snapShoot['usuario'];
-    String tokenAuth = await currentUser.getIdToken();
-
-    final msg = jsonEncode({
-      "usuario": _id
-    });
-
-    var response = await _api.GetRooms(msg, tokenAuth);
-    var data = jsonDecode(response.body);
-    List<String> _rooms = [];
-
-    if (response.statusCode == 200) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-
-      data.forEach((index, room) {
-        if (room['estatus']==1){
-          _rooms.add('idhabitacion');
-        }
-
-      });
-
-      return _rooms;
-    } else {
-      if (Platform.isAndroid) {
-        //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
-      } else if (Platform.isIOS) {
-        //_cupertinoDialog(context, data['message'], 'Notificación');
-      }
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +83,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       onChanged: (value) =>
           setState(() => _room = value),
       validator: (value) => value == null ? 'Elije una opción' : null,
-      items:
-      widget.rooms['rooms'].map<DropdownMenuItem<String>>((String value) {
+      items: widget.rooms['rooms'].map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(value),
@@ -149,7 +111,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       enabled: _contrato == 'Sí' ? true : false,
       autofocus: false,
       controller: monthsCtrl,
-      validator: numberValidator,
+      ////////////////////////////validator: numberValidator,
       onSaved: (value) => _months = value,
       decoration: buildInputDecoration("Meses", Icons.more_vert),
     );
@@ -165,11 +127,13 @@ class _RegisterTenantState extends State<RegisterTenant> {
       dateFormat: DateFormat.yMMMMd('es'),
       mode: DateTimeFieldPickerMode.date,
       autovalidateMode: AutovalidateMode.always,
-      validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
+      validator: StartDateValidator,//(e) => ((e?.day ?? 0) == 1) ? 'Fecha inválida' : null,
       onDateSelected: (DateTime value) {
-        ////////////////////////////////////////print(value);
+
+        startdateCtrl.text = value.toString();
+        print("************************** ${startdateCtrl.text}");
       },
-      onSaved: (value) => _startdate = value.toString()
+      //onSaved: (value) => _startdate = value.toString()
     );
 
     /*
@@ -202,11 +166,14 @@ class _RegisterTenantState extends State<RegisterTenant> {
         dateFormat: DateFormat.yMMMMd('es'),
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
-        validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
+        validator: (value) => validateDates(value, DateTime.parse(startdateCtrl.text)),///EndDateValidator,s
+        //validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
         onDateSelected: (DateTime value) {
-          ////////////////////////print(value);
+
+          enddateCtrl.text = value.toString();
+          print("************************** ${enddateCtrl.text}");
         },
-        onSaved: (value) => _enddate = value.toString()
+        //onSaved: (value) => _enddate = value.toString()
     );
 
     final payDate = DateTimeFormField(
@@ -220,7 +187,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         dateFormat: DateFormat.yMMMMd('es'),
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
-        validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
+        //validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
         onDateSelected: (DateTime value) {
           //////////////////////////////////////////////print(value);
         },
@@ -242,11 +209,22 @@ class _RegisterTenantState extends State<RegisterTenant> {
       decoration: buildInputDecoration("Términos", Icons.more_vert),
     );
 
-
     Future registerNewTenant() async {
       final form = formKey.currentState;
 
-      if (form.validate()) {
+
+      //print("###################################### A ${_startdate}"); enddateCtrl
+      //print("startdateCtrl ************************** ${startdateCtrl.text}");
+      //print("enddateCtrl ************************** ${enddateCtrl.text} : value= ${enddateCtrl.text.isEmpty}");
+
+
+      if(startdateCtrl.text.isEmpty || enddateCtrl.text.isEmpty){
+        setState(() => _saving = false);
+        _showDialog(2, 'Añade una fecha de inicio y término');
+      }
+
+      else if (form.validate()) {
+        setState(() => _saving = false);
 
         form.save();
 
@@ -263,19 +241,20 @@ class _RegisterTenantState extends State<RegisterTenant> {
           "idhabitacion": _room,
           "idpropietario": _userid,
           "contrato": _contrato == 'Sí' ? "1" : "0",
-          "meses": int.parse(monthsCtrl.text), // conversion a entero
+          "meses": monthsCtrl.text == null ? int.parse(monthsCtrl.text) : 0, // conversion a entero
           "fecha_inicio": _startdate.split(" ")[0],
           "fecha_fin": _enddate.split(" ")[0],
-          "fecha_pago": _paydate.split(" ")[0],
+          "fecha_pago": _paydate == null ? _paydate.split(" ")[0] : null,
           "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
-        print(msg);
+        ///////////////////////////////////////print(msg);
         Api _api = Api();
 
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
         //Map data = jsonDecode(response.body);
         print("RESPUESTA: ${response.statusCode}");
+
         if (response.statusCode == 201 || response.statusCode == 200) {
 
           print("############################################################# A ");
@@ -306,7 +285,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
         }
 
       } else {
-        print("*-************************************** B");
         setState(() => _saving = false);
       }
     }
@@ -321,6 +299,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
           onPressed: () {
             setState(() => _saving = true);
             registerNewTenant();
+
           },
           child: Text("Registrar",
               textAlign: TextAlign.center,
