@@ -322,7 +322,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           if(responseCode == 201){
             clearForm();
             setState(() => _saving = false);
-            _showDialog(2, "A Habitación registrada");
+            _showDialog(2, "Habitación registrada");
           }
           else if(responseCode == 438){
             setState(() => _saving = false);

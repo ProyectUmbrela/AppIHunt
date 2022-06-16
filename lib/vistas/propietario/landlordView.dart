@@ -1,7 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/rendering.dart';
-//import 'package:flutter/widgets.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'rooms.dart';
@@ -17,8 +15,7 @@ class Landlord extends StatefulWidget {
 }
 
 
-class _LandlordState extends State<Landlord>
-    with SingleTickerProviderStateMixin{
+class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin{
   User _currentUser;
   String _nombre;
   int _currentIndex = 0;

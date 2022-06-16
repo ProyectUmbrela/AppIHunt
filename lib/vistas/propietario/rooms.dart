@@ -280,11 +280,11 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 10),
+                                        vertical: 2, horizontal: 5),
                                     child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
-                                          Column(
+                                          /*Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Text(
@@ -294,8 +294,8 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                     fontWeight: FontWeight.bold),
                                               ),
                                             ],
-                                          ),
-                                          Column(
+                                          ),*/
+                                          /*Column(
                                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [ snapshot.data[index].status == 1 ?
                                               Text(
@@ -311,9 +311,9 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                     fontWeight: FontWeight.normal),
                                               ),
                                             ],
-                                          ),
+                                          ),*/
                                           Container(
-                                            padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
+                                            padding: const EdgeInsets.symmetric(vertical: .0005, horizontal: 5),
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
@@ -357,7 +357,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 10),
+                                        vertical: 0, horizontal: 10),
                                     child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
@@ -386,7 +386,53 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                         ],
                                     ),
                                   ),
-                                  Row(
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              children: <Widget>[
+                                                ButtonBar(
+                                                  alignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        'Publicar: ',
+                                                        style: TextStyle(
+                                                            color: Colors.black.withOpacity(0.6),
+                                                            fontWeight: FontWeight.bold),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 25,
+                                                        height: 10,
+                                                        child: Switch(
+                                                        value: snapshot.data[index].publicar,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            snapshot.data[index].publicar = value;
+                                                          });
+                                                          var collection = FirebaseFirestore.instance.collection('habitaciones');
+                                                          collection.doc(snapshot.data[index].idhabitacion + '_${snapshot.data[index].idpropietario}')
+                                                              .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
+                                                              .then((_) => value == true ? _showDialog(2, 'Publicación activada') : _showDialog(2, 'Publicación pausada'))
+                                                              .catchError((error) => _showDialog(2, 'Ocurrio un error'));
+                                                        },
+                                                      ),)
+                                                    ],
+                                                 ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  /*Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       ButtonBar(
@@ -414,7 +460,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                         ],
                                       ),
                                     ],
-                                  ),
+                                  ),*/
                                 ],
                               ),
                             ),
