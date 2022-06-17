@@ -7,7 +7,7 @@ import 'package:ihunt/utils/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'package:ihunt/providers/provider.dart';
 
 class UpdateRoom extends StatefulWidget {
 
@@ -80,7 +80,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
         var snapShoot = await FirebaseFirestore
             .instance
-            .collection('users')
+            .collection(GlobalDataLandlord().userCollection)
             .doc(currentUser.uid)
             .get();
 
@@ -341,14 +341,14 @@ class _UpdateRoomState extends State<UpdateRoom> {
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataLandlord().userCollection)
         .doc(currentUser.uid)
         .get();
-    var _id = snapShoot['usuario'];
+    var _userid = snapShoot['usuario'];
     String tokenAuth = await currentUser.getIdToken();
 
     final msg = jsonEncode({
-      "usuario": _id,
+      "usuario": _userid,
       "idhabitacion": idhabitacion
     });
 

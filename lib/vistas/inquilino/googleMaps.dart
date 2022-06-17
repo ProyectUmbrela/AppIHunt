@@ -9,7 +9,7 @@ import 'dart:convert';
 // style map
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:geocoder/geocoder.dart';
-
+import 'package:ihunt/providers/provider.dart';
 // to get the current location
 import 'package:geolocator/geolocator.dart';
 
@@ -378,7 +378,7 @@ class MapsPage extends State<MyMaps> {
           child: StreamBuilder(
             stream: FirebaseFirestore
                 .instance
-                .collection(_coleccion)
+                .collection(GlobalDataUser().markerCollection)
                 .where("coords", isNotEqualTo: "")
                 .snapshots(),
             builder: (context, snapshot) {
@@ -403,7 +403,7 @@ class MapsPage extends State<MyMaps> {
                     if (publicar == 1){
                       FirebaseFirestore
                           .instance
-                          .collection(_coleccion)
+                          .collection(GlobalDataUser().markerCollection)
                           .doc("NotAvailable")
                           .get()
                           .then((docRef) => {

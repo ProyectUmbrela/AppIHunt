@@ -59,9 +59,6 @@ String numberValidator(String value) {
 
 String StartDateValidator(DateTime a_date) {
 
-  //print("********** FROM VALIDATOR FUNCTION: ${a_date}");
-  // inicio de formulario, la fecha es null por tal regresamos null como mensaje
-  //print("############# ${DateTime.now()} #################### ${a_date}");
   if(a_date == null) {
     return null;
   }

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:ihunt/providers/provider.dart';
 import 'package:ihunt/providers/api.dart';
 import 'registerRoom.dart';
 import 'update_room.dart';
@@ -82,7 +82,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataLandlord().userCollection)
         .doc(currentUser.uid)
         .get();
     var _userid = snapShoot['usuario'];

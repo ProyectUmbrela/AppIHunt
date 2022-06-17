@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/providers/api.dart';
 import 'registerTenants.dart';
+import 'package:ihunt/providers/provider.dart';
 
 class Tenants extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataLandlord().userCollection)
         .doc(currentUser.uid)
         .get();
     var _id = snapShoot['usuario'];
@@ -110,7 +111,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataLandlord().userCollection)
         .doc(currentUser.uid)
         .get();
     var _id = snapShoot['usuario'];

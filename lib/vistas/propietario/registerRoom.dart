@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ihunt/providers/provider.dart';
 //import 'package:permission_handler/permission_handler.dart';
 
 
@@ -287,7 +288,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
         var coordinates = await getLocation(fullAddress);
         if (coordinates != null){
           var snapShoot = await FirebaseFirestore.instance
-              .collection('users')
+              .collection(GlobalDataLandlord().userCollection)
               .doc(currentUser.uid)
               .get();
           var _iduser = snapShoot['usuario'];

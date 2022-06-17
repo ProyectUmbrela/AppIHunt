@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/rendering.dart';
 import 'package:ihunt/vistas/inquilino/detallesHabitacion.dart';
-
+import 'package:ihunt/providers/provider.dart';
 //permissions
 //import 'package:permission_handler/permission_handler.dart';
 //import 'package:android_intent/android_intent.dart';
@@ -17,7 +17,7 @@ import 'dart:async';
 /// This is the main application widget.
 class Lugares extends StatefulWidget {
 
-  static const String _title = 'Mis lugares';
+  //static const String _title = 'Mis lugares';
 
   @override
   _MisLugares createState ()=> _MisLugares();
@@ -217,7 +217,7 @@ class _MisLugares extends State<Lugares> {
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataUser().userCollection)
         .doc(_currentUser.uid)
         .get();
 

@@ -8,6 +8,7 @@ import 'invitation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
+import 'package:ihunt/providers/provider.dart';
 
 class Landlord extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin
     _currentUser = FirebaseAuth.instance.currentUser;
 
     var snapShoot = await FirebaseFirestore.instance
-        .collection('users')
+        .collection(GlobalDataLandlord().userCollection)
         .doc(_currentUser.uid)
         .get();
     setState(() {
@@ -63,7 +64,7 @@ class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin
     // upsert, insert if not exists or add anew one if already exists
     var _current = await _currentUser.uid;
 
-    await FirebaseFirestore.instance.collection('users').doc(_current).set(
+    await FirebaseFirestore.instance.collection(GlobalDataLandlord().userCollection).doc(_current).set(
         {'updatedOn': FieldValue.serverTimestamp(), 'token': token},
         SetOptions(merge: true));
   }

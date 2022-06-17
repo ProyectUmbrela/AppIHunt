@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/providers/api.dart';
+import 'package:ihunt/providers/provider.dart';
 
 class Invitations extends StatefulWidget {
   @override
@@ -37,7 +38,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
     Api _api = Api();
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataLandlord().userCollection)
         .doc(currentUser.uid)
         .get();
     var _userid = snapShoot['usuario'];

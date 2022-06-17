@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/rendering.dart';
 //import 'package:flutter/widgets.dart';
+import 'package:ihunt/providers/provider.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
 import 'package:ihunt/vistas/inquilino/misHabitaciones.dart';
 import 'package:ihunt/vistas/inquilino/invitaciones.dart';
@@ -55,7 +56,7 @@ class _UserState extends State<UserView> {
     _currentUser = FirebaseAuth.instance.currentUser;
 
     var snapShoot = await FirebaseFirestore.instance
-        .collection('users')
+        .collection(GlobalDataUser().userCollection)
         .doc(_currentUser.uid)
         .get();
 
@@ -71,7 +72,7 @@ class _UserState extends State<UserView> {
     // upsert, insert if not exists or add anew one if already exists
     var _current = await _currentUser.uid;
 
-    await FirebaseFirestore.instance.collection('users').doc(_current).set(
+    await FirebaseFirestore.instance.collection(GlobalDataUser().userCollection).doc(_current).set(
         {'updatedOn': FieldValue.serverTimestamp(), 'token': token},
         SetOptions(merge: true));
   }

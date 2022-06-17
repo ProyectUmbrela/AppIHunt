@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
+import 'package:ihunt/providers/provider.dart';
+
 
 class InvitacionesInquilino extends StatefulWidget{
 
@@ -135,7 +137,7 @@ class InvitacionesState extends State<InvitacionesInquilino>{
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataUser().userCollection)
         .doc(_currentUser.uid)
         .get();
 

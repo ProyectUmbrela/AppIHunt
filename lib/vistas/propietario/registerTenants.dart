@@ -12,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/utils/validators.dart';
+import 'package:ihunt/providers/provider.dart';
 
 class RegisterTenant extends StatefulWidget {
 
@@ -129,7 +130,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
       onDateSelected: (DateTime value) {
 
         startdateCtrl.text = value.toString();
-        print("************************** ${startdateCtrl.text}");
+        print("|startdateCtrl| ************************** ${startdateCtrl.text}");
       },
       //onSaved: (value) => _startdate = value.toString()
     );
@@ -169,7 +170,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         onDateSelected: (DateTime value) {
 
           enddateCtrl.text = value.toString();
-          print("************************** ${enddateCtrl.text}");
+          print("|enddateCtrl|************************** ${enddateCtrl.text}");
         },
         //onSaved: (value) => _enddate = value.toString()
     );
@@ -186,10 +187,12 @@ class _RegisterTenantState extends State<RegisterTenant> {
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
         //validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
+        validator: StartDateValidator,
         onDateSelected: (DateTime value) {
-          //////////////////////////////////////////////print(value);
+          paydateCtrl.text = value.toString();
+          print("|paydateCtrl|************************** ${paydateCtrl.text}");
         },
-        onSaved: (value) => _paydate = value.toString()
+        //onSaved: (value) => _paydate = value.toString()
     );
 
     final Plazo = TextFormField(
@@ -222,7 +225,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
         var snapShoot = await FirebaseFirestore
             .instance
-            .collection('users')
+            .collection(GlobalDataLandlord().userCollection)
             .doc(currentUser.uid)
             .get();
         var _userid = snapShoot['usuario'];
@@ -236,16 +239,19 @@ class _RegisterTenantState extends State<RegisterTenant> {
           "meses": monthsCtrl.text == null ? int.parse(monthsCtrl.text) : 0, // conversion a entero
           "fecha_inicio": startdateCtrl.text.split(" ")[0],
           "fecha_fin": enddateCtrl.text.split(" ")[0],
-          "fecha_pago": _paydate == null ? _paydate.split(" ")[0] : null,
+          "fecha_pago": paydateCtrl.text != null ? paydateCtrl.text.split(" ")[0] : "null",
           "plazo": int.parse(plazoCtrl.text), // conversion a entero,
           "detalles": detailsCtrl.text
         });
+        print("*****************************************************************");
+        print("*****************************************************************");
         print(msg);
-        Api _api = Api();
+        print("*****************************************************************");
+        print("*****************************************************************");
 
+
+        Api _api = Api();
         var response = await _api.RegisterTenantPost(msg, tokenAuth);
-        //Map data = jsonDecode(response.body);
-        print("RESPUESTA: ${response.statusCode}");
 
         if (response.statusCode == 201 || response.statusCode == 200) {
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
