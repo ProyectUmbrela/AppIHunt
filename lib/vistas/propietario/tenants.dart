@@ -46,11 +46,11 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
         .collection(GlobalDataLandlord().userCollection)
         .doc(currentUser.uid)
         .get();
-    var _id = snapShoot['usuario'];
+    var _userid = snapShoot['usuario'];
     String tokenAuth = await currentUser.getIdToken();
 
     final msg = jsonEncode({
-      "usuario": _id
+      "usuario": _userid
     });
 
     var response = await _api.GetTenants(msg, tokenAuth);
@@ -251,7 +251,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                     leading: Icon(Icons.airline_seat_individual_suite),
                                     title: Text('Inquilino: ${snapshot.data[index].idusuario}'),
                                     subtitle: Text(
-                                      'Habitacion: ${snapshot.data[index].idhabitacion}',
+                                      'Habitación: ${snapshot.data[index].idhabitacion}',
                                       style:
                                       TextStyle(color: Colors.black.withOpacity(0.6)),
                                     ),

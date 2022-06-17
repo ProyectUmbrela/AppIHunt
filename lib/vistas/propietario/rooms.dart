@@ -68,7 +68,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
   Future getSpecie(String id_room) async {
 
     var check = await FirebaseFirestore.instance
-        .collection('habitaciones')
+        .collection(GlobalDataUser().habitacionesCollection)
         .doc(id_room)
         .get()
         .then((value) {
@@ -108,15 +108,12 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
       Map<String, bool> statusMap = {};
       Map<String, String> fotosMap = {};
-
       getValue() async{
         for(int i = 0; i < data['habitaciones'].length; i++){
           var document = data['habitaciones'][i]['idhabitacion'] + '_${data['habitaciones'][i]['idpropietario']}';
           var result = await getSpecie(document);
-          //print("############ ${result.data()}");
           int publicar = result.data()['publicar'];
           String foto = result.data()['fotos']['0'];
-          //print("# KEY VALUE: ${"${data['habitaciones'][i]['idhabitacion']}"}");
           statusMap["${data['habitaciones'][i]['idhabitacion']}"] = publicar == 1 ? true : false;
           fotosMap["${data['habitaciones'][i]['idhabitacion']}"] = foto;
         }
@@ -160,7 +157,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
     var snapShoot = await FirebaseFirestore
         .instance
-        .collection('habitaciones')
+        .collection(GlobalDataUser().habitacionesCollection)
         .doc(idhabitacion)
         .get();
 
@@ -269,10 +266,10 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                       width: 100.0,
                                       child: snapshot.data[index].foto == null ? Center(child: Icon(Icons.airline_seat_individual_suite)) : Image.memory(Base64Decoder().convert(snapshot.data[index].foto), fit: BoxFit.cover),
                                     ),
-                                    title: Text('Habitacion: ${snapshot.data[index].idhabitacion}'),
+                                    title: Text('Habitación: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(
                                       'Inquilino: ${
-                                          snapshot.data[index].idusuario == null ? 'No' : snapshot.data[index].idusuario
+                                          snapshot.data[index].idusuario == "" || snapshot.data[index].idusuario == null? 'No' : snapshot.data[index].idusuario
                                       }',
                                       style:
                                       TextStyle(color: Colors.black.withOpacity(0.6)),
@@ -415,7 +412,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                                           setState(() {
                                                             snapshot.data[index].publicar = value;
                                                           });
-                                                          var collection = FirebaseFirestore.instance.collection('habitaciones');
+                                                          var collection = FirebaseFirestore.instance.collection(GlobalDataUser().habitacionesCollection);
                                                           collection.doc(snapshot.data[index].idhabitacion + '_${snapshot.data[index].idpropietario}')
                                                               .update({'publicar' : value == true ? 1 : 0}) // <-- Updated data
                                                               .then((_) => value == true ? _showDialog(2, 'Publicación activada') : _showDialog(2, 'Publicación pausada'))
