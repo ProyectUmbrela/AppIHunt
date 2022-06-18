@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
-import 'package:flutter/widgets.dart';
+//import 'package:flutter/widgets.dart';
 import 'package:ihunt/utils/widgets.dart';
 
 import 'dart:io' show Platform, sleep;
@@ -65,7 +65,7 @@ class _RegisterState extends State<Register> {
       controller: useridCtrl,
       validator: (value) => value.isEmpty ? "Usuario requerido" : null,
       onSaved: (value) => _userid = value,
-      //decoration: buildInputDecoration("Username", Icons.account_box),
+      decoration: buildInputDecoration("Username", Icons.account_box),
     );
 
     final userName = TextFormField(
@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
       controller: usernameCtrl,
       validator: (value) => value.isEmpty ? "Nombre requerido" : null,
       onSaved: (value) => _username = value,
-      //decoration: buildInputDecoration("First and last name", Icons.accessibility),
+      decoration: buildInputDecoration("First and last name", Icons.accessibility),
     );
 
     final userEmail = TextFormField(
@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
       controller: useremailCtrl,
       validator: validateEmail,
       onSaved: (value) => _useremail = value,
-      //decoration: buildInputDecoration("Email", Icons.email),
+      decoration: buildInputDecoration("Email", Icons.email),
     );
 
     final userPhone = TextFormField(
@@ -89,7 +89,7 @@ class _RegisterState extends State<Register> {
       controller: userphoneCtrl,
       validator: validateMobile,
       onSaved: (value) => _userphone = value,
-      //decoration: buildInputDecoration("Phone number", Icons.phone_android),
+      decoration: buildInputDecoration("Phone number", Icons.phone_android),
     );
 
     final passwordField = TextFormField(
@@ -98,7 +98,7 @@ class _RegisterState extends State<Register> {
       obscureText: true,
       validator: (value) => value.isEmpty ? "Contraseña requerida" : null,
       onSaved: (value) => _password = value,
-      //decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
+      decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
     );
 
     final confirmPassword = TextFormField(
@@ -107,7 +107,7 @@ class _RegisterState extends State<Register> {
       validator: (value) => validatePassword(value, passwordCtrl.text),
       onSaved: (value) => _confirmPassword = value,
       obscureText: true,
-      //decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
+      decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
     );
 
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
@@ -194,12 +194,15 @@ class _RegisterState extends State<Register> {
           'tipo': _chosenValue
         });
 
+        print("###################################################");
+        print("###################################################");
         print(msg);
+        print("###################################################");
+        print("###################################################");
 
         var response = await _api.registerPost(msg);
         Map data = jsonDecode(response.body);
 
-        print("############## ${data}");
         if (response.statusCode == 201) {
 
           // CHECAR BIEN LOS CODIDOS DE RESPUESTA
@@ -232,7 +235,7 @@ class _RegisterState extends State<Register> {
         setState(() {
           _saving = false;
         });
-        if (Platform.isAndroid) {
+        /*if (Platform.isAndroid) {
           _materialAlertDialog(
               context,
               "Por favor, rellene el formulario correctamente",
@@ -242,9 +245,9 @@ class _RegisterState extends State<Register> {
               context,
               "Por favor, rellene el formulario correctamente",
               "Formulario inválido");
-        }
+        }*/
       }
-    };
+    }
 
 
 
@@ -361,7 +364,8 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: 15),
                       ],
                     ),
-                  )),
+                  ),
+              ),
             ),
             inAsyncCall: _saving
         )

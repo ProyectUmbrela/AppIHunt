@@ -1,13 +1,15 @@
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 String validateEmail(String value) {
   String _msg;
   RegExp regex = new RegExp(
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
   if (value.isEmpty) {
-    _msg = "Correo requerido";
+    _msg = "Correo inválido";
   } else if (!regex.hasMatch(value)) {
-    _msg = "Please provide a valid email address";
+    _msg = "Ingresa un correo válido";
+  } else{
+    _msg = null;
   }
   return _msg;
 }
@@ -17,9 +19,9 @@ String EmailValidating(String value) {
   RegExp regex = new RegExp(
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
   if (value.isEmpty) {
-    _msg = "Your email is required";
+    _msg = "Correo inválido";
   } else if (!regex.hasMatch(value)) {
-    _msg = "Please provide a valid email address";
+    _msg = "Ingresa un correo válido";
   }else{
     _msg = 'email-valid';
   }
@@ -37,6 +39,15 @@ String validateMobile(String value) {
     _msg = "Please provide a valid phone number address";
   }
   return _msg;
+}
+
+String validateSinglePassword(String value) {
+  if (value.isEmpty) {
+    return "Contraseña inválida";
+  } else{
+    return null;
+  }
+  //return "2 Contraseña inválida";
 }
 
 String validatePassword(String value, value2) {

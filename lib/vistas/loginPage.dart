@@ -12,6 +12,7 @@ import 'package:ihunt/utils/fire_auth.dart';
 import 'package:ihunt/vistas/mainscreen.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'dart:async';
+import 'package:ihunt/utils/validators.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ihunt/vistas/recuperarContrasena.dart';
 
@@ -27,6 +28,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  final formKey = new GlobalKey<FormState>();
   bool _saving = false;
   int statusCode;
   final myControllerEmail = TextEditingController();
@@ -139,7 +141,6 @@ class _LoginPageState extends State<LoginPage> {
     final body = jsonEncode({
       'correo': correo
     });
-    print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC: ${body}");
 
     var response = await _api.EnabledCuenta(body);
     statusCode = response.statusCode;
@@ -189,8 +190,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Future _sendRequest(emailField, passwordField) async {
 
-
-   var user = await FireAuth
+  final form = formKey.currentState;
+  if(form.validate()){
+    var user = await FireAuth
         .signInUsingEmailPassword(
       email: emailField.text,
       password: passwordField.text,
@@ -220,8 +222,8 @@ class _LoginPageState extends State<LoginPage> {
           else if (snapShoot['tipo'] == 'Usuario'){
 
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => UserView()));
+                MaterialPageRoute(
+                    builder: (context) => UserView()));
           }
           else{
             setState(() => _saving = false);
@@ -248,20 +250,26 @@ class _LoginPageState extends State<LoginPage> {
         setState(() => _saving = false);
       }
     }
+  }else{
+    setState(() => _saving = false);
+  }
+
   }
 
   @override
   Widget build(BuildContext context) {
 
     final emailField = TextFormField(
-        autofocus: true,
+        autofocus: false,
         controller: myControllerEmail,
+        validator: validateEmail,
         decoration: buildInputDecoration("Correo", Icons.email));
 
     final passwordField = TextFormField(
         autofocus: false,
         controller: myControllerPassword,
         obscureText: true,
+        validator: validateSinglePassword,
         decoration: buildInputDecoration("Contraseña", Icons.remove_red_eye));
 
     final loginbuton = Material(
@@ -274,7 +282,6 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           setState(() => _saving = true);
           _sendRequest(myControllerEmail, myControllerPassword);
-          //
         },
         child: Text("Ingresar",
             textAlign: TextAlign.center,
@@ -283,64 +290,68 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final heighT = MediaQuery.of(context).size.height * 0.08;
+
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(60.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                        horizontal: 30.0),
-                    child: Container(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Correo"),
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(60.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: 30.0),
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Correo"),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 30.0),
-                    child: emailField,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                        horizontal: 30.0),
-                    child: Container(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Contraseña"),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 30.0),
+                      child: emailField,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: 30.0),
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Contraseña"),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 30.0),
-                    child: passwordField,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 30.0),
-                    child: loginbuton,
-                  ),
-                  recuperarPass(),
-                  _divider(),
-                  Padding(
-                    padding: new EdgeInsets.all(heighT),
-                  ),
-                  _createAccountLabel()
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 30.0),
+                      child: passwordField,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20.0,
+                          horizontal: 30.0),
+                      child: loginbuton,
+                    ),
+                    recuperarPass(),
+                    _divider(),
+                    Padding(
+                      padding: new EdgeInsets.all(heighT),
+                    ),
+                    _createAccountLabel()
+                  ],
+                ),
               ),
             ),
           ),

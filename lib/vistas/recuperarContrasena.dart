@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:ihunt/providers/api.dart';
-//import 'package:ihunt/utils/fire_auth.dart';
+import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:ihunt/vistas/loginPage.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -17,6 +16,7 @@ class RecuperarContrasena extends StatefulWidget {
 class _RecuperarContrasenaState extends State<RecuperarContrasena> {
 
   bool _saving = false;
+  final formKey = new GlobalKey<FormState>();
   final myControllerEmail = TextEditingController();
   TextStyle style = TextStyle(fontSize: 18, color: Colors.black);
 
@@ -57,39 +57,42 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
 
 
   Future _sendRequest(emailField) async {
-    print("******************* EMAIL: ${emailField}");
-    Api _api = Api();
-    final body = jsonEncode({
-      'usuario': emailField
-    });
 
-    var response = await _api.resetPasswordPost(body);
-
-    //int statusCode = response.statusCode;
-    var resp = json.decode(response.body);
-
-    print("======================> ${resp}");
-
-    // {code: badRequest, message: Usuario no existe}
-    // {message: Se ha enviado el correo para restablecer contraseña a desonses@gmail.com}
-
-
-    if (resp['code'] == 'badRequest'){
-      print("A ${resp['message']}");
-      _showDialog(1, 'El correo no existe');
-      setState(() => _saving = false);
-    }
-    else{
-      print("B ${resp['message']}");
-      _showDialog(2, 'Se ha enviado un correo para recuperar tu contraseña');
-      setState(() => _saving = false);
-
-      Future.delayed(Duration(seconds: 3), () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()));
+    final form = formKey.currentState;
+    if (form.validate()) {
+      print("******************* EMAIL: ${emailField}");
+      Api _api = Api();
+      final body = jsonEncode({
+        'usuario': emailField
       });
+      print("======================> ${body}");
+      var response = await _api.resetPasswordPost(body);
+      print("======================> ${response.body}");
+      //int statusCode = response.statusCode;
+      var resp = json.decode(response.body);
+
+      print("======================> ${resp}");
+
+      if (resp['code'] == 'badRequest'){
+        print("A ${resp['message']}");
+        _showDialog(1, 'El correo no existe');
+        setState(() => _saving = false);
+      }
+      else{
+        print("B ${resp['message']}");
+        _showDialog(2, 'Se ha enviado un correo para recuperar tu contraseña');
+        setState(() => _saving = false);
+
+        Future.delayed(Duration(seconds: 3), () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()));
+        });
+      }
+    }else{
+      setState(() => _saving = false);
     }
+
   }
 
   @override
@@ -98,7 +101,9 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
     final emailField = TextFormField(
         autofocus: true,
         controller: myControllerEmail,
-        decoration: buildInputDecoration("Correo", Icons.email));
+        decoration: buildInputDecoration("Correo", Icons.email),
+      validator: validateEmail,
+    );
 
 
     final loginbuton = Material(
@@ -123,41 +128,44 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
     return Scaffold(
       body: ModalProgressHUD(
           child: Container(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(60.0),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 5.0,
-                        horizontal: 30.0),
-                    child: Container(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Correo"),
+            child: Form(
+              key: formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(60.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5.0,
+                          horizontal: 30.0),
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Correo"),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 30.0),
-                    child: emailField,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 30.0),
-                    child: loginbuton,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(50.0),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 30.0),
+                      child: emailField,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20.0,
+                          horizontal: 30.0),
+                      child: loginbuton,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(50.0),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

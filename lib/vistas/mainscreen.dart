@@ -13,9 +13,9 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: new AppBar(
+        /*appBar: new AppBar(
           title: new Text('Menu'),
-        ),
+        ),*/
         body: Card(
           child: Center(
             child: Column(
