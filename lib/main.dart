@@ -13,11 +13,10 @@ import 'package:ihunt/vistas/inquilino/detallesHabitacion.dart';
 import 'package:ihunt/vistas/inquilino/invitaciones.dart';
 import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
 import 'package:ihunt/vistas/propietario/rooms.dart';
-
+import 'package:ihunt/providers/provider.dart';
 
 // VISTA PROPIETARIO
 import 'vistas/propietario/landlordView.dart';
-import 'package:ihunt/vistas/propietario/notificaciones_propietario.dart';
 import 'vistas/propietario/registerRoom.dart';
 
 // IMPORTAR VISTAS
@@ -52,8 +51,6 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
-
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -82,9 +79,10 @@ class IHuntApp extends StatelessWidget {
 
     var dataUser = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection(GlobalDataUser().userCollection)
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get();
+
     return dataUser;
   }
 
@@ -106,10 +104,7 @@ class IHuntApp extends StatelessWidget {
             );
           }
           else if(snapshot.hasData) {
-
             try{
-              //print("  ======>     ${snapshot.hasData}  ");
-              //print("1 ELSE CONDITIION");
               print("#######################################################");
               print("#######################################################");
               print("A ${snapshot.data['tipo']}");
@@ -118,23 +113,23 @@ class IHuntApp extends StatelessWidget {
               print("#######################################################");
             }catch (error){
               if(error.toString().contains('Bad state')){
-                //print("#################error: $error");
                 return LoginPage();
               }else{
-                return MainScreen();
+                return LoginPage();
               }
             }
-
             if (snapshot.data['tipo'] == 'Usuario'){
               return UserView();
-
-            }else{
+            }
+            else if (snapshot.data['tipo'] == 'Propietario'){
               return Landlord();
-
+            }
+            else{
+              return LoginPage();
             }
           }
           else{
-            return MainScreen();
+            return LoginPage();
           }
         }
     );
@@ -143,7 +138,7 @@ class IHuntApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Renti',
+      title: 'RentI',
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, userSnapshot){
@@ -152,12 +147,10 @@ class IHuntApp extends StatelessWidget {
                 child: CircularProgressIndicator()
             );
           }
-
           if (userSnapshot.data != null && FirebaseAuth.instance.currentUser.emailVerified){
             return getViewWidget();
           }
           else {
-            //print("user is not logged in");
             return MainScreen();
           }
         },

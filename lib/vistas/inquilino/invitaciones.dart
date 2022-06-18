@@ -85,7 +85,7 @@ class InvitacionesState extends State<InvitacionesInquilino>{
   }
 
 
-  Future getInvitacionesRecientes(_idUsuarioLive, tokenAuth)async {
+  Future getInvitacionesRecientes(_idUsuarioLive, tokenAuth) async {
 
     Api _api = Api();
     final body = jsonEncode({

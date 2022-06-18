@@ -16,13 +16,13 @@ class Landlord extends StatefulWidget {
 }
 
 
-class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin{
+class _LandlordState extends State<Landlord> {
   User _currentUser;
   String _nombre;
   int _currentIndex = 0;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  String messageTitle = "Empty!";
+  String AmessageTitle = "Empty!";
   var tokenBy = '';
 
   @override
@@ -35,14 +35,14 @@ class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       setState(() {
-        messageTitle = event.notification.title;
+        AmessageTitle = event.notification.title;
         //notificationAlert = "New Notification Alert";
       });
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
       setState(() {
-        messageTitle = event.notification.title;
+        AmessageTitle = event.notification.title;
         //notificationAlert = "Application opened from Notification";
       });
     });
@@ -55,6 +55,7 @@ class _LandlordState extends State<Landlord> with SingleTickerProviderStateMixin
         .collection(GlobalDataLandlord().userCollection)
         .doc(_currentUser.uid)
         .get();
+
     setState(() {
       _nombre = snapShoot['nombre'];
     });

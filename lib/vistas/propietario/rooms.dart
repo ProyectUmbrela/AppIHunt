@@ -110,6 +110,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       Map<String, String> fotosMap = {};
       getValue() async{
         for(int i = 0; i < data['habitaciones'].length; i++){
+
           var document = data['habitaciones'][i]['idhabitacion'] + '_${data['habitaciones'][i]['idpropietario']}';
           var result = await getSpecie(document);
           int publicar = result.data()['publicar'];
@@ -120,7 +121,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
       }
       // getting status of room
       await getValue();
-
       data['habitaciones'].forEach((room) {
         _rooms.add(Room(
             publicar: statusMap[room['idhabitacion']],
@@ -132,7 +132,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
             fechaupdate: room['fechaupdate'],
             idhabitacion: room['idhabitacion'],
             idpropietario: room['idpropietario'],
-            idusuario: room['idusuario'],
+            idusuario: room['nombre'],
             precio: room['precio'],
             servicios: room['servicios'],
             status: room['estatus'],
@@ -269,7 +269,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
                                     title: Text('Habitación: ${snapshot.data[index].idhabitacion}'),
                                     subtitle: Text(
                                       'Inquilino: ${
-                                          snapshot.data[index].idusuario == "" || snapshot.data[index].idusuario == null? 'No' : snapshot.data[index].idusuario
+                                          snapshot.data[index].idusuario == "" || snapshot.data[index].idusuario == null ? 'No' : snapshot.data[index].idusuario
                                       }',
                                       style:
                                       TextStyle(color: Colors.black.withOpacity(0.6)),

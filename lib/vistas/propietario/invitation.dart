@@ -102,6 +102,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
   @override
   void initState(){
     setData();
+    super.initState();
   }
 
   @override

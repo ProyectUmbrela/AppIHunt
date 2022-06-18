@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/rendering.dart';
-//import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/provider.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
 import 'package:ihunt/vistas/inquilino/misHabitaciones.dart';
@@ -11,8 +9,6 @@ import 'package:ihunt/vistas/profiles/user_profile.dart';
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
-
-// AdMob
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class UserView extends StatefulWidget {
@@ -60,11 +56,9 @@ class _UserState extends State<UserView> {
         .doc(_currentUser.uid)
         .get();
 
-    //SharedPreferences localStorage = await SharedPreferences.getInstance();
-
     setState(() {
       _nombre = snapShoot['nombre'];
-      //localStorage.setString('GlobalUserName', 'FREDY MARIN FLORES');
+      //localStorage.setString('GlobalUserName', 'A NAME');
     });
   }
 

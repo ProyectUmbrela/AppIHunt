@@ -56,10 +56,13 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     var response = await _api.GetTenants(msg, tokenAuth);
     var data = jsonDecode(response.body);
     List<Tenant> _tenants = [];
+    print("#####################################################");
+    print("#####################################################");
     print(data);
+    print("#####################################################");
+    print("#####################################################");
 
     if (response.statusCode == 201) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
 
       data['inquilinos'].forEach((tenant) {
         _tenants.add(Tenant(
@@ -70,7 +73,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
             id: tenant['id'],
             idhabitacion: tenant['idhabitacion'],
             idpropietario: tenant['idpropietario'],
-            idusuario: tenant['idusuario'],
+            idusuario: tenant['nombre'],
             precio: tenant['precio']
         ));
       });
@@ -90,8 +93,8 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
   void setData() async{
     setState(() {
       currentUser = FirebaseAuth.instance.currentUser;
-      getRooms();
-      print(rooms);
+      //getRooms();
+      //print(rooms);
     });
   }
 
@@ -106,7 +109,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     setData();
   }
 
-  Future getRooms() async{
+  /*Future getRooms() async{
     Api _api = Api();
 
     var snapShoot = await FirebaseFirestore
@@ -143,7 +146,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
         //_cupertinoDialog(context, data['message'], 'Notificación');
       }
     }
-  }
+  }*/
 
   Future deleteTenant(id, idhabitacion, idinquilino) async{
 
@@ -198,7 +201,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "No tienes inquilinos registrados",
+                      "Sin inquilinos registrados",
                       style: Theme.of(context).textTheme.headline4,
                       textAlign: TextAlign.center,
                     ),
@@ -211,7 +214,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                   children: <Widget> [
                     ListView.builder(
                       itemCount: snapshot.data.length,
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(10),
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
@@ -244,26 +247,28 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                             child: Material(
                               color: Colors.black12,
                               shadowColor: Colors.deepPurpleAccent,
-                              //borderRadius: BorderRadius.circular(20.0),
                               child: Column(
                                 children: [
                                   ListTile(
-                                    leading: Icon(Icons.airline_seat_individual_suite),
+                                    leading: SizedBox(
+                                      height: 60.0,
+                                      width: 60.0,
+                                      child: Center(child: Icon(Icons.airline_seat_individual_suite),),
+                                    ),
                                     title: Text('Inquilino: ${snapshot.data[index].idusuario}'),
                                     subtitle: Text(
                                       'Habitación: ${snapshot.data[index].idhabitacion}',
-                                      style:
-                                      TextStyle(color: Colors.black.withOpacity(0.6)),
+                                      style: TextStyle(color: Colors.black.withOpacity(0.6)),
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 10),
+                                        vertical: 2, horizontal: 5),
                                     child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
                                           Container(
-                                            padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
+                                            padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 5),
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               children: [
@@ -302,16 +307,17 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
                                               ],
                                             ),
                                           ),
-                                        ]),
+                                        ],
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 10),
+                                        vertical: 2, horizontal: 5),
                                     child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
                                           Container(
-                                            padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 10),
+                                            padding: const EdgeInsets.symmetric(vertical: .0004, horizontal: 5),
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.end,
                                               children: [

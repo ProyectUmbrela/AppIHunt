@@ -1,4 +1,4 @@
-
+import 'package:ihunt/providers/provider.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -135,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Future sendData(var correo) async {
 
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     Api _api = Api();
     final body = jsonEncode({
       'correo': correo
@@ -205,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
 
         var snapShoot = await FirebaseFirestore
             .instance
-            .collection('users')
+            .collection(GlobalDataUser().userCollection)
             .doc(user[0].uid)
             .get();
 
@@ -225,7 +224,6 @@ class _LoginPageState extends State<LoginPage> {
                 builder: (context) => UserView()));
           }
           else{
-
             setState(() => _saving = false);
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -346,7 +344,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          inAsyncCall: _saving
+          inAsyncCall: _saving,
       ),
     );
   }
