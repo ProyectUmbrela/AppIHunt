@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,61 +39,66 @@ class Tenant{
 class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
 
   Future getTenants(id) async{
-    Api _api = Api();
+    try{
+      Api _api = Api();
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataLandlord().userCollection)
+          .doc(currentUser.uid)
+          .get();
+      var _userid = snapShoot['usuario'];
+      String tokenAuth = await currentUser.getIdToken();
 
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection(GlobalDataLandlord().userCollection)
-        .doc(currentUser.uid)
-        .get();
-    var _userid = snapShoot['usuario'];
-    String tokenAuth = await currentUser.getIdToken();
+      final msg = jsonEncode({"usuario": _userid});
 
-    final msg = jsonEncode({
-      "usuario": _userid
-    });
+      var response = await _api.GetTenants(msg, tokenAuth);
+      var data = jsonDecode(response.body);
+      List<Tenant> _tenants = [];
+      print("#####################################################");
+      print("#####################################################");
+      print(data);
+      print("#####################################################");
+      print("#####################################################");
 
-    var response = await _api.GetTenants(msg, tokenAuth);
-    var data = jsonDecode(response.body);
-    List<Tenant> _tenants = [];
-    print("#####################################################");
-    print("#####################################################");
-    print(data);
-    print("#####################################################");
-    print("#####################################################");
-
-    if (response.statusCode == 201) {
-
-      data['inquilinos'].forEach((tenant) {
-        _tenants.add(Tenant(
-            fechafincontrato: tenant['fechafincontrato'],
-            fechainicontrato: tenant['fechainicontrato'] ,
-            fechamax: tenant['fechamax'],
-            fechapago: tenant['fechapago'],
-            id: tenant['id'],
-            idhabitacion: tenant['idhabitacion'],
-            idpropietario: tenant['idpropietario'],
-            idusuario: tenant['nombre'],
-            precio: tenant['precio']
-        ));
-      });
-      return _tenants;
-    }
-    if (response.statusCode == 403){
-      // este status es para caso sin inquilino
-      return _tenants;
-    }else {
-      if (Platform.isAndroid) {
-        //_materialAlertDialog(context, data['message'], 'Notificación');
-      } else if (Platform.isIOS) {
-        //_cupertinoDialog(context, data['message'], 'Notificación');
+      if (response.statusCode == 201) {
+        data['inquilinos'].forEach((tenant) {
+          _tenants.add(Tenant(
+              fechafincontrato: tenant['fechafincontrato'],
+              fechainicontrato: tenant['fechainicontrato'],
+              fechamax: tenant['fechamax'],
+              fechapago: tenant['fechapago'],
+              id: tenant['id'],
+              idhabitacion: tenant['idhabitacion'],
+              idpropietario: tenant['idpropietario'],
+              idusuario: tenant['nombre'],
+              precio: tenant['precio']));
+        });
+        return _tenants;
       }
+      if (response.statusCode == 403) {
+        // este status es para caso sin inquilino
+        return _tenants;
+      } else {
+        if (Platform.isAndroid) {
+          //_materialAlertDialog(context, data['message'], 'Notificación');
+        } else if (Platform.isIOS) {
+          //_cupertinoDialog(context, data['message'], 'Notificación');
+        }
+      }
+    }on Exception catch (exception) {
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return null;
+    } catch (error) {
+
     }
   }
+
   void setData() async{
     setState(() {
       currentUser = FirebaseAuth.instance.currentUser;
-      //getRooms();
+      getFreeRooms();
       //print(rooms);
     });
   }
@@ -109,49 +114,48 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
     setData();
   }
 
-  /*Future getRooms() async{
-    Api _api = Api();
+  Future getFreeRooms() async{
+    try{
+      Api _api = Api();
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataLandlord().userCollection)
+          .doc(currentUser.uid)
+          .get();
+      var _id = snapShoot['usuario'];
+      String tokenAuth = await currentUser.getIdToken();
 
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection(GlobalDataLandlord().userCollection)
-        .doc(currentUser.uid)
-        .get();
-    var _id = snapShoot['usuario'];
-    String tokenAuth = await currentUser.getIdToken();
+      final msg = jsonEncode({"usuario": _id});
 
-    final msg = jsonEncode({
-      "usuario": _id
-    });
+      var response = await _api.GetRooms(msg, tokenAuth);
+      var data = jsonDecode(response.body);
 
-    var response = await _api.GetRooms(msg, tokenAuth);
-    var data = jsonDecode(response.body);
-
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-
-      data['habitaciones'].forEach((room) {
-        if (room['estatus'] == 0){
-          rooms.add(room['idhabitacion']);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+        data['habitaciones'].forEach((room) {
+          if (room['estatus'] == 0) {
+            rooms.add(room['idhabitacion']);
+          }
+        });
+        return rooms;
+      } else {
+        if (Platform.isAndroid) {
+        } else if (Platform.isIOS) {
+          //_cupertinoDialog(context, data['message'], 'Notificación');
         }
-
-      });
-      return rooms;
-    } else {
-      if (Platform.isAndroid) {
-        //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
-      } else if (Platform.isIOS) {
-        //_cupertinoDialog(context, data['message'], 'Notificación');
       }
+    }on Exception catch (exception) {
+      /*final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);*/
+      return null;
+    } catch (error) {
+      return null;
     }
-  }*/
+  }
 
-  Future deleteTenant(id, idhabitacion, idinquilino) async{
-
+  /*Future deleteTenant(id, idhabitacion, idinquilino) async{
     Api _api = Api();
-
     final msg = jsonEncode({
       "idinquilino": idinquilino,
       "idhabitacion": idhabitacion,
@@ -172,7 +176,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
       }
 
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +189,7 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
               // Esperando la respuesta de la API
               if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
                 return Center(
-                  child: Text("Algo salió mal en tu solicitud"),
+                  //child: Text("Algo salió mal en tu solicitud"),
                 );
               }
               return Center(

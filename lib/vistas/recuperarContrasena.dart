@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
@@ -60,39 +61,52 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
 
     final form = formKey.currentState;
     if (form.validate()) {
-      print("******************* EMAIL: ${emailField}");
-      Api _api = Api();
-      final body = jsonEncode({
-        'usuario': emailField
-      });
-      print("======================> ${body}");
-      var response = await _api.resetPasswordPost(body);
-      print("======================> ${response.body}");
-      //int statusCode = response.statusCode;
-      var resp = json.decode(response.body);
+      try{
+        print("******************* EMAIL: ${emailField}");
+        Api _api = Api();
+        final body = jsonEncode({'usuario': emailField});
+        print("======================> ${body}");
+        var response = await _api.resetPasswordPost(body);
+        print("======================> ${response.body}");
+        //int statusCode = response.statusCode;
+        var resp = json.decode(response.body);
 
-      print("======================> ${resp}");
+        print("======================> ${resp}");
 
-      if (resp['code'] == 'badRequest'){
-        print("A ${resp['message']}");
-        _showDialog(1, 'El correo no existe');
-        setState(() => _saving = false);
-      }
-      else{
-        print("B ${resp['message']}");
-        _showDialog(2, 'Se ha enviado un correo para recuperar tu contraseña');
-        setState(() => _saving = false);
+        if (resp['code'] == 'badRequest') {
+          print("A ${resp['message']}");
+          _showDialog(1, 'El correo no existe');
+          setState(() => _saving = false);
+        } else {
+          print("B ${resp['message']}");
+          _showDialog(
+              2, 'Se ha enviado un correo para recuperar tu contraseña');
+          setState(() => _saving = false);
 
-        Future.delayed(Duration(seconds: 3), () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()));
+          Future.delayed(Duration(seconds: 3), () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
+          });
+        }
+      }on Exception catch (exception) {
+        setState(() {
+          _saving = false;
         });
+        final snackBar = SnackBar(
+          content: const Text('Ocurrio un error!'),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } catch (error) {
+        setState(() {
+          _saving = false;
+        });
+
       }
+
+
     }else{
       setState(() => _saving = false);
     }
-
   }
 
   @override
@@ -101,8 +115,11 @@ class _RecuperarContrasenaState extends State<RecuperarContrasena> {
     final emailField = TextFormField(
         autofocus: true,
         controller: myControllerEmail,
+        inputFormatters: [
+          new LengthLimitingTextInputFormatter(100),
+        ],
         decoration: buildInputDecoration("Correo", Icons.email),
-      validator: validateEmail,
+        validator: validateEmail,
     );
 
 

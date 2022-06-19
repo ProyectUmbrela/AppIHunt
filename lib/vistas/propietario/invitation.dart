@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,51 +34,58 @@ class Invitation{
 class _InvitationsState extends State<Invitations> with SingleTickerProviderStateMixin {
 
   Future getInvitations(id) async{
-    Api _api = Api();
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection(GlobalDataLandlord().userCollection)
-        .doc(currentUser.uid)
-        .get();
-    var _userid = snapShoot['usuario'];
-    String tokenAuth = await currentUser.getIdToken();
 
-    final msg = jsonEncode({
-      "usuario": _userid
-    });
+    try{
+      Api _api = Api();
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataLandlord().userCollection)
+          .doc(currentUser.uid)
+          .get();
+      var _userid = snapShoot['usuario'];
+      String tokenAuth = await currentUser.getIdToken();
 
-    var response = await _api.GetInvitations(msg, tokenAuth);
-    var data = jsonDecode(response.body);
-    print("###########################################################");
-    print("###########################################################");
-    print(data);
-    print("###########################################################");
-    print("###########################################################");
+      final msg = jsonEncode({"usuario": _userid});
 
-    List<Invitation> _invitations = [];
+      var response = await _api.GetInvitations(msg, tokenAuth);
+      var data = jsonDecode(response.body);
+      print("###########################################################");
+      print("###########################################################");
+      print(data);
+      print("###########################################################");
+      print("###########################################################");
 
-    if (response.statusCode == 201) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+      List<Invitation> _invitations = [];
 
-      data["invitaciones"].forEach((invitation) {
-        _invitations.add(Invitation(
-            idusuario: invitation['idusuario'],
-            idhabitacion: invitation['idhabitacion'],
-            num_invitacion: invitation['num_invitacion'],
-            fecha_envio: invitation['fecha_envio'],
-            estatus: invitation['estatus'],
-            telefono: invitation['telefono'],
-            nombre: invitation['nombre']
-        ));
-      });
-      return _invitations;
-    } else {
-      if (Platform.isAndroid) {
-        //_materialAlertDialog(context, data['message'], 'Notificación');
-        print(response.statusCode);
-      } else if (Platform.isIOS) {
-        //_cupertinoDialog(context, data['message'], 'Notificación');
+      if (response.statusCode == 201) {
+        // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+
+        data["invitaciones"].forEach((invitation) {
+          _invitations.add(Invitation(
+              idusuario: invitation['idusuario'],
+              idhabitacion: invitation['idhabitacion'],
+              num_invitacion: invitation['num_invitacion'],
+              fecha_envio: invitation['fecha_envio'],
+              estatus: invitation['estatus'],
+              telefono: invitation['telefono'],
+              nombre: invitation['nombre']));
+        });
+        return _invitations;
+      } else {
+        if (Platform.isAndroid) {
+          //_materialAlertDialog(context, data['message'], 'Notificación');
+          print(response.statusCode);
+        } else if (Platform.isIOS) {
+          //_cupertinoDialog(context, data['message'], 'Notificación');
+        }
       }
+    }on Exception catch (exception) {
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return null;
+    } catch (error) {
+      return null;
     }
   }
 
@@ -117,7 +123,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
               // Esperando la respuesta de la API
               if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
                 return Center(
-                  child: Text("Algo salió mal en tu solicitud"),
+                  //child: Text("Algo salió mal en tu solicitud"),
                 );
               }
               return Center(

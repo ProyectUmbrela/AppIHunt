@@ -147,12 +147,13 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
           //_cupertinoDialog(context, data['message'], 'Notificación');
         }
       }
-    }on Exception catch (e) {
-      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      print(e);
-      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    }on Exception catch (exception) {
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return null;
+    } catch (error) {
       return null;
     }
   }
@@ -180,7 +181,7 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
               //print("==========> ${snapshot.data} | ${snapshot.hasData} | ${snapshot.hasError}");
               if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
                 return Center(
-                  child: Text("Algo salió mal en tu solicitud"),
+                  //child: Text("Algo salió mal en tu solicitud"),
                 );
               }
               return Center(

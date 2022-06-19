@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-//import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
 import 'package:ihunt/providers/provider.dart';
@@ -134,18 +133,26 @@ class InvitacionesState extends State<InvitacionesInquilino>{
 
 
   Future getInvitaciones() async {
+    try{
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataUser().userCollection)
+          .doc(_currentUser.uid)
+          .get();
 
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection(GlobalDataUser().userCollection)
-        .doc(_currentUser.uid)
-        .get();
+      var _idUsuarioLive = snapShoot['usuario'];
+      String tokenAuth = await _currentUser.getIdToken();
 
-    var _idUsuarioLive = snapShoot['usuario'];
-    String tokenAuth = await _currentUser.getIdToken();
-
-    var result = await getInvitacionesRecientes(_idUsuarioLive, tokenAuth);
-    return result;
+      var result = await getInvitacionesRecientes(_idUsuarioLive, tokenAuth);
+      return result;
+    }on Exception catch (exception) {
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 
 
@@ -201,7 +208,7 @@ class InvitacionesState extends State<InvitacionesInquilino>{
           // Esperando la respuesta de la API
           if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
             return Center(
-              child: Text("Algo salió mal en tu solicitud"),
+              //child: Text("Algo salió mal en tu solicitud"),
             );
           }
           return Center(

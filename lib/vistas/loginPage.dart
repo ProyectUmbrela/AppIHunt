@@ -192,65 +192,73 @@ class _LoginPageState extends State<LoginPage> {
 
   final form = formKey.currentState;
   if(form.validate()){
-    var user = await FireAuth
-        .signInUsingEmailPassword(
-      email: emailField.text,
-      password: passwordField.text,
-    );
+    try{
+        var user = await FireAuth.signInUsingEmailPassword(
+          email: emailField.text,
+          password: passwordField.text,
+        );
 
-    print("1 =================> ${user[0]} <==============");
-    print("2 =================> ${user[1]} <==============");
-    if (user[0] != null) {
+        print("1 =================> ${user[0]} <==============");
+        print("2 =================> ${user[1]} <==============");
+        if (user[0] != null) {
+          if (user[0].emailVerified) {
+            var snapShoot = await FirebaseFirestore.instance
+                .collection(GlobalDataUser().userCollection)
+                .doc(user[0].uid)
+                .get();
 
-      if (user[0].emailVerified){
-
-        var snapShoot = await FirebaseFirestore
-            .instance
-            .collection(GlobalDataUser().userCollection)
-            .doc(user[0].uid)
-            .get();
-
-        if (snapShoot != null){
-          if (snapShoot['tipo'] == 'Propietario'){
-
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => Landlord(),
-              ),
-            );
-          }
-          else if (snapShoot['tipo'] == 'Usuario'){
-
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) => UserView()));
-          }
-          else{
+            if (snapShoot != null) {
+              if (snapShoot['tipo'] == 'Propietario') {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => Landlord(),
+                  ),
+                );
+              } else if (snapShoot['tipo'] == 'Usuario') {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => UserView()));
+              } else {
+                setState(() => _saving = false);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => MainScreen(),
+                  ),
+                );
+              }
+            }
+          } else {
+            _showDialog(2,
+                "Tu cuenta aún no ha sido verificada. Revisa tu correo para confirmar");
             setState(() => _saving = false);
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => MainScreen(),
-              ),
-            );
+          }
+        } else {
+          if (user[1] == 'user-disabled') {
+            var message = "La cuenta ha sido desactivada";
+            showAlertDialog(context, message, emailField.text);
+            setState(() => _saving = false);
+          } else {
+            _showDialog(2, "Usuario o contraseña incorrectos");
+            setState(() => _saving = false);
           }
         }
-      }else{
-        _showDialog(2, "Tu cuenta aún no ha sido verificada. Revisa tu correo para confirmar");
-        setState(() => _saving = false);
-      }
-    }else{
+      }on Exception catch (exception) {
+      setState(() {
+        _saving = false;
+      });
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } catch (error) {
+      setState(() {
+        _saving = false;
+      });
 
-      if (user[1] == 'user-disabled'){
-        var message = "La cuenta ha sido desactivada";
-        showAlertDialog(context, message, emailField.text);
-        setState(() => _saving = false);
-
-      }else{
-        _showDialog(2, "Usuario o contraseña incorrectos");
-        setState(() => _saving = false);
-      }
     }
-  }else{
+
+
+
+    }else{
     setState(() => _saving = false);
   }
 

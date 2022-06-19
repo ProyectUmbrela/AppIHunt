@@ -8,33 +8,26 @@ class DeleteAccount extends StatelessWidget {
 
   Future<String> sendData(var correo) async {
 
-    //print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     String tokenAuth = await FirebaseAuth.instance.currentUser.getIdToken();
     String currentEmail = await FirebaseAuth.instance.currentUser.email;
 
     if(correo == currentEmail){
-      //print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
       String responseRequest;
       Api _api = Api();
       final body = jsonEncode({
         'correo': correo
       });
-      //print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
       var response = await _api.DisabledCuenta(body, tokenAuth);
 
       int statusCode = response.statusCode;
-      var resp = json.decode(response.body);
-      //print("#################### 1 response: ${statusCode}"); // 201 //422 invalidInput
+      //var resp = json.decode(response.body);
+      print("#################### 1 response: ${statusCode}"); // 201 //422 invalidInput
       // {code: success, message: Se ha desactivado el usuario desonses@gmail.com }
       if(statusCode == 201){
-        //print("Solicitud enviada");
-        //print("#################### 2 response: ${resp}");
         responseRequest = 'Solicitud enviada';
       } else if (statusCode == 422){
-        //print("No coincide el correo registrado");
         responseRequest = 'No coincide el correo registrado';
       } else{
-        //print("Ocurrio un error en tu solicitud");
         responseRequest = 'Ocurrio un error inesperado en tu solicitud';
       }
       return responseRequest;
@@ -84,14 +77,9 @@ class DeleteAccount extends StatelessWidget {
                   onPressed: () async {
                     var isEmail = EmailValidating(_textFieldController.text);
                     if (isEmail == 'email-valid'){
-
-                      //print("**************** To send data");
-                      //print("************** result if is a valid email: ${isEmail}");
-
                       var responseRequest = await sendData(_textFieldController.text);
                       Navigator.of(context).pop();
                       _showDialog(context, 2, responseRequest);
-
                     }
                     else{
                       print("****************** Email not valid");

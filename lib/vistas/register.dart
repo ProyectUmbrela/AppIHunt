@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 //import 'package:flutter/widgets.dart';
@@ -36,6 +37,7 @@ class _RegisterState extends State<Register> {
       _userphone,
       _password,
       _confirmPassword;
+
   String _chosenValue;
   TextStyle style = TextStyle(fontSize: 18, color: Colors.white);
 
@@ -63,6 +65,9 @@ class _RegisterState extends State<Register> {
     final userId = TextFormField(
       autofocus: false,
       controller: useridCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(30),
+      ],
       validator: (value) => value.isEmpty ? "Usuario requerido" : null,
       onSaved: (value) => _userid = value,
       decoration: buildInputDecoration("Usuario", Icons.account_box),
@@ -71,6 +76,9 @@ class _RegisterState extends State<Register> {
     final userName = TextFormField(
       autofocus: false,
       controller: usernameCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(100),
+      ],
       validator: (value) => value.isEmpty ? "Nombre requerido" : null,
       onSaved: (value) => _username = value,
       decoration: buildInputDecoration("Nombre", Icons.accessibility),
@@ -79,6 +87,9 @@ class _RegisterState extends State<Register> {
     final userEmail = TextFormField(
       autofocus: false,
       controller: useremailCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(100),
+      ],
       validator: validateEmail,
       onSaved: (value) => _useremail = value,
       decoration: buildInputDecoration("Correo", Icons.email),
@@ -96,6 +107,9 @@ class _RegisterState extends State<Register> {
       autofocus: false,
       controller: passwordCtrl,
       obscureText: true,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(500),
+      ],
       validator: (value) => value.isEmpty ? "Contraseña requerida" : null,
       onSaved: (value) => _password = value,
       decoration: buildInputDecoration("Confirmar contraseña", Icons.remove_red_eye),
@@ -104,9 +118,12 @@ class _RegisterState extends State<Register> {
     final confirmPassword = TextFormField(
       autofocus: false,
       controller: confirmPasswordCtrl,
+      obscureText: true,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(500),
+      ],
       validator: (value) => validatePassword(value, passwordCtrl.text),
       onSaved: (value) => _confirmPassword = value,
-      obscureText: true,
       decoration: buildInputDecoration("Confirmar contraseña", Icons.remove_red_eye),
     );
 
@@ -151,9 +168,7 @@ class _RegisterState extends State<Register> {
 
     Widget _showMaterialDialog(String texto, String noty) {
       return AlertDialog(
-        //title: _dialogTitle(noty),
         content: _contentText(texto),
-        //actions: _buildActions(),
       );
     }
 
@@ -182,55 +197,70 @@ class _RegisterState extends State<Register> {
 
       if (form.validate()) {
 
-        form.save();
-        Api _api = Api();
+        try{
+          form.save();
+          Api _api = Api();
 
-        final msg = jsonEncode({
-          'idusuario': useridCtrl.text,
-          'nombre': usernameCtrl.text,
-          'correo': useremailCtrl.text,
-          'telefono': userphoneCtrl.text,
-          'contrasena': passwordCtrl.text,
-          'tipo': _chosenValue
-        });
+          final msg = jsonEncode({
+            'idusuario': useridCtrl.text,
+            'nombre': usernameCtrl.text,
+            'correo': useremailCtrl.text,
+            'telefono': userphoneCtrl.text,
+            'contrasena': passwordCtrl.text,
+            'tipo': _chosenValue
+          });
 
-        print("###################################################");
-        print("###################################################");
-        print(msg);
-        print("###################################################");
-        print("###################################################");
+          print("###################################################");
+          print("###################################################");
+          print(msg);
+          print("###################################################");
+          print("###################################################");
 
-        var response = await _api.registerPost(msg);
-        Map data = jsonDecode(response.body);
+          var response = await _api.registerPost(msg);
+          Map data = jsonDecode(response.body);
 
-        if (response.statusCode == 201) {
+          if (response.statusCode == 201) {
 
-          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-          debugPrint("Data posted successfully");
-          setState(() => _saving = false);
+            // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+            debugPrint("Data posted successfully");
+            setState(() => _saving = false);
 
-          _materialAlertDialog(context, 'Registro exitoso, revisa tu correo para completar tu registro', 'Notificación');
-          clearForm();
-        }
-        else if(data['message'] == 'El usuario ya existe'){
+            _materialAlertDialog(context, 'Registro exitoso, revisa tu correo para completar tu registro', 'Notificación');
+            clearForm();
+          }
+          else if(data['message'] == 'El usuario ya existe'){
+            setState(() {
+              _saving = false;
+            });
+            _materialAlertDialog(context, 'Ya existe una cuenta con este correo', 'Notificación');
+          } else {
+            if (Platform.isAndroid) {
+              setState(() {
+                _saving = false;
+              });
+              _materialAlertDialog(context, data['message'], 'Notificación');
+            } else if (Platform.isIOS) {
+              setState(() {
+                _saving = false;
+              });
+              _cupertinoDialog(context, data['message'], 'Notificación');
+            }
+          }
+        }on Exception catch (exception) {
           setState(() {
             _saving = false;
           });
-          _materialAlertDialog(context, 'Ya existe una cuenta con este correo', 'Notificación');
-        } else {
-          if (Platform.isAndroid) {
-            setState(() {
-              _saving = false;
-            });
-            _materialAlertDialog(context, data['message'], 'Notificación');
-          } else if (Platform.isIOS) {
-            setState(() {
-              _saving = false;
-            });
-            _cupertinoDialog(context, data['message'], 'Notificación');
+          final snackBar = SnackBar(
+            content: const Text('Ocurrio un error!'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } catch (error) {
+          setState(() {
+            _saving = false;
+          });
 
-          }
         }
+
       } else {
         setState(() {
           _saving = false;

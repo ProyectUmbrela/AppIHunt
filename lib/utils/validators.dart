@@ -61,10 +61,18 @@ String numberValidator(String value) {
   if(value == null) {
     return null;
   }
+
   final n = double.tryParse(value);
   if(n == null) {
     return '"$value" No es un número válido';
   }
+  else if(n < 0){
+    return '1 No es un número válido';
+  }
+  else if(n > 1000000){
+    return 'No es un número válido';
+  }
+
   return null;
 }
 
@@ -98,8 +106,6 @@ String EndDateValidator(DateTime a_date) {
 
 
 String validateDates(DateTime firstDate, String secondDate){
-
-  //print(${DateFormat('MM').parse('02')});
 
   if(firstDate == null) {
     return null;

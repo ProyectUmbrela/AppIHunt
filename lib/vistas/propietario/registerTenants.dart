@@ -2,6 +2,7 @@ import 'dart:convert';
 //import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/widgets.dart';
 import 'package:date_field/date_field.dart';
@@ -55,7 +56,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
 
 
   String _iduser, _room, _contrato, _months, _plazo, _details;
-  String _paydate = "";
+  //String _paydate = "";
 
   bool _saving = false;
   TextStyle style = TextStyle(fontSize: 18);
@@ -68,6 +69,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
     final userId = TextFormField(
       autofocus: false,
       controller: iduserCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(30),
+      ],
       validator: (value) => value.isEmpty ? "Ingresa el usuario que deseas registrar" : null,
       onSaved: (value) => _iduser = value,
       decoration: buildInputDecoration("iduser", Icons.person_add),
@@ -155,9 +159,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
     );*/
 
     final endDate = DateTimeFormField(
-      ////////////////////////////enabled: false,
-        decoration: const InputDecoration(
-          hintStyle: TextStyle(color: Colors.black45),
+      //enabled: _contrato == 'Sí' ? true : false,
+      decoration: const InputDecoration(
+      hintStyle: TextStyle(color: Colors.black45),
           errorStyle: TextStyle(color: Colors.redAccent),
           border: OutlineInputBorder(),
           suffixIcon: Icon(Icons.event_note),
@@ -166,10 +170,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
         dateFormat: DateFormat.yMMMMd('es'),
         mode: DateTimeFieldPickerMode.date,
         autovalidateMode: AutovalidateMode.always,
-        validator: (value) => validateDates(value, startdateCtrl.text),///EndDateValidator,s
+        validator: (value) => validateDates(value, startdateCtrl.text),
         //validator: (e) => (e?.day ?? 0) == 1 ? 'Fecha inválida' : null,
         onDateSelected: (DateTime value) {
-
           enddateCtrl.text = value.toString();
           print("|enddateCtrl|************************** ${enddateCtrl.text}");
         },
@@ -207,6 +210,9 @@ class _RegisterTenantState extends State<RegisterTenant> {
     final Details = TextFormField(
       autofocus: false,
       controller: detailsCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       onSaved: (value) => _details = value,
       decoration: buildInputDecoration("Términos", Icons.more_vert),
     );
@@ -215,13 +221,6 @@ class _RegisterTenantState extends State<RegisterTenant> {
       final form = formKey.currentState;
 
       if (form.validate()) {
-
-        //setState(() => _saving = false);
-        /*if(startdateCtrl.text.isEmpty || enddateCtrl.text.isEmpty){
-          setState(() => _saving = false);
-          _showDialog(2, 'Añade una fecha de inicio y término');
-        }*/
-
         form.save();
 
         var snapShoot = await FirebaseFirestore

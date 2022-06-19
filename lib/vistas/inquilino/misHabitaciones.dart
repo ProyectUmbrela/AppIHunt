@@ -164,9 +164,7 @@ class _MisLugares extends State<Lugares> {
   }
 
   void setData() async{
-
     _currentUser = FirebaseAuth.instance.currentUser;
-
   }
 
   Widget habitacionDetalles(habitacion) {
@@ -214,19 +212,26 @@ class _MisLugares extends State<Lugares> {
 
 
   Future getProjectDetails() async {
+    try{
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataUser().userCollection)
+          .doc(_currentUser.uid)
+          .get();
 
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection(GlobalDataUser().userCollection)
-        .doc(_currentUser.uid)
-        .get();
+      var _idUsuarioLive = snapShoot['usuario'];
+      String tokenAuth = await _currentUser.getIdToken();
 
-    var _idUsuarioLive = snapShoot['usuario'];
-    String tokenAuth = await _currentUser.getIdToken();
-
-    var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
-    return result;
-
+      var result = await getListaHabitaciones(_idUsuarioLive, tokenAuth);
+      return result;
+    }on Exception catch (exception) {
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 
   Widget projectWidget() {
@@ -238,7 +243,7 @@ class _MisLugares extends State<Lugares> {
           // Esperando la respuesta de la API
           if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
             return Center(
-              child: Text("Algo salió mal en tu solicitud"),
+              //child: Text("Algo salió mal en tu solicitud"),
             );
           }
           return Center(

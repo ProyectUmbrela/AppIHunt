@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-//import 'package:ihunt/vistas/propietario/rooms.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';
@@ -13,7 +12,6 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/providers/provider.dart';
-//import 'package:permission_handler/permission_handler.dart';
 
 
 class RegisterRoom extends StatefulWidget {
@@ -26,12 +24,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   String selectedCountry;
   int _currentstep = 0;
-  var addressCompound = '';
-  var estadoCompound = '';
-  var municipioCompound = '';
-  String selectedValueCP = null;
   final formKey = new GlobalKey<FormState>();
-  final multiPicker = ImagePicker();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> imageFileList = [];
 
@@ -74,6 +67,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final roomId = TextFormField(
       autofocus: false,
       controller: roomidCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(30),
+      ],
       validator: (value) => value.isEmpty ? "ID de habitación requerido" : null,
       onSaved: (value) => _roomid = value,
       decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
@@ -82,6 +78,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final dimensions = TextFormField(
       autofocus: false,
       controller: dimensionsCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(30),
+      ],
       validator: (value) => value.isEmpty ? "La dimensión es requerida" : null,
       onSaved: (value) => _dimensions = value,
       decoration: buildInputDecoration("Dimensión", Icons.menu),
@@ -90,6 +89,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final services = TextFormField(
       autofocus: false,
       controller: servicesCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       validator: (value) => value.isEmpty ? "Añade los servicios incluidos" : null,
       onSaved: (value) => _services = value,
       decoration: buildInputDecoration("Servicios", Icons.local_laundry_service),
@@ -98,6 +100,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final description = TextFormField(
       autofocus: false,
       controller: descriptionCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       onSaved: (value) => _description = value,
       decoration: buildInputDecoration("Descripción", Icons.description),
     );
@@ -113,9 +118,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final terms = TextFormField(
       autofocus: false,
       controller: termsCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       onSaved: (value) => _terms = value,
       decoration: buildInputDecoration("Términos", Icons.add_alert),
-
     );
 
     final registrarRoom = Material(
@@ -132,7 +139,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           child: Text("Registrar",
               textAlign: TextAlign.center,
               style: style.copyWith(color: Colors.white)),
-        )
+        ),
     );
 
     final addingPhotos = InkWell(
@@ -168,11 +175,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
                   Icons.camera,
                   color: Colors.blue,
                 ),
-            /*Icon(
-              CupertinoIcons.camera,
-              color: Colors.blue,
-              //.withOpacity(0.5),
-            ),*/
           ),
         ),
       ),
@@ -266,84 +268,92 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final form = formKey.currentState;
 
     if (form.validate()) {
-
       var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
-
       if (imageFileList.length <= maxImages){
-        form.save();
-        // preparando imagenes para codificar
-        List<String> images64_Base = [];
-        _images_to_base64() async {
-          for (int i = 0; i < imageFileList.length; i++) {
-            List<int> imageBytes = await imageFileList[i].readAsBytes();
-            String img64 = base64Encode(imageBytes);
-            images64_Base.add(img64);
-          }
-        }
 
-        // generando las imagenes en base64
-        await _images_to_base64();
-
-        // generando las coordenadas sobre la direccion proporcionada
-        var coordinates = await getLocation(fullAddress);
-        if (coordinates != null){
-          var snapShoot = await FirebaseFirestore.instance
-              .collection(GlobalDataLandlord().userCollection)
-              .doc(currentUser.uid)
-              .get();
-          var _iduser = snapShoot['usuario'];
-          String tokenAuth = await currentUser.getIdToken();
-
-
-          var generalDocument = {
-            'idhabitacion': roomidCtrl.text,
-            'idpropietario': _iduser,
-            'direccion': fullAddress,
-            'dimension': dimensionsCtrl.text,
-            'servicios': servicesCtrl.text,
-            'descripcion': descriptionCtrl.text,
-            'precio': priceCtrl.text,
-            'terminos': termsCtrl.text,
-            'latitud': coordinates.latitude,
-            'longitud': coordinates.longitude,
-            'publicar': 1,
-            'disponibilidad': 1,
-            'fotos': {},
-            'check_images': 1
-          };
-
-          if(images64_Base.isNotEmpty) {
-            for (int i = 0; i < images64_Base.length; i++) {
-              generalDocument['fotos'][i.toString()] = images64_Base[i];
+        try{
+          form.save();
+          // preparando imagenes para codificar
+          List<String> images64_Base = [];
+          _images_to_base64() async {
+            for (int i = 0; i < imageFileList.length; i++) {
+              List<int> imageBytes = await imageFileList[i].readAsBytes();
+              String img64 = base64Encode(imageBytes);
+              images64_Base.add(img64);
             }
           }
 
-          var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
-          print("######### RESPONSE: ${responseCode}");
-          if(responseCode == 201){
-            clearForm();
+          // generando las imagenes en base64
+          await _images_to_base64();
+
+          // generando las coordenadas sobre la direccion proporcionada
+          var coordinates = await getLocation(fullAddress);
+          if (coordinates != null) {
+            var snapShoot = await FirebaseFirestore.instance
+                .collection(GlobalDataLandlord().userCollection)
+                .doc(currentUser.uid)
+                .get();
+            var _iduser = snapShoot['usuario'];
+            String tokenAuth = await currentUser.getIdToken();
+
+            var generalDocument = {
+              'idhabitacion': roomidCtrl.text,
+              'idpropietario': _iduser,
+              'direccion': fullAddress,
+              'dimension': dimensionsCtrl.text,
+              'servicios': servicesCtrl.text,
+              'descripcion': descriptionCtrl.text,
+              'precio': priceCtrl.text,
+              'terminos': termsCtrl.text,
+              'latitud': coordinates.latitude,
+              'longitud': coordinates.longitude,
+              'publicar': 1,
+              'disponibilidad': 1,
+              'fotos': {},
+              'check_images': 1
+            };
+
+            if (images64_Base.isNotEmpty) {
+              for (int i = 0; i < images64_Base.length; i++) {
+                generalDocument['fotos'][i.toString()] = images64_Base[i];
+              }
+            }
+
+            var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
+            if (responseCode == 201) {
+              clearForm();
+              setState(() => _saving = false);
+              _showDialog(2, "Habitación registrada");
+            } else if (responseCode == 438) {
+              setState(() => _saving = false);
+              _showDialog(2, "Ya existe la habitación");
+            } else if (responseCode == 432) {
+              setState(() => _saving = false);
+              _showDialog(2, "No se localiza el usuario");
+            } else if (responseCode == 422) {
+              setState(() => _saving = false);
+              _showDialog(2, "Datos incorectos");
+            } else {
+              setState(() => _saving = false);
+              _showDialog(2, "Ocurrio un error con la solicitud");
+            }
+          } else {
             setState(() => _saving = false);
-            _showDialog(2, "Habitación registrada");
+            _showDialog(2, "No se encuentra la dirección");
           }
-          else if(responseCode == 438){
-            setState(() => _saving = false);
-            _showDialog(2, "Ya existe la habitación");
-          }
-          else if(responseCode == 432){
-            setState(() => _saving = false);
-            _showDialog(2, "No se localiza el usuario");
-          }
-          else if(responseCode == 422){
-            setState(() => _saving = false);
-            _showDialog(2, "Datos incorectos");
-          }
-          else{
-            setState(() => _saving = false);
-            _showDialog(2, "Ocurrio un error con la solicitud");
-          }
-        }else{
-          setState(() => _saving = false);
-          _showDialog(2, "No se encuentra la dirección");
+        }on Exception catch (exception) {
+          setState(() {
+            _saving = false;
+          });
+          final snackBar = SnackBar(
+            content: const Text('Ocurrio un error!'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } catch (error) {
+          setState(() {
+            _saving = false;
+          });
+
         }
       }
       else {
@@ -547,7 +557,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
             controller: cpCtrl,
             onSaved: (value) => _cpInput = value,
             decoration: InputDecoration(
-              hintText: 'Código postal',
+              //hintText: 'Código postal',
               border: OutlineInputBorder(),
             ),
               validator: (value) {
@@ -570,8 +580,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
           title: Text(_currentstep == 2 ? 'Calle': ''),
           content: TextFormField(
             controller: addressCtrl,
-            onSaved: (value) => _addressInput = value,
-            decoration: InputDecoration(
+              inputFormatters: [
+                new LengthLimitingTextInputFormatter(100),
+              ],
+              onSaved: (value) => _addressInput = value,
+              decoration: InputDecoration(
               hintText: 'Calle y num',
               border: OutlineInputBorder(),
             ),
