@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:flutter/widgets.dart';
+//import 'package:flutter/widgets.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/vistas/inquilino/invitacionDetalles.dart';
 import 'package:ihunt/providers/provider.dart';
@@ -199,6 +199,11 @@ class InvitacionesState extends State<InvitacionesInquilino>{
       builder: (context, snapshot) {
         if(!snapshot.hasData){
           // Esperando la respuesta de la API
+          if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
+            return Center(
+              child: Text("Algo salió mal en tu solicitud"),
+            );
+          }
           return Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

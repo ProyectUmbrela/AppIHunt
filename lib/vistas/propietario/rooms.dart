@@ -77,79 +77,83 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
     return check;
   }
 
-  Future getRooms() async {
-    Api _api = Api();
+  Future getAllRooms() async {
 
-    var snapShoot = await FirebaseFirestore
-        .instance
-        .collection(GlobalDataLandlord().userCollection)
-        .doc(currentUser.uid)
-        .get();
-    var _userid = snapShoot['usuario'];
-    String tokenAuth = await currentUser.getIdToken();
+    try{
+      Api _api = Api();
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataLandlord().userCollection)
+          .doc(currentUser.uid)
+          .get();
+      var _userid = snapShoot['usuario'];
+      String tokenAuth = await currentUser.getIdToken();
 
-    final msg = jsonEncode({
-      "usuario": _userid
-    });
+      final msg = jsonEncode({"usuario": _userid});
+      var response = await _api.GetRooms(msg, tokenAuth);
+      var data = jsonDecode(response.body);
+      List<Room> _rooms = [];
 
+      print("#########################################################");
+      print("#########################################################");
+      print(data);
+      //print("${response.statusCode }");
+      print("#########################################################");
+      print("#########################################################");
 
-    var response = await _api.GetRooms(msg, tokenAuth);
-    var data = jsonDecode(response.body);
-    List<Room> _rooms = [];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
+        Map<String, bool> statusMap = {};
+        Map<String, String> fotosMap = {};
+        getValue() async {
+          for (int i = 0; i < data['habitaciones'].length; i++) {
+            var document = data['habitaciones'][i]['idhabitacion'] +
+                '_${data['habitaciones'][i]['idpropietario']}';
+            var result = await getSpecie(document);
+            int publicar = result.data()['publicar'];
+            String foto = result.data()['fotos']['0'];
+            statusMap["${data['habitaciones'][i]['idhabitacion']}"] =
+                publicar == 1 ? true : false;
+            fotosMap["${data['habitaciones'][i]['idhabitacion']}"] = foto;
+          }
+        }
 
-    print("#########################################################");
-    print("#########################################################");
-    print(data);
-    //print("${response.statusCode }");
-    print("#########################################################");
-    print("#########################################################");
+        // getting status of room
+        await getValue();
+        data['habitaciones'].forEach((room) {
+          _rooms.add(Room(
+              publicar: statusMap[room['idhabitacion']],
+              foto: fotosMap[room['idhabitacion']],
+              descripcion: room['descripcion'],
+              dimension: room['dimension'],
+              direccion: room['direccion'],
+              fecharegistro: room['fecharegistro'],
+              fechaupdate: room['fechaupdate'],
+              idhabitacion: room['idhabitacion'],
+              idpropietario: room['idpropietario'],
+              idusuario: room['nombre'],
+              precio: room['precio'],
+              servicios: room['servicios'],
+              status: room['estatus'],
+              terminos: room['terminos']));
+        });
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // CHECAR BIEN LOS CODIDOS DE RESPUESTA;
-      Map<String, bool> statusMap = {};
-      Map<String, String> fotosMap = {};
-      getValue() async{
-        for(int i = 0; i < data['habitaciones'].length; i++){
-
-          var document = data['habitaciones'][i]['idhabitacion'] + '_${data['habitaciones'][i]['idpropietario']}';
-          var result = await getSpecie(document);
-          int publicar = result.data()['publicar'];
-          String foto = result.data()['fotos']['0'];
-          statusMap["${data['habitaciones'][i]['idhabitacion']}"] = publicar == 1 ? true : false;
-          fotosMap["${data['habitaciones'][i]['idhabitacion']}"] = foto;
+        return _rooms;
+      } else {
+        if (Platform.isAndroid) {
+          //_materialAlertDialog(context, data['message'], 'Notificación');
+          print('ERROR EN GET ROOMS ${response.statusCode}');
+        } else if (Platform.isIOS) {
+          print('ERROR EN GET ROOMS ${response.statusCode}');
+          //_cupertinoDialog(context, data['message'], 'Notificación');
         }
       }
-      // getting status of room
-      await getValue();
-      data['habitaciones'].forEach((room) {
-        _rooms.add(Room(
-            publicar: statusMap[room['idhabitacion']],
-            foto: fotosMap[room['idhabitacion']],
-            descripcion: room['descripcion'],
-            dimension: room['dimension'],
-            direccion: room['direccion'],
-            fecharegistro: room['fecharegistro'],
-            fechaupdate: room['fechaupdate'],
-            idhabitacion: room['idhabitacion'],
-            idpropietario: room['idpropietario'],
-            idusuario: room['nombre'],
-            precio: room['precio'],
-            servicios: room['servicios'],
-            status: room['estatus'],
-            terminos: room['terminos']
-        ));
-      });
-
-      return _rooms;
-
-    } else {
-      if (Platform.isAndroid) {
-        //_materialAlertDialog(context, data['message'], 'Notificación');
-        print('ERROR EN GET ROOMS ${response.statusCode}');
-      } else if (Platform.isIOS) {
-        print('ERROR EN GET ROOMS ${response.statusCode}');
-        //_cupertinoDialog(context, data['message'], 'Notificación');
-      }
+    }on Exception catch (e) {
+      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      print(e);
+      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      return null;
     }
   }
 
@@ -170,17 +174,21 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       body: FutureBuilder(
-          future: getRooms(),
+          future: getAllRooms(),
           builder: (context, snapshot) {
             if(!snapshot.hasData){
-              // Esperando la respuesta de la API
+              //print("==========> ${snapshot.data} | ${snapshot.hasData} | ${snapshot.hasError}");
+              if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
+                return Center(
+                  child: Text("Algo salió mal en tu solicitud"),
+                );
+              }
               return Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      //Text('Cargando...'),
                     ]
                 ),
               );

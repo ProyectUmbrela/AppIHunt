@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 //import 'package:ihunt/vistas/propietario/rooms.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:ihunt/providers/api.dart';

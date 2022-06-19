@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -115,13 +115,17 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
           builder: (context, snapshot) {
             if(!snapshot.hasData){
               // Esperando la respuesta de la API
+              if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
+                return Center(
+                  child: Text("Algo salió mal en tu solicitud"),
+                );
+              }
               return Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(),
-                      //Text('Cargando...'),
                     ]
                 ),
               );

@@ -183,6 +183,11 @@ class _TenantsState extends State<Tenants> with SingleTickerProviderStateMixin {
           builder: (context, snapshot) {
             if(!snapshot.hasData){
               // Esperando la respuesta de la API
+              if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
+                return Center(
+                  child: Text("Algo salió mal en tu solicitud"),
+                );
+              }
               return Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
