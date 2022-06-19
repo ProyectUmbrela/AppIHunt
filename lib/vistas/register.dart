@@ -19,8 +19,8 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+
   final formKey = new GlobalKey<FormState>();
-  //bool _loading = false;
   bool _saving = false;
   TextEditingController useridCtrl = new TextEditingController();
   TextEditingController usernameCtrl = new TextEditingController();
@@ -65,7 +65,7 @@ class _RegisterState extends State<Register> {
       controller: useridCtrl,
       validator: (value) => value.isEmpty ? "Usuario requerido" : null,
       onSaved: (value) => _userid = value,
-      decoration: buildInputDecoration("Username", Icons.account_box),
+      decoration: buildInputDecoration("Usuario", Icons.account_box),
     );
 
     final userName = TextFormField(
@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
       controller: usernameCtrl,
       validator: (value) => value.isEmpty ? "Nombre requerido" : null,
       onSaved: (value) => _username = value,
-      decoration: buildInputDecoration("First and last name", Icons.accessibility),
+      decoration: buildInputDecoration("Nombre", Icons.accessibility),
     );
 
     final userEmail = TextFormField(
@@ -81,7 +81,7 @@ class _RegisterState extends State<Register> {
       controller: useremailCtrl,
       validator: validateEmail,
       onSaved: (value) => _useremail = value,
-      decoration: buildInputDecoration("Email", Icons.email),
+      decoration: buildInputDecoration("Correo", Icons.email),
     );
 
     final userPhone = TextFormField(
@@ -89,7 +89,7 @@ class _RegisterState extends State<Register> {
       controller: userphoneCtrl,
       validator: validateMobile,
       onSaved: (value) => _userphone = value,
-      decoration: buildInputDecoration("Phone number", Icons.phone_android),
+      decoration: buildInputDecoration("Telefóno", Icons.phone_android),
     );
 
     final passwordField = TextFormField(
@@ -98,7 +98,7 @@ class _RegisterState extends State<Register> {
       obscureText: true,
       validator: (value) => value.isEmpty ? "Contraseña requerida" : null,
       onSaved: (value) => _password = value,
-      decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
+      decoration: buildInputDecoration("Confirmar contraseña", Icons.remove_red_eye),
     );
 
     final confirmPassword = TextFormField(
@@ -107,7 +107,7 @@ class _RegisterState extends State<Register> {
       validator: (value) => validatePassword(value, passwordCtrl.text),
       onSaved: (value) => _confirmPassword = value,
       obscureText: true,
-      decoration: buildInputDecoration("Confirm password", Icons.remove_red_eye),
+      decoration: buildInputDecoration("Confirmar contraseña", Icons.remove_red_eye),
     );
 
     /**** VENTANAS DE DIALOGO PARA EL ERROR DE LA API O FORMULARIO****/
