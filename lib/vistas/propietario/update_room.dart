@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:ihunt/utils/validators.dart';
 import 'package:ihunt/utils/widgets.dart';
@@ -60,12 +61,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
     setData();
   }
 
-
-
   String _roomid, _adress, _dimensions, _services, _description, _price, _terms, _status;
-
-  // VARIABLES PARA COORDENADAS
-
 
   @override
   Widget build(BuildContext context) {
@@ -75,60 +71,73 @@ class _UpdateRoomState extends State<UpdateRoom> {
       final form = formKey.currentState;
 
       if (form.validate()) {
-        form.save();
-        Api _api = Api();
 
-        var snapShoot = await FirebaseFirestore
-            .instance
-            .collection(GlobalDataLandlord().userCollection)
-            .doc(currentUser.uid)
-            .get();
+        // actalizar almenos un campo para enviar la solicitud
+        if(adressCtrl.text == widget.room['direccion'] &&
+            dimensionsCtrl.text == widget.room['dimension'] &&
+            servicesCtrl.text == widget.room['servicios'] &&
+            descriptionCtrl.text == widget.room['descripcion'] &&
+            priceCtrl.text == widget.room['precio'].toString() &&
+            termsCtrl.text == widget.room['terminos']){
 
-        var _userid = snapShoot['usuario'];
-        //var name = snapShoot['nombre'];
-        String tokenAuth = await currentUser.getIdToken();
-
-        final msg = jsonEncode({
-          "idhabitacion": roomidCtrl.text,
-          "idpropietario": _userid,
-          "direccion": adressCtrl.text,
-          "dimension": dimensionsCtrl.text,
-          "servicios": servicesCtrl.text,
-          "descripcion": descriptionCtrl.text,
-          "precio": double.parse(priceCtrl.text),
-          "terminos": termsCtrl.text
-        });
-
-
-        print("body actualizar habitacion ${msg}");
-        //addDocument(lat, lngt, priceCtrl.text, descriptionCtrl.text, adressCtrl.text, servicesCtrl.text, name);
-
-        var response = await _api.UpdateRoom(msg, tokenAuth);
-        Map data = jsonDecode(response.body);
-        print("#################################################");
-        print("#################################################");
-        print(data);
-        print("#################################################");
-        print("#################################################");
-
-
-        if (response.statusCode  == 201) {
-          // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+          print("No hay cambio de datos..........");
           setState(() => _saving = false);
-          _showDialog(2, "Se actualizo la habitación");
+          _showDialog(2, "No hay datos a actualizar");
+        }
+        else{
+
+          print("hay cambio de datos..........");
+          form.save();
+          Api _api = Api();
+          var snapShoot = await FirebaseFirestore
+              .instance
+              .collection(GlobalDataLandlord().userCollection)
+              .doc(currentUser.uid)
+              .get();
+
+          var _userid = snapShoot['usuario'];
+          String tokenAuth = await currentUser.getIdToken();
+
+          final msg = jsonEncode({
+            "idhabitacion": roomidCtrl.text,
+            "idpropietario": _userid,
+            "direccion": adressCtrl.text,
+            "dimension": dimensionsCtrl.text,
+            "servicios": servicesCtrl.text,
+            "descripcion": descriptionCtrl.text,
+            "precio": double.parse(priceCtrl.text),
+            "terminos": termsCtrl.text
+          });
+
+          var response = await _api.UpdateRoom(msg, tokenAuth);
+          Map data = jsonDecode(response.body);
+          print("#################################################");
+          print("#################################################");
+          print(data);
+          print("#################################################");
+          print("#################################################");
+
+
+          if (response.statusCode == 201) {
+            // CHECAR BIEN LOS CODIDOS DE RESPUESTA
+            setState(() => _saving = false);
+            _showDialog(2, "Se actualizo la habitación");
+
+          }
+          else if (response.statusCode == 433){
+            setState(() => _saving = false);
+            _showDialog(2, "Datos incorrectos");
+          }
+          else if (response.statusCode == 501){
+            setState(() => _saving = false);
+            _showDialog(2, "Error al actualizar los datos");
+          }
+          else {
+            _showDialog(2, "Ocurrio un error con la solicitud");
+          }
 
         }
-        else if (response.statusCode  == 433){
-          setState(() => _saving = false);
-          _showDialog(2, "Datos incorrectos");
-        }
-        else if (response.statusCode  == 501){
-          setState(() => _saving = false);
-          _showDialog(2, "Error al actualizar los datos");
-        }
-        else {
-          _showDialog(2, "Ocurrio un error con la solicitud");
-        }
+
       } else {
         setState(() => _saving = false);
       }
@@ -138,9 +147,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
       autofocus: false,
       controller: roomidCtrl,
       enabled: false,
-      validator: (value) => value.isEmpty ? "ID de habitación requerido" : null,
+      //validator: (value) => value.isEmpty ? "ID de habitación requerido" : null,
       onSaved: (value) => _roomid = value,
-      decoration: buildInputDecoration("room name", Icons.airline_seat_individual_suite),
+      decoration: buildInputDecoration("ID", Icons.airline_seat_individual_suite),
     );
 
     final adress = TextFormField(
@@ -155,6 +164,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final dimensions = TextFormField(
       autofocus: false,
       controller: dimensionsCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(30),
+      ],
       enabled: true,
       validator: (value) => value.isEmpty ? "La dimensión de la habitacón es requerida" : null,
       onSaved: (value) => _dimensions = value,
@@ -164,6 +176,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final services = TextFormField(
       autofocus: false,
       controller: servicesCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _services = value,
       decoration: buildInputDecoration("Servicios", Icons.local_laundry_service),
@@ -172,6 +187,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final description = TextFormField(
       autofocus: false,
       controller: descriptionCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _description = value,
       decoration: buildInputDecoration("Descripción", Icons.description),
@@ -189,6 +207,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final terms = TextFormField(
       autofocus: false,
       controller: termsCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       enabled: widget.room['status'] == 1 ? false : true,
       onSaved: (value) => _terms = value,
       decoration: buildInputDecoration("Términos", Icons.add_alert),
