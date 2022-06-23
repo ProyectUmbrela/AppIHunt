@@ -51,7 +51,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
   double lngt;
 
   // VARIABLE DE IMAGENES
-  List<File> image_files = []; //new List();
+  List<File> image_files = [];
   TextStyle style = TextStyle(fontSize: 15);
   bool _saving = false;
   final formKey = new GlobalKey<FormState>();

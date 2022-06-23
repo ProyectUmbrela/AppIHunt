@@ -25,6 +25,7 @@ class infoHabitacion{
   String detalles;
   String direccion;
   String titular;
+  String telefono;
 
 
   infoHabitacion(
@@ -32,6 +33,7 @@ class infoHabitacion{
   this.costo,
   this.detalles,
   this.direccion,
+  this.telefono,
   this.titular);
 
 }
@@ -39,14 +41,14 @@ class infoHabitacion{
 class MapsPage extends State<MyMaps> {
 
   String _mapStyle;
-  String _coleccion = "marker_rent";//"marker_rent"; // habitaciones -> produccion
+  //String _coleccion = "marker_rent";//"marker_rent"; // habitaciones -> produccion
 
   //google controller and markers
   GoogleMapController _controller;
   Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   BitmapDescriptor _mapMarker;
   double zoomView = 14.0;
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
   void setCustomMarker() async {
@@ -61,7 +63,7 @@ class MapsPage extends State<MyMaps> {
     final MarkerId markerId = MarkerId(specifyId);
     infoHabitacion info = habitacion;
     var fontWords = FontWeight.w500;
-    double sizeText = 14;
+    double sizeText = 13;
 
     final Marker marker = new Marker(
       markerId: markerId,
@@ -72,7 +74,7 @@ class MapsPage extends State<MyMaps> {
         title: "Habitación en Renta",
         onTap: (){
           showDialog(
-            context: context,
+            context: _scaffoldKey.currentContext,
             builder: (BuildContext builderContext) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -147,6 +149,16 @@ class MapsPage extends State<MyMaps> {
                                         ),
                                         Text(
                                           "Titular: ${info.titular}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: fontWords,
+                                            fontFamily: 'Roboto',
+                                            letterSpacing: 0.5,
+                                            fontSize: sizeText,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Tel: ${info.telefono}",
                                           style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: fontWords,
@@ -335,6 +347,7 @@ class MapsPage extends State<MyMaps> {
   Widget build(BuildContext context){
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Stack(
@@ -344,7 +357,6 @@ class MapsPage extends State<MyMaps> {
               color: Colors.grey[100],
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                 children: <Widget>[
                   Expanded(
                     child: TextField(
@@ -378,7 +390,7 @@ class MapsPage extends State<MyMaps> {
           child: StreamBuilder(
             stream: FirebaseFirestore
                 .instance
-                .collection(GlobalDataUser().markerCollection)
+                .collection(GlobalDataUser().habitacionesCollection)
                 .where("coords", isNotEqualTo: "")
                 .snapshots(),
             builder: (context, snapshot) {
@@ -395,20 +407,20 @@ class MapsPage extends State<MyMaps> {
                       rawFotos.forEach((final String key, final value) {
                         widgets.add(Image.memory(base64Decode(value)));
                       });
-
                   }
                   //Si no tiene imagenes
                   else{
                     // si no tiene imagenes pero se quiere publicar usando una imagen default
                     if (publicar == 1){
-                      FirebaseFirestore
+                      /*FirebaseFirestore
                           .instance
-                          .collection(GlobalDataUser().markerCollection)
+                          .collection(GlobalDataUser().habitacionesCollection)
                           .doc("NotAvailable")
                           .get()
                           .then((docRef) => {
-                        widgets.add(Image.memory(base64Decode(docRef.get('image'))))
-                      });
+                            widgets.add(Image.memory(base64Decode(GlobalDataUser().notAvailable)))
+                          });*/
+                      widgets.add(Image.memory(base64Decode(GlobalDataUser().notAvailable)));
                     }
                     // si no tiene imagenes y no se quiere publicar
                     else{
@@ -422,6 +434,7 @@ class MapsPage extends State<MyMaps> {
 
                   String direccion = snapshot.data.docs[i]['direccion'];
                   String titular = snapshot.data.docs[i]['titular'];
+                  String telefono = snapshot.data.docs[i]['telefono'];
                   String servicios = snapshot.data.docs[i]['servicios'];
                   String costo = snapshot.data.docs[i]['costo'];
                   String detalles = snapshot.data.docs[i]['detalles'];
@@ -431,6 +444,7 @@ class MapsPage extends State<MyMaps> {
                       costo,
                       detalles,
                       direccion,
+                      telefono,
                       titular);
 
                   initMarker(

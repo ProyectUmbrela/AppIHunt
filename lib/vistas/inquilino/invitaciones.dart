@@ -84,6 +84,34 @@ class InvitacionesState extends State<InvitacionesInquilino>{
   }
 
 
+  String customDate(String a_date){
+
+    String resultDate = a_date.toString().replaceAll('GMT', '');
+    resultDate = resultDate.toString().replaceAll('Jan', 'Enero');
+    resultDate = resultDate.toString().replaceAll('Feb', 'Febreo');
+    resultDate = resultDate.toString().replaceAll('Mar', 'Marzo');
+    resultDate = resultDate.toString().replaceAll('Apr', 'Abril');
+    resultDate = resultDate.toString().replaceAll('May', 'Mayo');
+    resultDate = resultDate.toString().replaceAll('Jun', 'Junio');
+    resultDate = resultDate.toString().replaceAll('Jul', 'Julio');
+    resultDate = resultDate.toString().replaceAll('Aug', 'Agosto');
+    resultDate = resultDate.toString().replaceAll('Sept', 'Septiembre');
+    resultDate = resultDate.toString().replaceAll('Oct', 'Octubre');
+    resultDate = resultDate.toString().replaceAll('Nov', 'Noviembre');
+    resultDate = resultDate.toString().replaceAll('Dec', 'Diciembre');
+
+    resultDate = resultDate.toString().replaceAll('Sun', 'Domingo');
+    resultDate = resultDate.toString().replaceAll('Mon', 'Lunes');
+    resultDate = resultDate.toString().replaceAll('Tue', 'Martes');
+    resultDate = resultDate.toString().replaceAll('Wed', 'Miércoles');
+    resultDate = resultDate.toString().replaceAll('Thu', 'Jueves');
+    resultDate = resultDate.toString().replaceAll('Fri', 'Viernes');
+    resultDate = resultDate.toString().replaceAll('Sat', 'Sábado');
+
+
+    return resultDate;
+  }
+
   Future getInvitacionesRecientes(_idUsuarioLive, tokenAuth) async {
 
     Api _api = Api();
@@ -96,7 +124,12 @@ class InvitacionesState extends State<InvitacionesInquilino>{
     List<Invitacion> invitaciones = [];
     int statusCode = response.statusCode;
     var resp = json.decode(response.body);
-
+    print("################################################################");
+    print("################################################################");
+    print("${resp}");
+    print("################################################################");
+    print("################################################################");
+    //statusCode = 422;
     if (statusCode == 201) {
       List invitacion = resp['invitaciones'];
       if (invitacion.length > 0){
@@ -111,7 +144,7 @@ class InvitacionesState extends State<InvitacionesInquilino>{
               direccion: current['direccion'],
               enlace_aceptar: current['enlace_aceptar'],
               enlace_rechazar: current['enlace_rechazar'],
-              fechaEnvio: current['fecha_envio'].toString(),
+              fechaEnvio: customDate(current['fecha_envio'].toString()),//.replaceAll('GMT', ''),
               fechaFin: current['fecha_fin'].toString(),
               fechaInicio: current['fecha_inicio'].toString(),
               fechaPago: current['fecha_pago'].toString(),
@@ -144,6 +177,7 @@ class InvitacionesState extends State<InvitacionesInquilino>{
 
       var result = await getInvitacionesRecientes(_idUsuarioLive, tokenAuth);
       return result;
+
     }on Exception catch (exception) {
       final snackBar = SnackBar(
         content: const Text('Ocurrio un error!'),

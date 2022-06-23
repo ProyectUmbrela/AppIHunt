@@ -310,16 +310,18 @@ class _RegisterRoomState extends State<RegisterRoom> {
               'publicar': 1,
               'disponibilidad': 1,
               'fotos': {},
-              'check_images': 1
+              'check_images': 0
             };
 
             if (images64_Base.isNotEmpty) {
               for (int i = 0; i < images64_Base.length; i++) {
                 generalDocument['fotos'][i.toString()] = images64_Base[i];
               }
+              generalDocument['check_images'] = 1;
             }
 
             var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
+
             if (responseCode == 201) {
               clearForm();
               setState(() => _saving = false);
