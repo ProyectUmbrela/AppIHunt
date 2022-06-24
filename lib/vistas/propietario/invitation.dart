@@ -302,8 +302,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                       ],
                                   ),
                                 ),
-                                //Image.asset('assets/card-sample-image.jpg'),
-                                //Image.asset('assets/card-sample-image-2.jpg'),
                               ],
                             ),
                           ),

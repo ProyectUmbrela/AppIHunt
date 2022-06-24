@@ -41,6 +41,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
   @override
   void initState(){
     setData();
+    plazoCtrl.text = '1'; // initial value
   }
 
 
@@ -271,7 +272,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
         }
         else if (response.statusCode == 402){
           setState(() => _saving = false);
-          _showDialog(2, 'Límite de registros superado');
+          _showDialog(2, 'Límite de invitaciones superado');
         }
         else if (response.statusCode == 408){
           setState(() => _saving = false);
@@ -353,7 +354,7 @@ class _RegisterTenantState extends State<RegisterTenant> {
                       endDate,
                       SizedBox(height: 15.0),
 
-                      label("Fecha de pago (el dia es el tomado)"),
+                      label("Fecha 1er pago (el dia es el tomado)"),
                       SizedBox(height: 5.0),
                       payDate,
                       SizedBox(height: 15.0),

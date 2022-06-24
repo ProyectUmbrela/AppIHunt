@@ -208,9 +208,10 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         title: Text("Invitación"),
         automaticallyImplyLeading: false,
       ),
-      body: Column(
-        children: <Widget>[
-          Column(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Column(
               children: <Widget>[
                 Row(
                     children: <Widget>[
@@ -218,75 +219,75 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                         width: MediaQuery.of(context).size.width ,
                         height: MediaQuery.of(context).size.height * 0.79,
                         child: Card(
-                          color: Colors.blue[100],
+                          //color: Colors.blue[100],
                           child: SingleChildScrollView(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 100.0),
-                                          child: Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Text('Disponible',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontWeight: fontTitle,
-                                                    color: Colors.black,
-                                                    fontSize: 30)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 10),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Titular: ' + widget.nombre.toString(), // NOMBRE
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Tel. contacto: ' + widget.telefono.toString(),  // TELEFONO
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        //Expanded(child: Text(String.fromCharCodes(List.generate(100, (i) => 65)))),
-                                        Expanded(
-                                          child: Text('Dir: ' + widget.direccion.toString(), // DIRECCION
-                                            textAlign: TextAlign.left,style: TextStyle(
-                                                  fontWeight: fontInfo,
-                                                  color: Colors.black,
-                                                  fontSize: textSize)
-                                          ),
-                                        ),
-                                        /*Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 100.0),
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Text('Disponible',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontWeight: fontTitle,
+                                                color: Colors.black,
+                                                fontSize: 30)
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Titular: ' + widget.nombre.toString(), // NOMBRE
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontInfo,
+                                                color: Colors.black,
+                                                fontSize: textSize)
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Tel. contacto: ' + widget.telefono.toString(),  // TELEFONO
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontInfo,
+                                                color: Colors.black,
+                                                fontSize: textSize)
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    //Expanded(child: Text(String.fromCharCodes(List.generate(100, (i) => 65)))),
+                                    Expanded(
+                                      child: Text('Dir: ' + widget.direccion.toString(), // DIRECCION
+                                          textAlign: TextAlign.left,style: TextStyle(
+                                              fontWeight: fontInfo,
+                                              color: Colors.black,
+                                              fontSize: textSize)
+                                      ),
+                                    ),
+                                    /*Padding(
                                           padding: EdgeInsets.only(),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
@@ -299,115 +300,102 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),
                                           ),
                                         ),*/
-                                      ],
-                                  ),
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 0, top: 10),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Detalles de la habitación',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontTitle,
-                                                    color: Colors.black,
-                                                    fontSize: titlesSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 10),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Costo: ' + widget.precio.toString() + ' mensual', // PRECIO
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 0),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Servicios: ' + widget.servicios.toString() + ' incluidos', // SERVICIOS
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text('Descripción: ' + widget.descripcion.toString(), // DESCRIPCION
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 0, top: 10),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Detalles de la habitación',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontTitle,
+                                                color: Colors.black,
+                                                fontSize: titlesSize)
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Costo: ' + widget.precio.toString() + ' mensual', // PRECIO
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontWeight: fontInfo,
                                                 color: Colors.black,
                                                 fontSize: textSize)
-                                          ),
-                                        ),
-                                        /*Padding(
-                                          padding: EdgeInsets.only(left: 0),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Descripción: ' + widget.descripcion.toString(), // DESCRIPCION
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),*/
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 0),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Tamaño: ' + widget.dimension.toString() + ' de espacio', // DIMENSION
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text('Detalles de contrato: ' + widget.detalles.toString(), // DETALLES
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 0),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Servicios: ' + widget.servicios.toString() + ' incluidos', // SERVICIOS
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontWeight: fontInfo,
                                                 color: Colors.black,
                                                 fontSize: textSize)
-                                          ),
-                                        ),
-                                        /*Padding(
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text('Descripción: ' + widget.descripcion.toString(), // DESCRIPCION
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontWeight: fontInfo,
+                                              color: Colors.black,
+                                              fontSize: textSize)
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 0),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Tamaño: ' + widget.dimension.toString() + ' de espacio', // DIMENSION
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                fontWeight: fontInfo,
+                                                color: Colors.black,
+                                                fontSize: textSize)
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text('Detalles de contrato: ' + widget.detalles.toString(), // DETALLES
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontWeight: fontInfo,
+                                              color: Colors.black,
+                                              fontSize: textSize)
+                                      ),
+                                    ),
+                                    /*Padding(
                                           padding: EdgeInsets.only(left: 0),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
@@ -420,44 +408,44 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),*/
-                                      ],
-                                  ),
-                                  Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Términos de renta',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontTitle,
-                                                    color: Colors.black,
-                                                    fontSize: titlesSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),
-                                      ],
-                                  ),
-                                  Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: widget.terminos.toString() == '' ? Text('Términos de contrato: No', //TERMINOS
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                  fontWeight: fontInfo,
-                                                  color: Colors.black,
-                                                  fontSize: textSize)
-                                          ): Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
+                                      child: Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: Text('Términos de renta',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                                fontWeight: fontInfo,
+                                                fontWeight: fontTitle,
                                                 color: Colors.black,
-                                                fontSize: textSize)
-                                          ),
-                                        ),
-                                        /*Padding(
+                                                fontSize: titlesSize)
+                                        ),//Icon(Icons.camera_alt),),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: widget.terminos.toString() == '' ? Text('Términos de contrato: No', //TERMINOS
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontWeight: fontInfo,
+                                              color: Colors.black,
+                                              fontSize: textSize)
+                                      ): Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                              fontWeight: fontInfo,
+                                              color: Colors.black,
+                                              fontSize: textSize)
+                                      ),
+                                    ),
+                                    /*Padding(
                                           padding: EdgeInsets.only(left: 0, top: 10),
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
@@ -470,44 +458,45 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                             ),//Icon(Icons.camera_alt),),
                                           ),
                                         ),*/
-                                      ],
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ]
                 ),
                 Row(
-                    children: <Widget>[
-                      Container(
-                          width: MediaQuery.of(context).size.width ,
-                          height: MediaQuery.of(context).size.height * 0.09,
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(left:30, bottom: 5),
-                                child: Align(
-                                  alignment: Alignment.bottomLeft,
-                                  child: rechazarButton,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left:80, bottom: 5),
-                                child: Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: rentarButton,
-                                ),
-                              ),
-                            ],
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width ,
+                      height: MediaQuery.of(context).size.height * 0.09,
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left:10, bottom: 15),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: rechazarButton,
+                            ),
                           ),
+                          Padding(
+                            padding: EdgeInsets.only(left:115, bottom: 15),
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: rentarButton,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ],
                 ),
               ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
