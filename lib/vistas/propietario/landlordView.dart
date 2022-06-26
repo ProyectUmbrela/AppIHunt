@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
 import 'package:ihunt/providers/provider.dart';
+import 'package:ihunt/vistas/profiles/ayuda.dart';
 
 class Landlord extends StatefulWidget {
   @override
@@ -108,7 +109,7 @@ class _LandlordState extends State<Landlord> {
     Navigator.of(context).pushReplacementNamed('/login');
   }
 
-  Future _requestPermission() async {
+  /*Future _requestPermission() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     NotificationSettings settings = await messaging.requestPermission(
@@ -124,7 +125,7 @@ class _LandlordState extends State<Landlord> {
     print('User granted permission: ${settings.authorizationStatus}');
 
     return settings.authorizationStatus;
-  }
+  }*/
 
   Widget widgetHome() {
     return Scaffold(
@@ -248,6 +249,10 @@ class _LandlordState extends State<Landlord> {
             ),
             onTap: () {
               // Update the state of the app.
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Ayuda()),
+              );
 
             },
           ),
