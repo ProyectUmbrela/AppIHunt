@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:ihunt/vistas/profiles/notificaciones.dart';
 import 'rooms.dart';
 import 'tenants.dart';
 import 'invitation.dart';
@@ -25,28 +26,52 @@ class _LandlordState extends State<Landlord> {
   String AmessageTitle = "Empty!";
   var tokenBy = '';
 
+
+
   @override
   void initState() {
     AdmobHelper.initialization();
+
     super.initState();
     setData();
-
     firebaseCloudMessaging_Listeners();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      if (!mounted) {
+        return;
+      }
       setState(() {
-        AmessageTitle = event.notification.title;
-        //notificationAlert = "New Notification Alert";
+          print("A #############################################");
+          print("A #############################################");
+          print("${event.notification.title}");
+          print("A #############################################");
+          print("A #############################################");
+          AmessageTitle = event.notification.title;
+          //notificationAlert = "New Notification Alert";
+          if (event.notification != null) {
+            print('Message also contained a notification: ${event.notification.body}');
+
+          }
       });
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
+      if (!mounted) {
+        return;
+      }
       setState(() {
-        AmessageTitle = event.notification.title;
-        //notificationAlert = "Application opened from Notification";
+          print("1 #############################################");
+          print("1 #############################################");
+          print("${event.notification.title}");
+          print("1 #############################################");
+          print("1 #############################################");
+          AmessageTitle = event.notification.title;
+          //notificationAlert = "Application opened from Notification";
       });
     });
   }
+
+
 
   void setData() async {
     _currentUser = FirebaseAuth.instance.currentUser;
@@ -81,6 +106,24 @@ class _LandlordState extends State<Landlord> {
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
+  }
+
+  Future _requestPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
+
+    return settings.authorizationStatus;
   }
 
   Widget widgetHome() {
@@ -189,6 +232,10 @@ class _LandlordState extends State<Landlord> {
             onTap: () {
               // Update the state of the app.
               // ...
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
+                );
             },
           ),
           ListTile(

@@ -100,7 +100,7 @@ class _Profile extends State<UserProfile> {
                         MaterialPageRoute(builder: (context) => DeleteAccount()),
                       );
                     },
-                  )
+                  ),
                 ],
               );
             },

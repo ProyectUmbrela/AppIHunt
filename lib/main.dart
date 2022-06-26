@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -31,6 +32,8 @@ String version;
 List<String> testDeviceIds = ['D69AD2F70B99972211345214A355C240'];
 
 
+
+
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,21 +45,6 @@ Future<void> main() async {
   // init the firebase system
   await Firebase.initializeApp();
 
-  /*
-  // Check internet connection with singleton (no custom values allowed)
-  await execute(InternetConnectionChecker());
-
-  // Create customized instance which can be registered via dependency injection
-  final InternetConnectionChecker customInstance =
-  InternetConnectionChecker.createInstance(
-    checkTimeout: const Duration(seconds: 1),
-    checkInterval: const Duration(seconds: 1),
-  );
-
-  // Check internet connection with created instance
-  var isConnected = await execute(customInstance);
-  print("########################## ${isConnected} ############################");
-  */
 
   runApp(IHuntApp());
 }

@@ -310,7 +310,6 @@ class MapsPage extends State<MyMaps> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             LatLng Currentposition;
-
             // Latitude: 37.4219983
             // Longitude: -122.084
             if (!snapshot.hasData){
@@ -320,7 +319,6 @@ class MapsPage extends State<MyMaps> {
               Currentposition  =  LatLng(snapshot.data.latitude , snapshot.data.longitude);
 
             }
-
             return GoogleMap(
               myLocationButtonEnabled: true,
               mapType: MapType.normal,
@@ -349,43 +347,43 @@ class MapsPage extends State<MyMaps> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Stack(
-          children:
-          <Widget>[
-            Container(
-              color: Colors.grey[100],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      cursorColor: Colors.black,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.go,
-                      controller: _controllerSearch,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
-                          hintText: "Buscar"),
+          automaticallyImplyLeading: false,
+          title: Stack(
+            children:
+            <Widget>[
+              Container(
+                color: Colors.grey[100],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        cursorColor: Colors.black,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.go,
+                        controller: _controllerSearch,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                            hintText: "Buscar"),
+                      ),
                     ),
-                  ),
-                  Material(
-                    type: MaterialType.transparency,
-                    child: IconButton(
-                        splashColor: Colors.black,
-                        icon: Icon(
-                          Icons.search,
-                          color: Colors.black54,),
-                        onPressed: () => searchPlace()
+                    Material(
+                      type: MaterialType.transparency,
+                      child: IconButton(
+                          splashColor: Colors.black,
+                          icon: Icon(
+                            Icons.search,
+                            color: Colors.black54,),
+                          onPressed: () => searchPlace()
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ) ,//FloatAppBar(_controller),
+            ],
+          ),
+        ) ,//FloatAppBar(_controller),
         body: SafeArea(
           child: StreamBuilder(
             stream: FirebaseFirestore

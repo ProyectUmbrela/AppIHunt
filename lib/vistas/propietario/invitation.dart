@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -33,9 +34,10 @@ class Invitation{
 
 class _InvitationsState extends State<Invitations> with SingleTickerProviderStateMixin {
 
-  Future getInvitations(id) async{
+  Future getAllInvitations() async{
 
     try{
+
       Api _api = Api();
       var snapShoot = await FirebaseFirestore.instance
           .collection(GlobalDataLandlord().userCollection)
@@ -55,6 +57,8 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
       print("###########################################################");
 
       List<Invitation> _invitations = [];
+
+
 
       if (response.statusCode == 201) {
         // CHECAR BIEN LOS CODIDOS DE RESPUESTA
@@ -117,7 +121,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
 
     return Scaffold(
       body: FutureBuilder(
-          future: getInvitations(id),
+          future: getAllInvitations(),
           builder: (context, snapshot) {
             if(!snapshot.hasData){
               // Esperando la respuesta de la API
