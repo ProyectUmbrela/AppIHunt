@@ -2,229 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-//import 'custom_dialog.dart';
-//import 'package:flutter/material.dart';
 
 
-class ProjectModel {
-
-  String bodyMessage;
-  String titleMessage;
-
-
-  ProjectModel({
-    this.bodyMessage,
-    this.titleMessage,
-  });
-}
-
-
-class CustomDialog extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      elevation: 0.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent(context),
-    );
-  }
-
-  Widget dialogContent(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 0.0,right: 0.0),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(
-              top: 18.0,
-            ),
-            margin: EdgeInsets.only(top: 13.0,right: 8.0),
-            decoration: BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(16.0),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 0.0,
-                    offset: Offset(0.0, 0.0),
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(
-                  height: 20.0,
-                ),
-                Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: new Text("Sorry please try \n again tomorrow", style:TextStyle(fontSize: 30.0,color: Colors.white)),
-                    )//
-                ),
-                SizedBox(height: 24.0),
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 15.0,bottom:15.0),
-                    decoration: BoxDecoration(
-                      color:Colors.white,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(16.0),
-                          bottomRight: Radius.circular(16.0)),
-                    ),
-                    child:  Text(
-                      "OK",
-                      style: TextStyle(color: Colors.blue,fontSize: 25.0),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  onTap:(){
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            right: 0.0,
-            child: GestureDetector(
-              onTap: (){
-                Navigator.of(context).pop();
-              },
-              child: Align(
-                alignment: Alignment.topRight,
-                child: CircleAvatar(
-                  radius: 14.0,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.close, color: Colors.red),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/*void main() {
-  runApp(MyApp());
-}*/
-
-
-class MyApp extends StatelessWidget {
+class MisNotificaciones extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      home: HomePage(),
+      home: HomePageNotificaciones(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePageNotificaciones extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePageNotificaciones> {
 
-  final customMessage = Container(
-      //margin: EdgeInsets.only(left: 0.0,right: 0.0),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(
-              top: 18.0,
-            ),
-            margin: EdgeInsets.only(top: 13.0,right: 8.0),
-            decoration: BoxDecoration(
-                color: Colors.red,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(16.0),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 0.0,
-                    offset: Offset(0.0, 0.0),
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(
-                  height: 10.0,
-                ),
-                Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: new Text("Sorry please try \n again tomorrow", style:TextStyle(fontSize: 30.0,color: Colors.white)),
-                    )//
-                ),
-                SizedBox(height: 24.0),
-                InkWell(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 15.0,bottom:15.0),
-                    decoration: BoxDecoration(
-                      color:Colors.white,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(16.0),
-                          bottomRight: Radius.circular(16.0)),
-                    ),
-                    child:  Text(
-                      "OK",
-                      style: TextStyle(color: Colors.blue,fontSize: 25.0),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  onTap:(){
-                    //Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-          ),
-          Positioned(
-            right: 0.0,
-            child: GestureDetector(
-              onTap: (){
-                //Navigator.of(context).pop();
-              },
-              child: Align(
-                alignment: Alignment.topRight,
-                child: CircleAvatar(
-                  radius: 14.0,
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.close, color: Colors.red),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            showDialog(context: context, builder: (BuildContext context) => CustomDialog());
-            showDialog(context: context, builder: (BuildContext context) => CustomDialog());
-          },
-          child: Text('show custom dialog'),
-        ),
-      ),
-    );
-  }*/
   User _currentUser;
   var _userId;
   @override
@@ -248,27 +44,33 @@ class _HomePageState extends State<HomePage> {
         .collection('notificaciones')
         .doc(_userId)
         .get();
-    print(snapShoot.data());
     var fields = snapShoot.data();
     var notificaciones = {};
 
-    for (int i = 0; i < fields.length; i++){
+    //print(fields);
+    int index = 0;
+    for (MapEntry e in fields.entries) {
       var aux = {};
-      aux[i.toString()] = {'body': fields[i.toString()]['body'].toString(), 'titulo':fields[i.toString()]['titulo'].toString()};
+      aux[index.toString()] = {'fieldID' : e.key, 'body' : e.value['body'], 'titulo' : e.value['titulo']};
+      index++;
       notificaciones.addAll(aux);
     }
-
-    print("1#################################################");
-    print("1#################################################");
-    print(notificaciones['0']);
-    print(notificaciones['1']);
-    print("1#################################################");
-    print("1#################################################");
-
+    
     return notificaciones;
-    //return [ProjectModel(bodyMessage: fields['0']['body'].toString(), titleMessage: fields['0']['titulo'].toString())];
   }
-  List myList = ["India", "Nepal", "Sri Lanka", "America", "United Kingdom"];
+
+  /*
+  Future removeNotificacion(String index){
+    var collection = FirebaseFirestore.instance.collection('notificaciones');
+    collection
+        .doc(_userId)
+        .update({
+          index : FieldValue.delete(),
+        });
+
+    print("######################## ELEMENTO ELIMINADO ${index} ##########################");
+
+  }*/
 
   Widget projectWidget() {
 
@@ -283,7 +85,6 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(),
-                  //Text('Cargando...'),
                 ]
             ),
           );
@@ -294,7 +95,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "No tienes nuevas invitaciones, consulta el mapa para encontrar nuevas habitaciones",
+                  "No tienes nuevas notificaciones",
                   style: Theme.of(context).textTheme.headline4,
                   textAlign: TextAlign.center,
                 ),
@@ -303,34 +104,57 @@ class _HomePageState extends State<HomePage> {
           );
         }
         else{
+
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-              print("==========> ${snapshot.data[index.toString()]}");
-              var element = snapshot.data[index.toString()];
+
+              print("A *************************************************************");
+              //print("A ==========> ${index}");
+              print(snapshot.data);
+              //print("A ==========> ${snapshot.data[index.toString()]}");
+              print("A *************************************************************");
+
               return Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Slidable(
                   key: const ValueKey(0),
-                    endActionPane: ActionPane(
-                      dismissible: DismissiblePane(onDismissed: () {
-                        // we can able to perform to some action here
-                      }),
-                      motion: const DrawerMotion(),
-                      children: [
-                        SlidableAction(
-                          autoClose: true,
-                          flex: 1,
-                          onPressed: (value) {
-                            myList.removeAt(index);
-                            setState(() {});
-                          },
-                          backgroundColor: Colors.blueAccent,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Borrar',
-                        ),
-                        /*SlidableAction(
+                  endActionPane: ActionPane(
+                    dismissible: DismissiblePane(onDismissed: () {
+                      var elementId = snapshot.data[index.toString()]['fieldID'];
+                      // we can able to perform to some action here
+                      FirebaseFirestore.instance
+                          .collection('notificaciones')
+                          .doc(_userId)
+                          .update({
+                        elementId : FieldValue.delete(),
+                      });
+
+                      setState(() {
+                        print("DELETE ELEMENT WITH ID: ${elementId} ******************");
+                        print("DELETE ELEMENT WITH INDEX: ${index} ******************");
+                        snapshot.data.removeWhere((key, value) => key == index.toString());
+                      });
+
+
+                    }),
+                    motion: const DrawerMotion(),
+                    children: [
+                      SlidableAction(
+                        autoClose: true,
+                        flex: 1,
+                        /*onPressed: (value) {
+                          //myList.removeAt(index);
+                          //removeNotificacion(index.toString());
+                          //setState(() {});
+                        },*/
+                        backgroundColor: Colors.blueAccent,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete,
+                        label: 'Borrar',
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      /*SlidableAction(
                           autoClose: true,
                           flex: 1,
                           onPressed: (value) {
@@ -342,33 +166,41 @@ class _HomePageState extends State<HomePage> {
                           icon: Icons.edit,
                           label: 'Edit',
                         ),*/
-                      ],
-                    ),
+                    ],
+                  ),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 50,
+                    height: 80,
                     child: Center(
-                        child: Text(
-                            element['body'], //myList[index],
+                      child: Card(
+                        // Con esta propiedad modificamos la forma de nuestro card
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+
+                        // Usamos columna para ordenar un ListTile y una fila con botones
+                        child: Column(
+                          children: <Widget>[
+                            // Usamos ListTile para ordenar la información del card como titulo, subtitulo e icono
+                            ListTile(
+                              contentPadding: EdgeInsets.fromLTRB(15, 5, 15, 0),
+                              title: Text(snapshot.data[index.toString()]['titulo']),//Text('Titulo'),
+                              subtitle: Text(snapshot.data[index.toString()]['body']),//Text('Este es el subtitulo del card. Aqui podemos colocar descripción de este card.'),
+                              //leading: Icon(Icons.home),
+                            ),
+                          ],
+                        ),
+                      ),
+                      /*child: Text(
+                          element['body'],
+                          textAlign: TextAlign.left,
                           style: const TextStyle(
                               color: Colors.black,
-                              //fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        ),
+                              fontSize: 15
+                          ),
+                        ),*/
                     ),
                   ),
-                )
+                ),
               );
-              /*return Column(
-                children: <Widget>[
-                  ListTile(
-                    title: Text(snapshot.data[index.toString()].body),
-                  ),
-                  ListTile(
-                    title: Text(snapshot.data[index.toString()].titulo),
-                  ),
-                ],
-              );*/
             },
           );
         }
@@ -382,6 +214,7 @@ class _HomePageState extends State<HomePage> {
     //List<String> names = <String>["John","Crea","Mike","Andy"];
 
     return Scaffold(
+      key: UniqueKey(),
       appBar: AppBar(
         title: Text('Notificaciones'),
         automaticallyImplyLeading: false,

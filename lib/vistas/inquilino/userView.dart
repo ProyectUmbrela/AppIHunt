@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:ihunt/vistas/profiles/notificaciones.dart';
+
 
 class UserView extends StatefulWidget {
   @override
@@ -192,6 +194,10 @@ class _UserState extends State<UserView> {
             onTap: () {
               // Update the state of the app.
               // ...
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MisNotificaciones()),
+              );
             },
           ),
           ListTile(

@@ -234,7 +234,7 @@ class _LandlordState extends State<Landlord> {
               // ...
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyApp()),
+                  MaterialPageRoute(builder: (context) => MisNotificaciones()),
                 );
             },
           ),
