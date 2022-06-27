@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
+import 'package:ihunt/providers/provider.dart';
 
 class MisNotificaciones extends StatelessWidget {
   @override
@@ -31,46 +31,48 @@ class _HomePageState extends State<HomePageNotificaciones> {
 
   void setData() async {
     _currentUser = FirebaseAuth.instance.currentUser;
-
     setState(() {
       _userId = _currentUser.uid;
     });
-    print("############################ ${_userId}");
+
   }
 
   Future getProjectDetails() async {
 
-    var snapShoot = await FirebaseFirestore.instance
-        .collection('notificaciones')
-        .doc(_userId)
-        .get();
-    var fields = snapShoot.data();
-    var notificaciones = {};
+    try{
+      var snapShoot = await FirebaseFirestore.instance
+          .collection(GlobalDataUser().notificacionesCollection)
+          .doc(_userId)
+          .get();
+      var fields = snapShoot.data();
+      var notificaciones = {};
 
-    //print(fields);
-    int index = 0;
-    for (MapEntry e in fields.entries) {
-      var aux = {};
-      aux[index.toString()] = {'fieldID' : e.key, 'body' : e.value['body'], 'titulo' : e.value['titulo']};
-      index++;
-      notificaciones.addAll(aux);
-    }
-    
-    return notificaciones;
+      int index = 0;
+      for (MapEntry e in fields.entries) {
+        var aux = {};
+        aux[index.toString()] = {
+          'fieldID': e.key,
+          'body': e.value['body'],
+          'titulo': e.value['titulo']
+        };
+        index++;
+        notificaciones.addAll(aux);
+      }
+
+      return notificaciones;
+    }on Exception catch (exception) {
+
+      final snackBar = SnackBar(
+        content: const Text('Ocurrio un error!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return null;
+    }catch (error) {
+      return [];
   }
 
-  /*
-  Future removeNotificacion(String index){
-    var collection = FirebaseFirestore.instance.collection('notificaciones');
-    collection
-        .doc(_userId)
-        .update({
-          index : FieldValue.delete(),
-        });
 
-    print("######################## ELEMENTO ELIMINADO ${index} ##########################");
-
-  }*/
+  }
 
   Widget projectWidget() {
 
@@ -79,6 +81,12 @@ class _HomePageState extends State<HomePageNotificaciones> {
       builder: (context, snapshot) {
         if(!snapshot.hasData){
           // Esperando la respuesta de la API
+          if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
+            return Center(
+              //child: Text("Algo salió mal en tu solicitud"),
+            );
+          }
+
           return Center(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -104,16 +112,14 @@ class _HomePageState extends State<HomePageNotificaciones> {
           );
         }
         else{
-
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-
-              print("A *************************************************************");
-              //print("A ==========> ${index}");
+              print("########################################################");
+              print("########################################################");
               print(snapshot.data);
-              //print("A ==========> ${snapshot.data[index.toString()]}");
-              print("A *************************************************************");
+              print("########################################################");
+              print("########################################################");
 
               return Padding(
                 padding: const EdgeInsets.all(5.0),
@@ -131,11 +137,8 @@ class _HomePageState extends State<HomePageNotificaciones> {
                       });
 
                       setState(() {
-                        print("DELETE ELEMENT WITH ID: ${elementId} ******************");
-                        print("DELETE ELEMENT WITH INDEX: ${index} ******************");
                         snapshot.data.removeWhere((key, value) => key == index.toString());
                       });
-
 
                     }),
                     motion: const DrawerMotion(),
@@ -170,7 +173,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 80,
+                    height: 85,
                     child: Center(
                       child: Card(
                         // Con esta propiedad modificamos la forma de nuestro card
@@ -189,14 +192,6 @@ class _HomePageState extends State<HomePageNotificaciones> {
                           ],
                         ),
                       ),
-                      /*child: Text(
-                          element['body'],
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 15
-                          ),
-                        ),*/
                     ),
                   ),
                 ),

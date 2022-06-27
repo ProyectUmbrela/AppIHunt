@@ -1,8 +1,6 @@
 import 'package:ihunt/providers/provider.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-//import 'package:flutter/widgets.dart';
-//import 'package:flutter/cupertino.dart';
 import 'package:ihunt/providers/api.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:ihunt/vistas/register.dart';
@@ -88,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                       fontSize: 14)),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -255,13 +253,9 @@ class _LoginPageState extends State<LoginPage> {
       });
 
     }
-
-
-
     }else{
-    setState(() => _saving = false);
-  }
-
+      setState(() => _saving = false);
+    }
   }
 
   @override
@@ -297,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
       )
     );
 
-    final heighT = MediaQuery.of(context).size.height * 0.08;
+    final heighT = MediaQuery.of(context).size.height * 0.14;
 
     return Scaffold(
       body: ModalProgressHUD(

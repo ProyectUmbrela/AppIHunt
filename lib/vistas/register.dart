@@ -210,21 +210,22 @@ class _RegisterState extends State<Register> {
             'tipo': _chosenValue
           });
 
-          print("###################################################");
-          print("###################################################");
-          print(msg);
-          print("###################################################");
-          print("###################################################");
+
 
           var response = await _api.registerPost(msg);
           Map data = jsonDecode(response.body);
 
-          if (response.statusCode == 201) {
+          print("###################################################");
+          print("###################################################");
+          print(msg);
+          print(response.statusCode);
+          print("###################################################");
+          print("###################################################");
+
+          if (response.statusCode == 201 || response.statusCode == 200) {
 
             // CHECAR BIEN LOS CODIDOS DE RESPUESTA
-            debugPrint("Data posted successfully");
             setState(() => _saving = false);
-
             _materialAlertDialog(context, 'Registro exitoso, revisa tu correo para completar tu registro', 'Notificación');
             clearForm();
           }
@@ -265,17 +266,6 @@ class _RegisterState extends State<Register> {
         setState(() {
           _saving = false;
         });
-        /*if (Platform.isAndroid) {
-          _materialAlertDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
-        } else if (Platform.isIOS) {
-          _cupertinoDialog(
-              context,
-              "Por favor, rellene el formulario correctamente",
-              "Formulario inválido");
-        }*/
       }
     }
 
@@ -297,40 +287,6 @@ class _RegisterState extends State<Register> {
               style: style.copyWith(color: Colors.white)),
         )
     );
-    /*final registerbuton = Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(10),
-        color: Color(0xff01A0C7),
-        child: MaterialButton(
-          //height: 20,
-          minWidth: 100,
-          onPressed: () {
-            setState(() => _saving = true);
-            submit();
-          },
-          child:SizedBox(
-              child: Text("Registrar",
-                  textAlign: TextAlign.center,
-                  style: style.copyWith())),
-        )
-    );*/
-
-    /*final cancelbuton = Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(10),
-        color: Color(0xff01A0C7),
-        child: MaterialButton(
-          //height: 20,
-          minWidth: 100,
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/login');
-          },
-          child:SizedBox(
-              child: Text("Cancelar",
-                  textAlign: TextAlign.center,
-                  style: style.copyWith())),
-        )
-    );*/
 
 
     return Scaffold(
@@ -359,14 +315,14 @@ class _RegisterState extends State<Register> {
                           height: 15,
                         ),
 
-                        label("Correo electrónico"),
-                        SizedBox(height: 5.0),
-                        userEmail,
-                        SizedBox(height: 15.0),
-
                         label("Teléfono"),
                         SizedBox(height: 5.0),
                         userPhone,
+                        SizedBox(height: 15.0),
+
+                        label("Correo electrónico"),
+                        SizedBox(height: 5.0),
+                        userEmail,
                         SizedBox(height: 15.0),
 
                         label("Contraseña"),

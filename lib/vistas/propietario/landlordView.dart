@@ -253,7 +253,6 @@ class _LandlordState extends State<Landlord> {
                 context,
                 MaterialPageRoute(builder: (context) => Ayuda()),
               );
-
             },
           ),
           ListTile(
