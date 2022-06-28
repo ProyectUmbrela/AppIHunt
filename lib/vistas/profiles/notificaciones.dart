@@ -47,6 +47,13 @@ class _HomePageState extends State<HomePageNotificaciones> {
       var fields = snapShoot.data();
       var notificaciones = {};
 
+      print("##########################################################");
+      print("##########################################################");
+      print(fields);
+      //print(fields['1']['fecha'].seconds);
+      print("##########################################################");
+      print("##########################################################");
+
       int index = 0;
       for (MapEntry e in fields.entries) {
         var aux = {};
@@ -59,6 +66,8 @@ class _HomePageState extends State<HomePageNotificaciones> {
         notificaciones.addAll(aux);
       }
 
+
+
       return notificaciones;
     }on Exception catch (exception) {
 
@@ -68,6 +77,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return null;
     }catch (error) {
+      // aun no recibe notificaciones por lo que no existe el doc en firestore
       return [];
   }
 
@@ -115,14 +125,8 @@ class _HomePageState extends State<HomePageNotificaciones> {
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-              print("########################################################");
-              print("########################################################");
-              print(snapshot.data);
-              print("########################################################");
-              print("########################################################");
-
               return Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Slidable(
                   key: const ValueKey(0),
                   endActionPane: ActionPane(
@@ -130,7 +134,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
                       var elementId = snapshot.data[index.toString()]['fieldID'];
                       // we can able to perform to some action here
                       FirebaseFirestore.instance
-                          .collection('notificaciones')
+                          .collection(GlobalDataUser().notificacionesCollection)
                           .doc(_userId)
                           .update({
                         elementId : FieldValue.delete(),
@@ -151,7 +155,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
                           //removeNotificacion(index.toString());
                           //setState(() {});
                         },*/
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: Colors.grey.shade600,
                         foregroundColor: Colors.white,
                         icon: Icons.delete,
                         label: 'Borrar',
@@ -176,6 +180,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
                     height: 85,
                     child: Center(
                       child: Card(
+                        color: Colors.grey.shade200,
                         // Con esta propiedad modificamos la forma de nuestro card
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
 
@@ -185,8 +190,8 @@ class _HomePageState extends State<HomePageNotificaciones> {
                             // Usamos ListTile para ordenar la información del card como titulo, subtitulo e icono
                             ListTile(
                               contentPadding: EdgeInsets.fromLTRB(15, 5, 15, 0),
-                              title: Text(snapshot.data[index.toString()]['titulo']),//Text('Titulo'),
-                              subtitle: Text(snapshot.data[index.toString()]['body']),//Text('Este es el subtitulo del card. Aqui podemos colocar descripción de este card.'),
+                              title: Text(snapshot.data[index.toString()]['titulo']),
+                              subtitle: Text(snapshot.data[index.toString()]['body']),
                               //leading: Icon(Icons.home),
                             ),
                           ],

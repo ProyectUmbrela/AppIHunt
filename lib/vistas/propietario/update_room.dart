@@ -220,7 +220,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
         borderRadius: BorderRadius.circular(5),
         color: Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: 110.0,
+          minWidth: MediaQuery.of(context).size.width,//150.0,
           height: 45.0,
           onPressed: () {
             updateARoom();
@@ -234,9 +234,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final eliminarRoom = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(5),
-        color: Color(0xff01A0C7),
+        color: Colors.grey.shade500, //Color(0xff01A0C7),
         child: MaterialButton(
-          minWidth: 110.0,
+          minWidth: MediaQuery.of(context).size.width,//110.0,
           height: 45.0,
           onPressed: () {
             _displayDialogForDelete(context);
@@ -296,7 +296,10 @@ class _UpdateRoomState extends State<UpdateRoom> {
                       SizedBox(height: 45.0),
                       //longButtons("Registrar", submit),
                       //actualizarRoom,
-                      Row(
+                      actualizarRoom,
+                      SizedBox(height: 10.0),
+                      eliminarRoom,
+                      /*Row(
                         children: <Widget>[
                           Expanded(
                               child: Container(
@@ -309,7 +312,7 @@ class _UpdateRoomState extends State<UpdateRoom> {
                                 alignment: Alignment.centerRight,
                               )),
                         ],
-                      ),
+                      ),*/
                       SizedBox(height: 15.0),
                     ],
                   ),

@@ -21,7 +21,12 @@ class AyudaPage extends StatefulWidget {
 
 class _HomePageState extends State<AyudaPage> {
 
-  final List<int> numbers = [1, 2, 3, 5, 8];
+
+
+
+  final List<int> numbers = [1, 2, 3, 5];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +41,33 @@ class _HomePageState extends State<AyudaPage> {
         padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
         height: MediaQuery.of(context).size.height * 0.9,
         child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: numbers.length,
-            itemBuilder: (context, index) {
-              return Container(
-                width: MediaQuery.of(context).size.width * 0.85,
-                child: Card(
-                  color: Colors.blue,
-                  child: Container(
-                    child: Center(child: Text(numbers[index].toString(), style: TextStyle(color: Colors.white, fontSize: 36.0),)),
+          scrollDirection: Axis.horizontal,
+          itemCount: numbers.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: MediaQuery.of(context).size.width * 0.85,
+              child: Column(
+                children: <Widget>[
+                  Card(
+                    color: Colors.grey.shade400,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: Center(
+                        child: Text(
+                          numbers[index].toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 36.0
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          );
-        }),
+            );
+          },
+        ),
       ),
     );
   }
