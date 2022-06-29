@@ -60,12 +60,11 @@ class _HomePageState extends State<HomePageNotificaciones> {
         aux[index.toString()] = {
           'fieldID': e.key,
           'body': e.value['body'],
-          'titulo': e.value['titulo']
+          'titulo': e.value['title']
         };
         index++;
         notificaciones.addAll(aux);
       }
-
 
 
       return notificaciones;
@@ -190,8 +189,8 @@ class _HomePageState extends State<HomePageNotificaciones> {
                             // Usamos ListTile para ordenar la información del card como titulo, subtitulo e icono
                             ListTile(
                               contentPadding: EdgeInsets.fromLTRB(15, 5, 15, 0),
-                              title: Text(snapshot.data[index.toString()]['titulo']),
-                              subtitle: Text(snapshot.data[index.toString()]['body']),
+                              title: Text(snapshot.data[index.toString()]['titulo'] == null ? '' : snapshot.data[index.toString()]['titulo']),
+                              subtitle: Text(snapshot.data[index.toString()]['body'] == null ? '' : snapshot.data[index.toString()]['body']),
                               //leading: Icon(Icons.home),
                             ),
                           ],
