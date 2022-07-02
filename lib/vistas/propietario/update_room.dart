@@ -155,6 +155,9 @@ class _UpdateRoomState extends State<UpdateRoom> {
     final adress = TextFormField(
       autofocus: false,
       controller: adressCtrl,
+      inputFormatters: [
+        new LengthLimitingTextInputFormatter(150),
+      ],
       enabled: widget.room['status'] == 1 ? false : true,
       validator: (value) => value.isEmpty ? "La dirección es requerida" : null,
       onSaved: (value) => _adress = value,

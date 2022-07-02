@@ -287,7 +287,8 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                               Text.rich(
                                                 TextSpan(
                                                   children: <TextSpan>[
-                                                    TextSpan(text: 'Tel. contacto: ', style: TextStyle(
+                                                    TextSpan(text: 'Tel: ', style: TextStyle(
+                                                    //TextSpan(text: 'Tel. contacto: ', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)
                                                     ),

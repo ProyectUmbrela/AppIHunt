@@ -106,7 +106,7 @@ class _LandlordState extends State<Landlord> {
 
   Future<void> _logout() async {
     //setState(() => _saving = false);
-    
+
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
   }
