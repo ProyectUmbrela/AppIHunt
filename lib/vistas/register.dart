@@ -110,7 +110,7 @@ class _RegisterState extends State<Register> {
       inputFormatters: [
         new LengthLimitingTextInputFormatter(500),
       ],
-      validator: (value) => value.isEmpty ? "Contraseña requerida" : null,
+      validator: minimumCharacters,//(value) => value.isEmpty ? "Contraseña requerida" : null,
       onSaved: (value) => _password = value,
       decoration: buildInputDecoration("Confirmar contraseña", Icons.remove_red_eye),
     );

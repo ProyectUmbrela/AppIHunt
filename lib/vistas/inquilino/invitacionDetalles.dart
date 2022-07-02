@@ -60,9 +60,18 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
 
     print("=================> ${URL}");
     try{
-      if (!await launch(URL.replaceAll('http', 'https'),
-          forceSafariVC: true,
-          forceWebView: true)) throw 'Could not launch ${URL}';
+      if(URL.toString().startsWith('https')){
+        print("1111111111111111111111111111111111111111111");
+        if (!await launch(URL,
+            forceSafariVC: true,
+            forceWebView: true)) throw 'Could not launch ${URL}';
+      }else{
+        print("222222222222222222222222222222222222222222");
+        if (!await launch(URL.replaceAll('http', 'https'),
+            forceSafariVC: true,
+            forceWebView: true)) throw 'Could not launch ${URL}';
+      }
+
     }catch (err){
       print("Error: ${err}");
     }
@@ -152,17 +161,19 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
   Widget build(BuildContext context) {
     double titlesSize = 18.0;
     double textSize = 15.0;
-
+    FontWeight fontInfo = FontWeight.w500;
+    FontWeight fontTitle = FontWeight.w800;
+    double generalPaddingWidgets = 15.0;
 
     final rechazarButton = Material(
         borderRadius: BorderRadius.circular(5),
-        color: Color(0xFF757575),
+        color: Colors.grey.shade500,//Color(0xFF757575),
         //EF9A9A, E57373, EF5350, B71C1C, C62828, D32F2F, D50000
         child: MaterialButton(
             minWidth: (MediaQuery
                 .of(context)
                 .size
-                .width / 3),
+                .width),
             onPressed: () {
               showAlertDialogRejected(context);
             },
@@ -185,7 +196,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
             minWidth: (MediaQuery
                 .of(context)
                 .size
-                .width / 3),
+                .width),
             onPressed: () {
               showAlertDialogAccepted(context);
             },
@@ -200,8 +211,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
         ),
     );
 
-    FontWeight fontInfo = FontWeight.w500;
-    FontWeight fontTitle = FontWeight.w800;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -217,8 +227,9 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                     children: <Widget>[
                       Container(
                         width: MediaQuery.of(context).size.width ,
-                        height: MediaQuery.of(context).size.height * 0.79,
+                        height: MediaQuery.of(context).size.height * 0.7,//0.79,
                         child: Card(
+                          margin: EdgeInsets.all(generalPaddingWidgets),
                           //color: Colors.blue[100],
                           child: SingleChildScrollView(
                             padding: const EdgeInsets.all(10.0),
@@ -228,7 +239,7 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Padding(
-                                      padding: EdgeInsets.only(left: 100.0),
+                                      padding: EdgeInsets.only(left: 100.0, top: 1),
                                       child: Align(
                                         alignment: Alignment.bottomCenter,
                                         child: Text('Disponible',
@@ -287,19 +298,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                               fontSize: textSize)
                                       ),
                                     ),
-                                    /*Padding(
-                                          padding: EdgeInsets.only(),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Dir: ' + widget.direccion.toString(), // DIRECCION
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),
-                                          ),
-                                        ),*/
                                   ],
                                 ),
                                 Row(
@@ -395,19 +393,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                               fontSize: textSize)
                                       ),
                                     ),
-                                    /*Padding(
-                                          padding: EdgeInsets.only(left: 0),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Detalles de contrato: ' + widget.detalles.toString(), // DETALLES
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),*/
                                   ],
                                 ),
                                 Row(
@@ -445,19 +430,6 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                                               fontSize: textSize)
                                       ),
                                     ),
-                                    /*Padding(
-                                          padding: EdgeInsets.only(left: 0, top: 10),
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text('Términos de contrato: ' + widget.terminos.toString(), //TERMINOS
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                    fontWeight: fontInfo,
-                                                    color: Colors.black,
-                                                    fontSize: textSize)
-                                            ),//Icon(Icons.camera_alt),),
-                                          ),
-                                        ),*/
                                   ],
                                 ),
                               ],
@@ -467,31 +439,26 @@ class _DetallesInvitacion extends State<DetallesInvitacion> {
                       ),
                     ]
                 ),
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: MediaQuery.of(context).size.width ,
-                      height: MediaQuery.of(context).size.height * 0.09,
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left:10, bottom: 15),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: rechazarButton,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left:115, bottom: 15),
-                            child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: rentarButton,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                Padding(
+                  padding: EdgeInsets.only(
+                      left:generalPaddingWidgets,
+                      top: 10,
+                      bottom: 15,
+                      right: generalPaddingWidgets),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: rentarButton,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left:generalPaddingWidgets,
+                      bottom: 15,
+                      right: generalPaddingWidgets),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: rechazarButton,
+                  ),
                 ),
               ],
             ),

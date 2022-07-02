@@ -50,6 +50,20 @@ String validateSinglePassword(String value) {
   //return "2 Contraseña inválida";
 }
 
+String minimumCharacters (String a_password){
+
+  if(a_password.isEmpty){
+    return "Contraseña no válida";
+  }
+  else if(a_password.length < 8){
+    return "Mínimo ocho carácteres";
+  }
+  else{
+    return null;
+  }
+
+}
+
 String validatePassword(String value, value2) {
   if (value != value2) {
     return "La contraseña no coincide";

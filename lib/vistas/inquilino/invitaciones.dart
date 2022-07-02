@@ -144,7 +144,7 @@ class InvitacionesState extends State<InvitacionesInquilino>{
               direccion: current['direccion'],
               enlace_aceptar: current['enlace_aceptar'],
               enlace_rechazar: current['enlace_rechazar'],
-              fechaEnvio: customDate(current['fecha_envio'].toString()),//.replaceAll('GMT', ''),
+              fechaEnvio: customDate(current['fecha_envio'].toString()),
               fechaFin: current['fecha_fin'].toString(),
               fechaInicio: current['fecha_inicio'].toString(),
               fechaPago: current['fecha_pago'].toString(),
@@ -193,17 +193,17 @@ class InvitacionesState extends State<InvitacionesInquilino>{
   Widget invitacionDetalles(invitacion) {
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5.0),
       child: Card(
         color: Colors.grey[700],
         child: InkWell(
           onTap: ()=> _DetallesInivitacion(invitacion, context),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(10.0),
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(1.0),
                   child: Container(
                     decoration: new BoxDecoration(shape: BoxShape.circle),
                   ),

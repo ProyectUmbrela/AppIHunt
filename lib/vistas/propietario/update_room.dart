@@ -71,7 +71,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
       final form = formKey.currentState;
 
       if (form.validate()) {
-
         // actalizar almenos un campo para enviar la solicitud
         if(adressCtrl.text == widget.room['direccion'] &&
             dimensionsCtrl.text == widget.room['dimension'] &&
@@ -85,7 +84,6 @@ class _UpdateRoomState extends State<UpdateRoom> {
           _showDialog(2, "No hay datos a actualizar");
         }
         else{
-
           print("hay cambio de datos..........");
           form.save();
           Api _api = Api();
