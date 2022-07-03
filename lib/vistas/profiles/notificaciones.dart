@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Slidable(
                   key: const ValueKey(0),
                   endActionPane: ActionPane(

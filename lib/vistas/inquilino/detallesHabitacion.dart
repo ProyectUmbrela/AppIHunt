@@ -40,12 +40,14 @@ class DetallesHab extends StatefulWidget {
 class _DetallesHab extends State<DetallesHab> {
 
   double sizeText = 16;
+  var colorCards = Colors.grey[700];
 
   Widget detallesPropietario() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(top: 5.0, bottom: 1.0, left: 10.0, right: 10.0),
       child: Card(
-        color: Colors.grey[800],
+        margin: EdgeInsets.symmetric(vertical: 5),
+        color: colorCards,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -70,9 +72,10 @@ class _DetallesHab extends State<DetallesHab> {
 
   Widget detallesRenta() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(top: 1.0, bottom: 1.0, left: 10.0, right: 10.0),
       child: Card(
-        color: Colors.grey[800],
+        margin: EdgeInsets.symmetric(vertical: 5),
+        color: colorCards,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -116,9 +119,10 @@ class _DetallesHab extends State<DetallesHab> {
   Widget detallesHabitacion() {
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(top: 1.0, bottom: 10.0, left: 10.0, right: 10.0),
       child: Card(
-        color: Colors.grey[800],
+        margin: EdgeInsets.symmetric(vertical: 5),
+        color: colorCards,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

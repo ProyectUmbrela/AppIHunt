@@ -178,7 +178,6 @@ class _RoomsState extends State<Rooms> with SingleTickerProviderStateMixin {
           future: getAllRooms(),
           builder: (context, snapshot) {
             if(!snapshot.hasData){
-              //print("==========> ${snapshot.data} | ${snapshot.hasData} | ${snapshot.hasError}");
               if(snapshot.data == null && snapshot.connectionState == ConnectionState.done){
                 return Center(
                   //child: Text("Algo salió mal en tu solicitud"),

@@ -187,15 +187,6 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                     TextStyle(color: Colors.black.withOpacity(0.6)),
                                   ),
                                 ),
-                                /*ListTile(
-                                  leading: Icon(Icons.airline_seat_individual_suite),
-                                  title: Text('Usuario: ${snapshot.data[index].idusuario}'),
-                                  subtitle: Text(
-                                    'No. Invitacion: ${snapshot.data[index].num_invitacion}',
-                                    style:
-                                    TextStyle(color: Colors.black.withOpacity(0.6)),
-                                  ),
-                                ),*/
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 2, horizontal: 10),
@@ -226,7 +217,7 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                           ],
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 30),
+                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.end,
                                             children: [
@@ -280,14 +271,14 @@ class _InvitationsState extends State<Invitations> with SingleTickerProviderStat
                                           ],
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 40),
+                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.end,
                                             children: [
                                               Text.rich(
                                                 TextSpan(
                                                   children: <TextSpan>[
-                                                    TextSpan(text: 'Tel: ', style: TextStyle(
+                                                    TextSpan(text: 'Tel. Contacto: ', style: TextStyle(
                                                     //TextSpan(text: 'Tel. contacto: ', style: TextStyle(
                                                         color: Colors.black.withOpacity(0.6),
                                                         fontWeight: FontWeight.bold)

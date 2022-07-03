@@ -12,6 +12,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/providers/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 class RegisterRoom extends StatefulWidget {
@@ -43,7 +44,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   String _roomid, _cpInput, _colonia, _dimensions, _services, _description, _price, _terms, _addressInput;
   String _stateSelected;
   String _municipioSelected;
-  int maxImages = 8;
+  //int maxImages = 8;
 
 
   User currentUser;
@@ -243,23 +244,63 @@ class _RegisterRoomState extends State<RegisterRoom> {
     ));
   }
 
+  bool permissionGranted = false;
+  Future<bool> _requestPermissions() async {
+    /*
+    //await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    var permission = Permission.storage.status;
+    if (permission != PermissionStatus.granted) {
+      await Permission.storage.request(); //PermissionHandler().requestPermissions([PermissionGroup.storage]);
+      permission = Permission.storage.status;                 //await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    }
 
-  Future insertIntoMysql(a_document, tokenAuth) async{
+     return permission == PermissionStatus.granted;*/
+
+    if (await Permission.storage.request().isGranted) {
+      setState(() {
+        permissionGranted = true;
+      });
+    } /*else if (await Permission.storage.request().isPermanentlyDenied) {
+      //await openAppSettings();
+
+    } else if (await Permission.storage.request().isDenied) {
+      setState(() {
+        permissionGranted = false;
+      });
+    }*/
+
+  }
+
+
+  Future insertIntoMysql(aDocument, tokenAuth) async{
 
     Api _api = Api();
-    final body = jsonEncode(a_document);
+    final body = jsonEncode(aDocument);
     var response = await _api.RegisterRoomPost(body, tokenAuth);
-
     return response.statusCode;
 
   }
 
   void selectImages() async {
-    final List<XFile> selectedImages = await imagePicker.pickMultiImage();
-    if (selectedImages.isNotEmpty) {
-      imageFileList.addAll(selectedImages);
+
+    await _requestPermissions();
+    print("A##########################################################");
+    print("A##########################################################");
+    print(permissionGranted);
+    print("A##########################################################");
+    print("A##########################################################");
+    if(permissionGranted == false){
+      print("***************** False ***************************");
+      return;
+    }else{
+      print("***************** True ***************************");
+      final List<XFile> selectedImages = await imagePicker.pickMultiImage();
+      if (selectedImages != null || selectedImages.isNotEmpty) {
+        imageFileList.addAll(selectedImages);
+      }
+      setState((){});
     }
-    setState((){});
+
   }
 
   // ENVIAR DATOS PARA REGISTRAR HABITACION
@@ -269,7 +310,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
     if (form.validate()) {
       var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
-      if (imageFileList.length <= maxImages){
+      if (imageFileList.length <= GlobalDataLandlord().maxImages){
 
         try{
           form.save();
@@ -282,7 +323,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
               images64_Base.add(img64);
             }
           }
-
           // generando las imagenes en base64
           await _images_to_base64();
 
@@ -355,12 +395,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
           setState(() {
             _saving = false;
           });
-
         }
       }
       else {
         setState(() => _saving = false);
-        _showDialog(2, "Máximo ocho imagénes");
+        _showDialog(2, "Máximo seis imagénes");
       }
     }else{
       setState(() => _saving = false);

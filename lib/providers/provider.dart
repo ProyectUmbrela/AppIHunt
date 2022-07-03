@@ -1,5 +1,6 @@
 class GlobalDataLandlord{
   var userCollection = "users";
+  int maxImages = 6;
 }
 
 class GlobalDataUser{

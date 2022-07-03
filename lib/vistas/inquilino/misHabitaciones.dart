@@ -180,7 +180,7 @@ class _MisLugares extends State<Lugares> {
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: Container(
                     decoration: new BoxDecoration(shape: BoxShape.circle),
                   ),
