@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
                         backgroundColor: Colors.grey.shade600,
                         foregroundColor: Colors.white,
                         icon: Icons.delete,
-                        label: 'Borrar',
+                        //label: 'Borrar',
                         borderRadius: BorderRadius.circular(10),
                       ),
                       /*SlidableAction(
@@ -191,6 +191,7 @@ class _HomePageState extends State<HomePageNotificaciones> {
                               contentPadding: EdgeInsets.fromLTRB(15, 5, 15, 0),
                               title: Text(snapshot.data[index.toString()]['titulo'] == null ? '' : snapshot.data[index.toString()]['titulo']),
                               subtitle: Text(snapshot.data[index.toString()]['body'] == null ? '' : snapshot.data[index.toString()]['body']),
+                              trailing: const Icon(Icons.arrow_back),
                               //leading: Icon(Icons.home),
                             ),
                           ],

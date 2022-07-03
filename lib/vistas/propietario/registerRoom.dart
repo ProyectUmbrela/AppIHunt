@@ -172,10 +172,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
                       fit: BoxFit.cover
                   ),
                 ),
-            ): Icon(
+            ): Container(child:Icon(
                   Icons.camera,
                   color: Colors.blue,
-                ),
+                ),),
           ),
         ),
       ),
@@ -287,6 +287,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
     print("A##########################################################");
     print("A##########################################################");
     print(permissionGranted);
+
     print("A##########################################################");
     print("A##########################################################");
     if(permissionGranted == false){
@@ -295,7 +296,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
     }else{
       print("***************** True ***************************");
       final List<XFile> selectedImages = await imagePicker.pickMultiImage();
-      if (selectedImages != null || selectedImages.isNotEmpty) {
+
+      if (selectedImages != null) {
         imageFileList.addAll(selectedImages);
       }
       setState((){});
@@ -309,7 +311,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
     final form = formKey.currentState;
 
     if (form.validate()) {
-      var fullAddress = '${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}';
+      var fullAddress = 'Calle ${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}.';
+      print("*********** DIRECCION: ****************");
+      print(fullAddress);
       if (imageFileList.length <= GlobalDataLandlord().maxImages){
 
         try{
@@ -327,7 +331,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           await _images_to_base64();
 
           // generando las coordenadas sobre la direccion proporcionada
-          var coordinates = await getLocation(fullAddress);
+          var coordinates = await getCoordinatesByAddress(fullAddress);
           if (coordinates != null) {
             var snapShoot = await FirebaseFirestore.instance
                 .collection(GlobalDataLandlord().userCollection)
@@ -399,7 +403,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
       }
       else {
         setState(() => _saving = false);
-        _showDialog(2, "Máximo seis imagénes");
+        _showDialog(2, "Máximo ${GlobalDataLandlord().maxImages} imagénes");
       }
     }else{
       setState(() => _saving = false);
@@ -449,7 +453,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
                 setState(() {
                   if (this._currentstep > 0) {
                     this._currentstep = this._currentstep - 1;
-                    selectedCountry = null; //****************************************
+                    selectedCountry = null;
                   } else {
                     this._currentstep = 0;
                   }
@@ -463,7 +467,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
 
   // OBTIENE LOS MUINICIPIOS Y LOCALIDADES DADO UN CODIGO POSTAL VALIDO
-  Future getCp() async {
+  Future getLocationsByCp() async {
 
     //***************************************
     //***************************************
@@ -528,17 +532,18 @@ class _RegisterRoomState extends State<RegisterRoom> {
   Widget projectWidget() {
 
     return FutureBuilder(
-      future: getCp(),
+      future: getLocationsByCp(),
       builder: (context, snapshot) {
         //if(!snapshot.hasData){
         if(!snapshot.hasData){// || snapshot.connectionState == ConnectionState.waiting){
           // Esperando la respuesta de la API
+
           return Center(
-              child: SizedBox(
-                width: 40,
-                height: 40,
-                child: CircularProgressIndicator(),
-              ),
+            child: SizedBox(
+              width: 40,
+              height: 40,
+              child: CircularProgressIndicator(),
+            ),
           );
         }
         else if(snapshot.hasData && snapshot.data.isEmpty) {
@@ -615,7 +620,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
           title: Text(_currentstep == 1 ? 'Localidad': ''),
           content: projectWidget(),
           isActive: _currentstep >= 1,
-          state: _currentstep == 1 ? StepState.editing: StepState.complete
+          state: _currentstep == 1 ? StepState.editing : StepState.complete
       ),
       Step(
           title: Text(_currentstep == 2 ? 'Calle': ''),
@@ -637,14 +642,14 @@ class _RegisterRoomState extends State<RegisterRoom> {
               }
           ),
           isActive: _currentstep >= 2,
-          state: _currentstep == 2 ? StepState.editing: StepState.complete
+          state: _currentstep == 2 ? StepState.editing : StepState.complete
       ),
     ];
 
     return _steps;
   }
 
-  Future getLocation(address) async{
+  Future getCoordinatesByAddress(address) async{
     try {
       var locations = await locationFromAddress(address);
       return locations[0];

@@ -83,6 +83,9 @@ String numberValidator(String value) {
   else if(n < 0){
     return '1 No es un número válido';
   }
+  else if(n == 0){
+    return 'No es un número válido';
+  }
   else if(n > 1000000){
     return 'No es un número válido';
   }
