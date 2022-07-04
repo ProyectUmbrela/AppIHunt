@@ -11,7 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ihunt/vistas/inquilino/AdmobHelper.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:ihunt/vistas/profiles/notificaciones.dart';
-import 'package:ihunt/vistas/profiles/ayuda.dart';
+import 'package:ihunt/vistas/profiles/ayudaUsuario.dart';
 
 class UserView extends StatefulWidget {
   @override
@@ -212,7 +212,7 @@ class _UserState extends State<UserView> {
               // Update the state of the app.
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Ayuda()),
+                MaterialPageRoute(builder: (context) => AyudaUsuario()),
               );
 
             },

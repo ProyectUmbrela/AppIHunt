@@ -6,7 +6,7 @@ import 'package:flutter_linkify/flutter_linkify.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/gestures.dart';
 
-class Ayuda extends StatelessWidget {
+class AyudaPropietario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -373,7 +373,7 @@ class _HomePageState extends State<AyudaPage> {
                       child: Padding(
                         padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
                         child: Text(
-                          "Añade fotográfias a tus habitaciones, esto ayudará a los demás a identificar y conocer con más detalles tus habitaciones así como las condiciones en las que se encuentra.",
+                          "Añade fotográfias a tus habitaciones, esto ayudará a los demás a identificar y conocer con más detalle tus habitaciones así como las condiciones en las que se encuentra",
                           style: TextStyle(fontSize: viewFourSize),
                         ),
                       ),
@@ -441,7 +441,7 @@ class _HomePageState extends State<AyudaPage> {
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
                                   child: Text(
-                                    "1 Abre la pestaña de habitaciones, llena el formulario mostrado, añade una descripcion corta y detallada de tu habitacion, costo mensual así como los servicios, no olvides añadir fotografias a tu registro. ",
+                                    "1 Abre la pestaña de habitaciones, llena el formulario mostrado, añade una descripcion corta y detallada de tu habitacion, costo mensual así como los servicios, no olvides añadir fotografias a tu registro",
                                     style: TextStyle(fontSize: viewFourSize),
                                   ),
                                 ),
@@ -462,7 +462,7 @@ class _HomePageState extends State<AyudaPage> {
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
                                   child: Text(
-                                    "2 Tu registro pasara por un proceso de revision para asegurarnos de que tu postulacion cumple con nuestras reglas, de ser correcto recibiras una notificacion de completado.",
+                                    "2 Tu registro pasará por un proceso de revision para asegurarnos de que tu solicitud cumple con nuestras reglas, de ser correcto recibirás una notificación de completado",
                                     style: TextStyle(fontSize: viewFourSize),
                                   ),
                                 ),
@@ -483,7 +483,7 @@ class _HomePageState extends State<AyudaPage> {
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
                                   child: Text(
-                                    "3 Una vez que tu registro este completo, tu habitacion sera mostrada a todo los usuario, comenzaras a recibir notificaciones y a tu primer inquilino",
+                                    "3 Una vez que tu registro este completo estás listo para recibir a tu primer inquilino, tu habitación será mostrada a todos los usuario, comenzarás a recibir vistas y notificaciones de contacto",
                                     style: TextStyle(fontSize: viewFourSize),
                                   ),
                                 ),

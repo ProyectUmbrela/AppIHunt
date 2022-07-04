@@ -10,7 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
 import 'package:ihunt/providers/provider.dart';
-import 'package:ihunt/vistas/profiles/ayuda.dart';
+import 'package:ihunt/vistas/profiles/ayudaPropietario.dart';
 
 class Landlord extends StatefulWidget {
   @override
@@ -253,7 +253,7 @@ class _LandlordState extends State<Landlord> {
               // Update the state of the app.
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Ayuda()),
+                MaterialPageRoute(builder: (context) => AyudaPropietario()),
               );
             },
           ),

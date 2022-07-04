@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 //import 'package:ihunt/vistas/inquilino/userView.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetallesInvitacion extends StatefulWidget {
