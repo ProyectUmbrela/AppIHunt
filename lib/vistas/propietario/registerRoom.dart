@@ -44,7 +44,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
   String _roomid, _cpInput, _colonia, _dimensions, _services, _description, _price, _terms, _addressInput;
   String _stateSelected;
   String _municipioSelected;
-  //int maxImages = 8;
 
 
   User currentUser;
@@ -175,7 +174,8 @@ class _RegisterRoomState extends State<RegisterRoom> {
             ): Container(child:Icon(
                   Icons.camera,
                   color: Colors.blue,
-                ),),
+                ),
+            ),
           ),
         ),
       ),
@@ -246,28 +246,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   bool permissionGranted = false;
   Future<bool> _requestPermissions() async {
-    /*
-    //await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-    var permission = Permission.storage.status;
-    if (permission != PermissionStatus.granted) {
-      await Permission.storage.request(); //PermissionHandler().requestPermissions([PermissionGroup.storage]);
-      permission = Permission.storage.status;                 //await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-    }
-
-     return permission == PermissionStatus.granted;*/
 
     if (await Permission.storage.request().isGranted) {
       setState(() {
         permissionGranted = true;
       });
-    } /*else if (await Permission.storage.request().isPermanentlyDenied) {
-      //await openAppSettings();
-
-    } else if (await Permission.storage.request().isDenied) {
-      setState(() {
-        permissionGranted = false;
-      });
-    }*/
+    }
 
   }
 
@@ -277,24 +261,19 @@ class _RegisterRoomState extends State<RegisterRoom> {
     Api _api = Api();
     final body = jsonEncode(aDocument);
     var response = await _api.RegisterRoomPost(body, tokenAuth);
+    //var data = jsonDecode(response.body);
+    //print("===========================> ${data}");
     return response.statusCode;
 
   }
 
+  // get permission to read images from local storage
   void selectImages() async {
 
     await _requestPermissions();
-    print("A##########################################################");
-    print("A##########################################################");
-    print(permissionGranted);
-
-    print("A##########################################################");
-    print("A##########################################################");
     if(permissionGranted == false){
-      print("***************** False ***************************");
       return;
     }else{
-      print("***************** True ***************************");
       final List<XFile> selectedImages = await imagePicker.pickMultiImage();
 
       if (selectedImages != null) {
@@ -302,7 +281,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
       }
       setState((){});
     }
-
   }
 
   // ENVIAR DATOS PARA REGISTRAR HABITACION
@@ -365,7 +343,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
             }
 
             var responseCode = await insertIntoMysql(generalDocument, tokenAuth);
-
             if (responseCode == 201) {
               clearForm();
               setState(() => _saving = false);
@@ -379,7 +356,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
             } else if (responseCode == 422) {
               setState(() => _saving = false);
               _showDialog(2, "Datos incorectos");
-            } else {
+            }else if (responseCode == 429) {
+              setState(() => _saving = false);
+              _showDialog(2, "Solo puedes registrar hasta tres habitaciones");
+            }
+            else {
               setState(() => _saving = false);
               _showDialog(2, "Ocurrio un error con la solicitud");
             }

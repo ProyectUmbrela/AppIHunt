@@ -286,14 +286,125 @@ class _HomePageState extends State<AyudaPage> {
       child: Container(
         width: widthGlobal,
         height: heightGlobal,
-        child: Center(
-          child: Text(
-            "3",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 36.0
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: [
+                Container(
+                  width: widthGlobal,
+                  height: 40.0,
+                  //color: Colors.white70,
+                  child: Align(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5.0),
+                      child: Text(
+                        "Administra a tus inquilinos",
+                        style: TextStyle(fontSize: 24.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
+            Row(
+              children: [
+                Container(
+                  width: widthGlobal,
+                  height: 335.0,
+                  //color: Colors.cyan,
+                  child: Column(
+                    children: [
+                      //SizedBox(height:5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: widthGlobal,
+                              //color: Colors.amber,
+                              height: 40.0,
+                              child: Align(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                                  child: Text(
+                                    "Una vez que un usuario te a contactado y esta seguro de que desea ocupar alguna de tus habitaiones sigue los siguientes pasos:",
+                                    style: TextStyle(fontSize: viewFourSize),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: widthGlobal,
+                              //color: Colors.amber,
+                              height: 95.0,
+                              child: Align(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                                  child: Text(
+                                    "1 Dirigete a la pestaña de inquilinos donde podrás darlo de alta, selecciona la habitacion a la cual esta asignado, cuando inicia su contrato y el periodo de uso, además podrás indicar fecha límite de pago y detalles adicionales a la contratacion",
+                                    style: TextStyle(fontSize: viewFourSize),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: widthGlobal,
+                              //color: Colors.amber,
+                              height: 95.0,
+                              child: Align(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                                  child: Text(
+                                    "2 Al termino de registro se enviará una notificación a tu futuro inquilino con los términos, costo y detalles de renta, el último paso será solo aceptarla. Tienes un límite de cinco invitaciones al dia para cada una de tus habitaciones",
+                                    style: TextStyle(fontSize: viewFourSize),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: widthGlobal,
+                              //color: Colors.amber,
+                              height: 95.0,
+                              child: Align(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                                  child: Text(
+                                    "3 Podrás ver el estado de tu invitación, en la pestaña de invitaciones. Una vez aceptada podrás ver a tu nuevo inquilino con un resumen de sus datos, periodo, costo de renta y más.",
+                                    style: TextStyle(fontSize: viewFourSize),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -510,14 +621,99 @@ class _HomePageState extends State<AyudaPage> {
       child: Container(
         width: widthGlobal,
         height: heightGlobal,//MediaQuery.of(context).size.height * 0.8,
-        child: Center(
-          child: Text(
-            "1",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 36.0
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: [
+                Container(
+                  width: widthGlobal,
+                  height: 40.0,
+                  //color: Colors.white70,
+                  child: Align(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5.0),
+                      child: Text(
+                        "¿Cómo funciona?",
+                        style: TextStyle(fontSize: 24.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: widthGlobal,
+                    //color: Colors.amber,
+                    height: 130.0,
+                    child: Align(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                        child: Text(
+                          "Con RentI puedes registrar y publicar las habitaciones que deseas alquilar, administrar a tus inquilinos, revisar fechas de pago, establecer contratos de renta"
+                              ", recibe alertas y sugerencias para rentar más rápido tus espacios gestionando de forma fácil",
+                          style: TextStyle(fontSize: viewFourSize),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: widthGlobal,
+                    //color: Colors.amber,
+                    height: 40.0,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: widthGlobal,
+                    //color: Colors.amber,
+                    height: 40.0,
+                    child: Align(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                        child: Text(
+                          "Cargos y comisiones",
+                          style: TextStyle(fontSize: 24.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: widthGlobal,
+                    //color: Colors.blue,
+                    height: 190.0,
+                    child: Align(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
+                        child: Text(
+                          "RentI realizará un cargo de \$50 adicional al costo de renta de tus habitaciones, una vez que has recibido el pago de cada uno de tus inqulinos se descontará este monto de tu cuenta por lo que requieres de un medio de pago registrado, si no tienes algún inquilino registrado no efectuaremos ningún cargo de esta manera solo pagas cuando la uses, este cargo será realizado por cada uno de tus registros activos y será efectivo durante los meses de renta",
+                          style: TextStyle(fontSize: viewFourSize),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -549,14 +745,6 @@ class _HomePageState extends State<AyudaPage> {
     );
   }
 
-  /*
-  Future<void> _onOpen(LinkableElement link) async {
-    if (await canLaunch(link.url)) {
-      await launch(link.url);
-    } else {
-      throw 'Could not launch $link';
-    }
-  }*/
 
 }
 
