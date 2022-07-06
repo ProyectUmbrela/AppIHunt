@@ -2,7 +2,7 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
+//import 'package:flutter_linkify/flutter_linkify.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/gestures.dart';
 
@@ -515,7 +515,7 @@ class _HomePageState extends State<AyudaPage> {
                 Container(
                   width: widthGlobal,
                   height: 335.0,
-                  //color: Colors.cyan,
+                  color: Colors.cyan,
                   child: Column(
                     children: [
                       //SizedBox(height:5),
@@ -526,7 +526,7 @@ class _HomePageState extends State<AyudaPage> {
                             child: Container(
                               width: widthGlobal,
                               //color: Colors.amber,
-                              height: 40.0,
+                              height: 50.0,
                               child: Align(
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
@@ -546,8 +546,8 @@ class _HomePageState extends State<AyudaPage> {
                           Expanded(
                             child: Container(
                               width: widthGlobal,
-                              //color: Colors.amber,
-                              height: 87.0,
+                              color: Colors.amber,
+                              height: 90.0,
                               child: Align(
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
@@ -568,7 +568,7 @@ class _HomePageState extends State<AyudaPage> {
                             child: Container(
                               width: widthGlobal,
                               //color: Colors.amber,
-                              height: 80.0,
+                              height: 90.0,
                               child: Align(
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
@@ -588,8 +588,8 @@ class _HomePageState extends State<AyudaPage> {
                           Expanded(
                             child: Container(
                               width: widthGlobal,
-                              //color: Colors.amber,
-                              height: 80.0,
+                              color: Colors.amber,
+                              height: 90.0,
                               child: Align(
                                 child: Padding(
                                   padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),

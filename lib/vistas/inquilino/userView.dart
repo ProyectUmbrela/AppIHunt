@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihunt/providers/provider.dart';
 import 'package:ihunt/vistas/inquilino/googleMaps.dart';
+import 'package:ihunt/vistas/inquilino/exampleMaps.dart';
 import 'package:ihunt/vistas/inquilino/misHabitaciones.dart';
 import 'package:ihunt/vistas/inquilino/invitaciones.dart';
 import 'package:ihunt/vistas/profiles/user_profile.dart';
@@ -143,8 +144,9 @@ class _UserState extends State<UserView> {
         // third page
         return InvitacionesInquilino();
       case 3:
-      // fourth page
-        return MyMaps();
+        // fourth page
+        return MyAppMaps();
+        //return MyMaps();
     }
 
     return Center(child: Text("No disponible"),);

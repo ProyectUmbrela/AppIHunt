@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 // slider images
 import 'package:carousel_slider/carousel_slider.dart';
@@ -262,6 +263,7 @@ class MapsPage extends State<MyMaps> {
 
     // Latitude: 37.4219983, Longitude: -122.084
 
+
     return position;
   }
 
@@ -289,6 +291,7 @@ class MapsPage extends State<MyMaps> {
         var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
         var first = results.first;
         var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+
 
         _controller.animateCamera(
             CameraUpdate.newLatLngZoom(
@@ -425,6 +428,35 @@ class MapsPage extends State<MyMaps> {
                       continue;
                     }
                   }
+
+
+                  //****************************************************************************
+                  //****************************************************************************
+                  //****************************************************************************
+                  /*final geo = Geoflutterfire();
+                  final _firestore = FirebaseFirestore.instance;
+                  // Create a geoFirePoint
+                  GeoFirePoint center = geo.point(latitude: 18.940788, longitude: -99.235606);
+
+                  // get the collection reference or query
+                  var collectionReference = _firestore.collection('marker_rent');
+
+                  double radius = 200;
+                  String field = 'coords';
+
+                  Stream<List<DocumentSnapshot>> stream = geo.collection(collectionRef: collectionReference)
+                      .within(center: center, radius: radius, field: field, strictMode: true);
+
+                  stream.listen((List<DocumentSnapshot> documentList) {
+                    // doSomething()
+                    print("111111111111111111111111111111111111111111111111111111111111111111");
+                    print("*** ${documentList.first}");
+                    print("111111111111111111111111111111111111111111111111111111111111111111");
+                  });*/
+                  //****************************************************************************
+                  //****************************************************************************
+                  //****************************************************************************
+
 
                   double latitude = snapshot.data.docs[i]['coords'].latitude;
                   double longitude = snapshot.data.docs[i]['coords'].longitude;
