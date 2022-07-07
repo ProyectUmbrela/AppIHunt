@@ -1,6 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+//import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/services.dart';
+import 'package:flutter_geo_hash/geohash.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:dart_geohash/dart_geohash.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -13,6 +19,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/providers/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore_platform_interface/src/geo_point.dart' as gpn;
+import 'package:flutter_geo_hash/geohash.dart' as goh;
 
 
 class RegisterRoom extends StatefulWidget {
@@ -46,6 +54,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
   String _municipioSelected;
 
 
+
+  Geoflutterfire geo;
+
   User currentUser;
   String id_usuario;
   String nombre;
@@ -59,6 +70,10 @@ class _RegisterRoomState extends State<RegisterRoom> {
   @override
   void initState(){
     setData();
+    super.initState();
+    geo = Geoflutterfire();
+
+
   }
 
   @override
@@ -261,8 +276,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
     Api _api = Api();
     final body = jsonEncode(aDocument);
     var response = await _api.RegisterRoomPost(body, tokenAuth);
-    //var data = jsonDecode(response.body);
-    //print("===========================> ${data}");
     return response.statusCode;
 
   }
@@ -290,10 +303,9 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
     if (form.validate()) {
       var fullAddress = 'Calle ${toBeginningOfSentenceCase(addressCtrl.text)}, ${selectedCountry}, ${cpCtrl.text} ${_municipioSelected}, ${_stateSelected}.';
-      print("*********** DIRECCION: ****************");
-      print(fullAddress);
-      if (imageFileList.length <= GlobalDataLandlord().maxImages){
+      print("****************| ${fullAddress} |*****************");
 
+      if (imageFileList.length <= GlobalDataLandlord().maxImages){
         try{
           form.save();
           // preparando imagenes para codificar
@@ -309,7 +321,22 @@ class _RegisterRoomState extends State<RegisterRoom> {
           await _images_to_base64();
 
           // generando las coordenadas sobre la direccion proporcionada
-          var coordinates = await getCoordinatesByAddress(fullAddress);
+          Location coordinates = await getCoordinatesByAddress(fullAddress);
+          /*print("111111111111 ****************** ${coordinates}");
+
+          try{
+            print("999999999999999999999999999999999999999999999999999999999999");
+            print("999999999999999999999999999999999999999999999999999999999999");
+
+            GeoHash myOtherHash = GeoHash.fromDecimalDegrees(-99.23142519999999, 18.943293399999998);
+            print(myOtherHash.geohash);
+            print("999999999999999999999999999999999999999999999999999999999999");
+            print("999999999999999999999999999999999999999999999999999999999999");
+
+          }catch (e){
+            print(e);
+          }*/
+
           if (coordinates != null) {
             var snapShoot = await FirebaseFirestore.instance
                 .collection(GlobalDataLandlord().userCollection)
@@ -317,7 +344,12 @@ class _RegisterRoomState extends State<RegisterRoom> {
                 .get();
             var _iduser = snapShoot['usuario'];
             String tokenAuth = await currentUser.getIdToken();
+            GeoHash coordHash = GeoHash.fromDecimalDegrees(
+                coordinates.longitude,
+                coordinates.latitude);
 
+
+            /*
             var generalDocument = {
               'idhabitacion': roomidCtrl.text,
               'idpropietario': _iduser,
@@ -333,7 +365,33 @@ class _RegisterRoomState extends State<RegisterRoom> {
               'disponibilidad': 1,
               'fotos': {},
               'check_images': 0
+            };*/
+            print("66666666666666666666666666666666666666666");
+            var generalDocument = {
+              'idhabitacion': roomidCtrl.text,
+              'idpropietario': _iduser,
+              'direccion': fullAddress,
+              'dimension': dimensionsCtrl.text,
+              'servicios': servicesCtrl.text,
+              'descripcion': descriptionCtrl.text,
+              'precio': priceCtrl.text,
+              'terminos': termsCtrl.text,
+              'latitud': coordinates.latitude,
+              'longitud': coordinates.longitude,
+              'geohash': coordHash.geohash,
+              'publicar': 1,
+              'disponibilidad': 1,
+              'fotos': {},
+              'check_images': 0
             };
+
+            print("**********************************************************");
+            print("**********************************************************");
+            print(generalDocument);
+            print("**********************************************************");
+            print("**********************************************************");
+
+            setState(() => _saving = false);
 
             if (images64_Base.isNotEmpty) {
               for (int i = 0; i < images64_Base.length; i++) {
@@ -630,13 +688,24 @@ class _RegisterRoomState extends State<RegisterRoom> {
     return _steps;
   }
 
+
   Future getCoordinatesByAddress(address) async{
     try {
-      var locations = await locationFromAddress(address);
-      return locations[0];
+      print("************************************************ 1");
+      List<Location> locations = await locationFromAddress(address);
+      print("************************************************ 2 ${locations.first}");
+
+      return locations.first;
+
     } catch(err){
+      print("------------------------------------------------------ ${err}");
       return null;
     }
+  }
+
+   Future _addPoint(double lat, double lng) async{
+    GeoFirePoint geoFirePoint = geo.point(latitude: lat, longitude: lng);
+    return geoFirePoint.data;
   }
 
   void clearForm() {

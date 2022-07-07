@@ -42,7 +42,7 @@ class _MyAppState extends State<MyAppMaps> {
     geo = Geoflutterfire();
     GeoFirePoint center = geo.point(latitude: 18.9242095, longitude: -99.22156590000002);
     stream = radius.switchMap((rad) {
-      final collectionReference = _firestore.collection('habitaciones_prueba');
+      final collectionReference = _firestore.collection('marker_rent');
 
       return geo.collection(collectionRef: collectionReference).within(
           center: center, radius: rad, field: 'position', strictMode: true);
@@ -57,6 +57,8 @@ class _MyAppState extends State<MyAppMaps> {
 
       */
     });
+
+
   }
 
   @override
@@ -243,7 +245,9 @@ class _MyAppState extends State<MyAppMaps> {
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
+    print("11111111111111111111111111111111111111111111111 ${documentList.length}");
     documentList.forEach((DocumentSnapshot document) {
+      print("************* ${document} ************************");
       final data = document.data() as Map<String, dynamic>;
       final GeoPoint point = data['position']['geopoint'];
       _addMarker(point.latitude, point.longitude);
