@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,8 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
+import '../../providers/provider.dart';
 //import 'streambuilder_test.dart';
 
 
@@ -22,7 +26,7 @@ class _MyAppState extends State<MyAppMaps> {
   final radius = BehaviorSubject<double>.seeded(1.0);
   final _firestore = FirebaseFirestore.instance;
   final markers = <MarkerId, Marker>{};
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Stream<List<DocumentSnapshot>> stream;
   Geoflutterfire geo;
 
@@ -42,23 +46,13 @@ class _MyAppState extends State<MyAppMaps> {
     geo = Geoflutterfire();
     GeoFirePoint center = geo.point(latitude: 18.9242095, longitude: -99.22156590000002);
     stream = radius.switchMap((rad) {
-      final collectionReference = _firestore.collection('marker_rent');
+      final collectionReference = _firestore
+          .collection('marker_rent');
 
       return geo.collection(collectionRef: collectionReference).within(
           center: center, radius: rad, field: 'position', strictMode: true);
 
-      /*
-      ****Example to specify nested object****
-
-      var collectionReference = _firestore.collection('nestedLocations');
-//          .where('name', isEqualTo: 'darshan');
-      return geo.collection(collectionRef: collectionReference).within(
-          center: center, radius: rad, field: 'address.location.position');
-
-      */
     });
-
-
   }
 
   @override
@@ -73,22 +67,14 @@ class _MyAppState extends State<MyAppMaps> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-        /*
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return StreamTestWidget();
-            }));
-          },
-          child: Icon(Icons.navigate_next),
-        ),*/
-        body: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: Card(
-                  elevation: 4,
+      key: _scaffoldKey,
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: Card(
+                elevation: 4,
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: SizedBox(
                     width: mediaQuery.size.width - 10,
@@ -117,64 +103,6 @@ class _MyAppState extends State<MyAppMaps> {
                   onChanged: (double value) => changed(value),
                 ),
               ),
-              /*
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    child: TextField(
-                      controller: _latitudeController,
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                          labelText: 'lat',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          )),
-                    ),
-                  ),
-                  Container(
-                    width: 100,
-                    child: TextField(
-                      controller: _longitudeController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          labelText: 'lng',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          )),
-                    ),
-                  ),
-                  MaterialButton(
-                    color: Colors.blue,
-                    onPressed: () {
-                      final lat =
-                      double.parse(_latitudeController?.text ?? '0.0');
-                      final lng =
-                      double.parse(_longitudeController?.text ?? '0.0');
-                      _addPoint(lat, lng);
-                    },
-                    child: const Text(
-                      'ADD',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                ],
-              ),*/
-              /*
-              MaterialButton(
-                color: Colors.amber,
-                child: const Text(
-                  'Add nested ',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  final lat = double.parse(_latitudeController?.text ?? '0.0');
-                  final lng = double.parse(_longitudeController?.text ?? '0.0');
-                  _addNestedPoint(lat, lng);
-                },
-              ),*/
             ],
           ),
         ),
@@ -231,13 +159,157 @@ class _MyAppState extends State<MyAppMaps> {
   */
 
 
-  void _addMarker(double lat, double lng) {
-    final id = MarkerId(lat.toString() + lng.toString());
+  void _addMarker(habitacion, List<Widget> widgetsFotos) {
+
+    //final idPublicacion = MarkerId(habitacion.id);
+    print("#########################################################################");
+    print("#########################################################################");
+    print("#########################################################################");
+    print("${habitacion['titular']}");
+    print("#########################################################################");
+    print("#########################################################################");
+    print("#########################################################################");
+    var fontWords = FontWeight.w500;
+    double sizeText = 13;
+    final GeoPoint point = habitacion['position']['geopoint'];
+    final id = MarkerId(point.latitude.toString() + point.longitude.toString());
+    print("####################################################### 1");
     final _marker = Marker(
       markerId: id,
-      position: LatLng(lat, lng),
+      position: LatLng(point.latitude, point.longitude),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
-      infoWindow: InfoWindow(title: 'latLng', snippet: '$lat,$lng'),
+      //infoWindow: InfoWindow(title: 'latLng', snippet: '${point.latitude},${point.longitude}'),
+      infoWindow: InfoWindow(
+          snippet: "Ver más detalles",
+          title: "Habitación en Renta",
+          onTap: (){
+            showDialog(
+              context: _scaffoldKey.currentContext,
+              builder: (BuildContext builderContext) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Align(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.width * 1.0,
+                        child: Card(
+                          //color: Colors.grey[400],
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  CarouselSlider(
+                                      options: CarouselOptions(
+                                          autoPlay: true
+                                      ),
+                                      items: widgetsFotos
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(horizontal: 10),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget> [
+                                          Row(
+                                            children: <Widget>[
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "\$ ${habitacion['costo']} mensual",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight: fontWords,
+                                                      fontFamily: 'Roboto',
+                                                      letterSpacing: 0.5,
+                                                      fontSize: sizeText,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(10.0),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "Titular: ${habitacion['titular']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: fontWords,
+                                              fontFamily: 'Roboto',
+                                              letterSpacing: 0.5,
+                                              fontSize: sizeText,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Tel: ${habitacion['telefono']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: fontWords,
+                                              fontFamily: 'Roboto',
+                                              letterSpacing: 0.5,
+                                              fontSize: sizeText,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Incluye: ${habitacion['servicios']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: fontWords,
+                                              fontFamily: 'Roboto',
+                                              letterSpacing: 0.5,
+                                              fontSize: sizeText,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Detalles: ${habitacion['detalles']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: fontWords,
+                                              fontFamily: 'Roboto',
+                                              letterSpacing: 0.5,
+                                              fontSize: sizeText,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Dirección: ${habitacion['direccion']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: fontWords,
+                                              fontFamily: 'Roboto',
+                                              letterSpacing: 0.5,
+                                              fontSize: sizeText,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+      ),
     );
     setState(() {
       markers[id] = _marker;
@@ -245,12 +317,34 @@ class _MyAppState extends State<MyAppMaps> {
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
-    print("11111111111111111111111111111111111111111111111 ${documentList.length}");
+    //print("11111111111111111111111111111111111111111111111 ${documentList.length}");
     documentList.forEach((DocumentSnapshot document) {
-      print("************* ${document} ************************");
-      final data = document.data() as Map<String, dynamic>;
-      final GeoPoint point = data['position']['geopoint'];
+
+      /*final habitacion = document.data() as Map<String, dynamic>;
+      final GeoPoint point = habitacion['position']['geopoint'];
       _addMarker(point.latitude, point.longitude);
+      */
+      List<Widget> widgetsFotos = [];
+
+      final habitacion = document.data() as Map<String, dynamic>;
+      int hasImage = habitacion['check_images'];
+      int publicar = habitacion['publicar'];
+
+      if (hasImage == 1 && publicar == 1){
+        var rawFotos = habitacion['fotos'];
+        rawFotos.forEach((final String key, final value) {
+          widgetsFotos.add(Image.memory(base64Decode(value)));
+        });
+      }
+      else{
+        // si no tiene imagenes pero se quiere publicar usando una imagen default
+        if (publicar == 1){
+          widgetsFotos.add(Image.memory(base64Decode(GlobalDataUser().notAvailable)));
+        }
+      }
+
+      _addMarker(habitacion, widgetsFotos);
+
     });
   }
 

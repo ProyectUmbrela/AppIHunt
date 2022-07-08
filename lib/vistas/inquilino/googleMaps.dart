@@ -413,14 +413,6 @@ class MapsPage extends State<MyMaps> {
                   else{
                     // si no tiene imagenes pero se quiere publicar usando una imagen default
                     if (publicar == 1){
-                      /*FirebaseFirestore
-                          .instance
-                          .collection(GlobalDataUser().habitacionesCollection)
-                          .doc("NotAvailable")
-                          .get()
-                          .then((docRef) => {
-                            widgets.add(Image.memory(base64Decode(GlobalDataUser().notAvailable)))
-                          });*/
                       widgets.add(Image.memory(base64Decode(GlobalDataUser().notAvailable)));
                     }
                     // si no tiene imagenes y no se quiere publicar

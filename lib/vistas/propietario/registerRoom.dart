@@ -19,8 +19,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihunt/providers/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:cloud_firestore_platform_interface/src/geo_point.dart' as gpn;
-import 'package:flutter_geo_hash/geohash.dart' as goh;
+//import 'package:cloud_firestore_platform_interface/src/geo_point.dart' as gpn;
+//import 'package:flutter_geo_hash/geohash.dart' as goh;
 
 
 class RegisterRoom extends StatefulWidget {
@@ -55,7 +55,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
 
 
-  Geoflutterfire geo;
+  //Geoflutterfire geo;
 
   User currentUser;
   String id_usuario;
@@ -71,9 +71,7 @@ class _RegisterRoomState extends State<RegisterRoom> {
   void initState(){
     setData();
     super.initState();
-    geo = Geoflutterfire();
-
-
+    //geo = Geoflutterfire();
   }
 
   @override
@@ -298,6 +296,15 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
   // ENVIAR DATOS PARA REGISTRAR HABITACION
   Future registerNewRoom() async{
+    /*
+    print("999999999999999999999999999999999999999999999999999999999999");
+    print("999999999999999999999999999999999999999999999999999999999999");
+
+    GeoHash myOtherHash = GeoHash.fromDecimalDegrees(-99.219558, 18.924087);
+    print(myOtherHash.geohash);
+    print("999999999999999999999999999999999999999999999999999999999999");
+    print("999999999999999999999999999999999999999999999999999999999999");
+    */
 
     final form = formKey.currentState;
 
@@ -322,20 +329,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
 
           // generando las coordenadas sobre la direccion proporcionada
           Location coordinates = await getCoordinatesByAddress(fullAddress);
-          /*print("111111111111 ****************** ${coordinates}");
-
-          try{
-            print("999999999999999999999999999999999999999999999999999999999999");
-            print("999999999999999999999999999999999999999999999999999999999999");
-
-            GeoHash myOtherHash = GeoHash.fromDecimalDegrees(-99.23142519999999, 18.943293399999998);
-            print(myOtherHash.geohash);
-            print("999999999999999999999999999999999999999999999999999999999999");
-            print("999999999999999999999999999999999999999999999999999999999999");
-
-          }catch (e){
-            print(e);
-          }*/
 
           if (coordinates != null) {
             var snapShoot = await FirebaseFirestore.instance
@@ -348,25 +341,6 @@ class _RegisterRoomState extends State<RegisterRoom> {
                 coordinates.longitude,
                 coordinates.latitude);
 
-
-            /*
-            var generalDocument = {
-              'idhabitacion': roomidCtrl.text,
-              'idpropietario': _iduser,
-              'direccion': fullAddress,
-              'dimension': dimensionsCtrl.text,
-              'servicios': servicesCtrl.text,
-              'descripcion': descriptionCtrl.text,
-              'precio': priceCtrl.text,
-              'terminos': termsCtrl.text,
-              'latitud': coordinates.latitude,
-              'longitud': coordinates.longitude,
-              'publicar': 1,
-              'disponibilidad': 1,
-              'fotos': {},
-              'check_images': 0
-            };*/
-            print("66666666666666666666666666666666666666666");
             var generalDocument = {
               'idhabitacion': roomidCtrl.text,
               'idpropietario': _iduser,
@@ -703,10 +677,11 @@ class _RegisterRoomState extends State<RegisterRoom> {
     }
   }
 
+  /*
    Future _addPoint(double lat, double lng) async{
     GeoFirePoint geoFirePoint = geo.point(latitude: lat, longitude: lng);
     return geoFirePoint.data;
-  }
+  }*/
 
   void clearForm() {
 
