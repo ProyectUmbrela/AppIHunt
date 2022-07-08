@@ -3,7 +3,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -21,8 +23,9 @@ class _MyAppState extends State<MyAppMaps> {
   GoogleMapController _mapController;
   String _mapStyle;
   //TextEditingController _latitudeController, _longitudeController;
-
+  LatLng initCameraPosition;
   // firestore init
+  final TextEditingController _controllerSearch = new TextEditingController();
   final radius = BehaviorSubject<double>.seeded(1.0);
   final _firestore = FirebaseFirestore.instance;
   final markers = <MarkerId, Marker>{};
@@ -63,12 +66,182 @@ class _MyAppState extends State<MyAppMaps> {
     super.dispose();
   }
 
+  Future<Position> _getGeoLocationPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+
+      else if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        //lat=6.9271;long=79.8612;
+        initCameraPosition = LatLng(7.4219983, -122.084);
+      }
+      else{
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration (seconds: 1));
+
+    // Latitude: 37.4219983, Longitude: -122.084
+
+
+    return position;
+  }
+
+  Widget getViewWidget(_markers) {
+
+    return FutureBuilder(
+        future: _getGeoLocationPosition(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            LatLng Currentposition;
+            // Latitude: 37.4219983
+            // Longitude: -122.084
+            if (!snapshot.hasData){
+              Currentposition  =  LatLng(37.4219983 , -122.084);
+            }
+            else{
+              Currentposition  =  LatLng(snapshot.data.latitude , snapshot.data.longitude);
+            }
+            return GoogleMap(
+              myLocationButtonEnabled: true,
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              compassEnabled: true,
+              initialCameraPosition: CameraPosition(
+                  target: Currentposition, //LatLng(37.4219983 , -122.084),
+                  zoom: 14.0),
+              markers: Set<Marker>.of(_markers.values),
+              onMapCreated: _onMapCreated,
+            );
+          }
+          else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       key: _scaffoldKey,
-      body: Container(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Stack(
+          children:
+          <Widget>[
+            Container(
+              color: Colors.grey[100],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      cursorColor: Colors.black,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.go,
+                      controller: _controllerSearch,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                          hintText: "Buscar"),
+                    ),
+                  ),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: IconButton(
+                        splashColor: Colors.black,
+                        icon: Icon(
+                          Icons.search,
+                          color: Colors.black54,),
+                        onPressed: () => searchPlace()
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: StreamBuilder(
+          stream: stream,
+          builder: (context, snapshot){
+            if (snapshot.hasData) {
+              return Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: Card(
+                        elevation: 4,
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        child: SizedBox(
+                          width: mediaQuery.size.width - 5,
+                          height: mediaQuery.size.height * 0.61,// * (1 / 2),
+                          child: GoogleMap(
+                            onMapCreated: _onMapCreated,
+                            initialCameraPosition: const CameraPosition(
+                              target: LatLng(18.9242095, -99.22156590000002),
+                              zoom: 15.0,
+                            ),
+                            markers: Set<Marker>.of(markers.values),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Slider(
+                        min: 1,
+                        max: 200,
+                        divisions: 4,
+                        value: _value,
+                        label: _label,
+                        activeColor: Colors.blue,
+                        inactiveColor: Colors.blue.withOpacity(0.2),
+                        onChanged: (double value) => changed(value),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+
+          },
+        ),
+      ),
+      /*body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -77,8 +250,8 @@ class _MyAppState extends State<MyAppMaps> {
                 elevation: 4,
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: SizedBox(
-                    width: mediaQuery.size.width - 10,
-                    height: mediaQuery.size.height * 0.69,// * (1 / 2),
+                    width: mediaQuery.size.width - 5,
+                    height: mediaQuery.size.height * 0.61,// * (1 / 2),
                     child: GoogleMap(
                       onMapCreated: _onMapCreated,
                       initialCameraPosition: const CameraPosition(
@@ -105,8 +278,32 @@ class _MyAppState extends State<MyAppMaps> {
               ),
             ],
           ),
-        ),
+        ),*/
     );
+  }
+
+  Future searchPlace() async {
+    try{
+      if(_controllerSearch.text.length != 0){
+
+        var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
+        var first = results.first;
+        var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
+
+
+        _mapController.animateCamera(
+          CameraUpdate.newLatLngZoom(
+              latLng,
+              14.0
+          ),
+        );
+        // cargando los marcadores para las nuevas coordenadas
+        //changedPosition(20);
+      }
+    }
+    catch(e) {
+      print("Error occured: $e");
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -130,33 +327,6 @@ class _MyAppState extends State<MyAppMaps> {
       ),
     ));
   }*/
-
-  /*
-  void _addPoint(double lat, double lng) {
-    GeoFirePoint geoFirePoint = geo.point(latitude: lat, longitude: lng);
-    _firestore
-        .collection('habitaciones_prueba')
-        .add({'name': 'random name', 'position': geoFirePoint.data}).then((_) {
-      print('added ${geoFirePoint.hash} successfully');
-    });
-  }
-  */
-
-
-  //example to add geoFirePoint inside nested object
-  /*
-  void _addNestedPoint(double lat, double lng) {
-    GeoFirePoint geoFirePoint = geo.point(latitude: lat, longitude: lng);
-    _firestore.collection('nestedLocations').add({
-      'name': 'random name',
-      'address': {
-        'location': {'position': geoFirePoint.data}
-      }
-    }).then((_) {
-      print('added ${geoFirePoint.hash} successfully');
-    });
-  }
-  */
 
 
   void _addMarker(habitacion, List<Widget> widgetsFotos) {
@@ -317,13 +487,7 @@ class _MyAppState extends State<MyAppMaps> {
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
-    //print("11111111111111111111111111111111111111111111111 ${documentList.length}");
     documentList.forEach((DocumentSnapshot document) {
-
-      /*final habitacion = document.data() as Map<String, dynamic>;
-      final GeoPoint point = habitacion['position']['geopoint'];
-      _addMarker(point.latitude, point.longitude);
-      */
       List<Widget> widgetsFotos = [];
 
       final habitacion = document.data() as Map<String, dynamic>;
@@ -343,6 +507,7 @@ class _MyAppState extends State<MyAppMaps> {
         }
       }
 
+      // creando los marcadores
       _addMarker(habitacion, widgetsFotos);
 
     });
@@ -360,5 +525,15 @@ class _MyAppState extends State<MyAppMaps> {
     });
     radius.add(value);
   }
+
+  changedPosition(value) {
+    setState(() {
+      _value = value;
+      _label = '${_value.toInt().toString()} kms';
+      markers.clear();
+    });
+    radius.add(value);
+  }
+
 
 }
