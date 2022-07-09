@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -32,6 +33,9 @@ class _MyAppState extends State<MyAppMaps> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Stream<List<DocumentSnapshot>> stream;
   Geoflutterfire geo;
+  Position currentLoc;
+  //GeoFirePoint center;
+  Position currenPos;
 
   void setStyleMap() async{
     rootBundle.loadString('assets/map_style.txt').then((string) {
@@ -43,20 +47,53 @@ class _MyAppState extends State<MyAppMaps> {
   void initState() {
     super.initState();
     setStyleMap();
+    //_getGeoLocationPosition();
     // _latitudeController = TextEditingController();
     // _longitudeController = TextEditingController();
 
-    geo = Geoflutterfire();
-    GeoFirePoint center = geo.point(latitude: 18.9242095, longitude: -99.22156590000002);
-    stream = radius.switchMap((rad) {
-      final collectionReference = _firestore
-          .collection('marker_rent');
+    getMarkers();
+    /*_getGeoLocationPosition().then((positi) {
+      //currenPos = positi;
+      setState(() {
+        currenPos = positi;
+      });
+    });*/
 
-      return geo.collection(collectionRef: collectionReference).within(
-          center: center, radius: rad, field: 'position', strictMode: true);
 
-    });
+    //print("1 ########################################## BUSCANDO HABITACIONES EN: ${currenPos} ##################################################");
+
+
+
   }
+
+
+  Future getMarkers() async{
+
+    Position currentPos = await _getGeoLocationPosition();
+    print("1 ########################################## BUSCANDO HABITACIONES EN: ${currentPos.latitude} ##################################################");
+
+    geo = Geoflutterfire();
+    //GeoFirePoint center = geo.point(latitude: 18.9242095, longitude: -99.22156590000002);
+    GeoFirePoint center = geo.point(latitude: currentPos.latitude, longitude: currentPos.longitude);
+    try{
+      stream = radius.switchMap((rad) {
+
+        final collectionReference = _firestore
+            .collection('marker_rent');
+        return geo.collection(collectionRef: collectionReference).within(
+            center: center, radius: rad, field: 'position', strictMode: true);
+      });
+    } catch (e){
+      print("OCURRIO UN ERROR: ${e} ****************************************************");
+    }
+
+  }
+
+
+  Future setNewMarkers() async{
+
+  }
+
 
   @override
   void dispose() {
@@ -67,6 +104,7 @@ class _MyAppState extends State<MyAppMaps> {
   }
 
   Future<Position> _getGeoLocationPosition() async {
+
     bool serviceEnabled;
     LocationPermission permission;
     // Test if location services are enabled.
@@ -90,8 +128,7 @@ class _MyAppState extends State<MyAppMaps> {
         //lat=6.9271;long=79.8612;
         initCameraPosition = LatLng(7.4219983, -122.084);
       }
-      else{
-      }
+      else {}
     }
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
@@ -106,16 +143,22 @@ class _MyAppState extends State<MyAppMaps> {
 
     // Latitude: 37.4219983, Longitude: -122.084
 
+    setState(() {
+      currentLoc = position;
+      //center = geo.point(latitude: currentLoc.latitude, longitude: currentLoc.longitude);
+    });
 
     return position;
   }
 
-  Widget getViewWidget(_markers) {
+  /*
+  Widget getViewWidget() {
 
     return FutureBuilder(
         future: _getGeoLocationPosition(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            print("=================================> ${snapshot.data}");
             LatLng Currentposition;
             // Latitude: 37.4219983
             // Longitude: -122.084
@@ -133,9 +176,10 @@ class _MyAppState extends State<MyAppMaps> {
               initialCameraPosition: CameraPosition(
                   target: Currentposition, //LatLng(37.4219983 , -122.084),
                   zoom: 14.0),
-              markers: Set<Marker>.of(_markers.values),
+              markers: Set<Marker>.of(markers.values),
               onMapCreated: _onMapCreated,
             );
+
           }
           else{
             return Center(
@@ -146,7 +190,7 @@ class _MyAppState extends State<MyAppMaps> {
     );
   }
 
-
+  */
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -208,8 +252,8 @@ class _MyAppState extends State<MyAppMaps> {
                           height: mediaQuery.size.height * 0.61,// * (1 / 2),
                           child: GoogleMap(
                             onMapCreated: _onMapCreated,
-                            initialCameraPosition: const CameraPosition(
-                              target: LatLng(18.9242095, -99.22156590000002),
+                            initialCameraPosition: CameraPosition(
+                              target: currentLoc != null ? LatLng(currentLoc.latitude, currentLoc.longitude) : LatLng(18.9242095, -99.22156590000002),
                               zoom: 15.0,
                             ),
                             markers: Set<Marker>.of(markers.values),
@@ -241,44 +285,6 @@ class _MyAppState extends State<MyAppMaps> {
           },
         ),
       ),
-      /*body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Center(
-              child: Card(
-                elevation: 4,
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  child: SizedBox(
-                    width: mediaQuery.size.width - 5,
-                    height: mediaQuery.size.height * 0.61,// * (1 / 2),
-                    child: GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: const CameraPosition(
-                        target: LatLng(18.9242095, -99.22156590000002),
-                        zoom: 15.0,
-                      ),
-                      markers: Set<Marker>.of(markers.values),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0),
-                child: Slider(
-                  min: 1,
-                  max: 200,
-                  divisions: 4,
-                  value: _value,
-                  label: _label,
-                  activeColor: Colors.blue,
-                  inactiveColor: Colors.blue.withOpacity(0.2),
-                  onChanged: (double value) => changed(value),
-                ),
-              ),
-            ],
-          ),
-        ),*/
     );
   }
 
@@ -289,7 +295,6 @@ class _MyAppState extends State<MyAppMaps> {
         var results = await Geocoder.local.findAddressesFromQuery(_controllerSearch.text);
         var first = results.first;
         var latLng = LatLng(first.coordinates.latitude, first.coordinates.longitude);
-
 
         _mapController.animateCamera(
           CameraUpdate.newLatLngZoom(
@@ -331,19 +336,10 @@ class _MyAppState extends State<MyAppMaps> {
 
   void _addMarker(habitacion, List<Widget> widgetsFotos) {
 
-    //final idPublicacion = MarkerId(habitacion.id);
-    print("#########################################################################");
-    print("#########################################################################");
-    print("#########################################################################");
-    print("${habitacion['titular']}");
-    print("#########################################################################");
-    print("#########################################################################");
-    print("#########################################################################");
     var fontWords = FontWeight.w500;
     double sizeText = 13;
     final GeoPoint point = habitacion['position']['geopoint'];
     final id = MarkerId(point.latitude.toString() + point.longitude.toString());
-    print("####################################################### 1");
     final _marker = Marker(
       markerId: id,
       position: LatLng(point.latitude, point.longitude),
@@ -518,15 +514,6 @@ class _MyAppState extends State<MyAppMaps> {
 
 
   changed(value) {
-    setState(() {
-      _value = value;
-      _label = '${_value.toInt().toString()} kms';
-      markers.clear();
-    });
-    radius.add(value);
-  }
-
-  changedPosition(value) {
     setState(() {
       _value = value;
       _label = '${_value.toInt().toString()} kms';

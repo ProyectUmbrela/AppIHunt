@@ -413,6 +413,7 @@ class MapsPage extends State<MyMaps> {
                   else{
                     // si no tiene imagenes pero se quiere publicar usando una imagen default
                     if (publicar == 1){
+
                       widgets.add(Image.memory(base64Decode(GlobalDataUser().notAvailable)));
                     }
                     // si no tiene imagenes y no se quiere publicar
